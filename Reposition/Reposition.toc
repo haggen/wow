@@ -1,7 +1,0 @@
-## Interface: 11200
-## Version: 1.0.0
-## Title: Reposition
-## Notes: ...
-## DefaultState: enabled
-## SavedVariablesPerCharacter: RepositionSavedVars
-Reposition.lua
