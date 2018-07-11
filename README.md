@@ -1,6 +1,10 @@
 <p align="center">
-  <img width="250" height="96" src="wow.png" style="margin:100px 0">
+  <br><br>
+  <img width="250" height="96" src="wow.png">
+  <br><br>
 </p>
+
+---
 
 > My add-ons for World of Warcraft.
 
