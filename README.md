@@ -1,5 +1,5 @@
 <p align="center">
-  <br><br>
+  <br>
   <img width="250" height="96" src="wow.png">
   <br><br>
 </p>
