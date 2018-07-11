@@ -4,11 +4,11 @@
 
 > My add-ons for World of Warcraft.
 
-Branch [`master`](/haggen/wow/tree/master) holds add-ons for the modern version:
+Branch [`master`](https://github.com/haggen/wow/tree/master) holds add-ons for the modern version:
 
-- [Fastbind](fastbind/)
+- [Fastbind](https://github.com/haggen/wow/tree/master/Fastbind)
 
-Branch [`vanilla`](/haggen/wow/tree/vanilla) holds add-ons for the classic version:
+Branch [`vanilla`](https://github.com/haggen/wow/tree/vanilla) holds add-ons for the classic version:
 
-- [Fastbind](fastbind/)
-- [Reposition](reposition/)
+- [Fastbind](https://github.com/haggen/wow/tree/vanilla/Fastbind/)
+- [Reposition](https://github.com/haggen/wow/tree/vanilla/Reposition/)
