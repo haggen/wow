@@ -1,0 +1,7 @@
+## Interface: 11200
+## Version: 1.0.0
+## Title: Fastbind
+## Notes: Quickly set your action keybindings.
+## DefaultState: enabled
+## SavedVariablesPerCharacter: FastbindSavedVars
+Fastbind.xml
