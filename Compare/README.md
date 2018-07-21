@@ -4,7 +4,7 @@
 
 ## Usage
 
-Nothing to do or configure.
+Simply move the add-on directory `Compare` into `World of Warcraft\Interface\AddOns` before launching the game. Nothing else to do or configure.
 
 ## License
 
