@@ -1,0 +1,7 @@
+## Interface: 11200
+## Version: 1.0.0
+## Title: Compare
+## Notes: ...
+## DefaultState: enabled
+## SavedVariablesPerCharacter: CompareSavedVars
+Compare.xml
