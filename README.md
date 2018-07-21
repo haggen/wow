@@ -1,7 +1,7 @@
 <p align="center">
-  <br>
-  <img width="250" height="96" src="wow.png">
   <br><br>
+  <img width="250" height="96" src="wow.png">
+  <br><br><br>
 </p>
 
 ---
@@ -15,4 +15,5 @@ Branch [`master`](https://github.com/haggen/wow/tree/master) holds add-ons for t
 Branch [`vanilla`](https://github.com/haggen/wow/tree/vanilla) holds add-ons for the classic version:
 
 - [Fastbind](https://github.com/haggen/wow/tree/vanilla/Fastbind/)
+- [Compare](https://github.com/haggen/wow/tree/vanilla/Compare/)
 - [Reposition](https://github.com/haggen/wow/tree/vanilla/Reposition/)
