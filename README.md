@@ -13,7 +13,7 @@ Branch [`vanilla`](https://github.com/haggen/wow/tree/vanilla) holds add-ons com
 
 - [Fastbind](https://github.com/haggen/wow/tree/vanilla/Fastbind/)
 - [Compare](https://github.com/haggen/wow/tree/vanilla/Compare/)
-- [Reposition](https://github.com/haggen/wow/tree/vanilla/Reposition/)
+- [Focus](https://github.com/haggen/wow/tree/vanilla/Focus/)
 
 ## Legal
 

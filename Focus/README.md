@@ -1,10 +1,10 @@
-# Reposition
+# Focus
 
 > Bring your character's frame as well your target's frame to closer to the center of the screen.
 
 ## Usage
 
-Simply move the add-on directory `Reposition` into `World of Warcraft\Interface\AddOns` before launching the game. Nothing else to do or configure.
+Simply move the add-on directory `Focus` into `World of Warcraft\Interface\AddOns` before launching the game. Nothing else to do or configure.
 
 ## License
 

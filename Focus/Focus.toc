@@ -1,7 +1,7 @@
 ## Interface: 11200
 ## Version: 1.0.0
-## Title: Reposition
+## Title: Focus
 ## Notes: Bring your character's frame as well your target's frame to closer to the center of the screen.
 ## DefaultState: enabled
-## SavedVariablesPerCharacter: RepositionSavedVars
-Reposition.lua
+## SavedVariablesPerCharacter: FocusSavedVars
+Focus.lua
