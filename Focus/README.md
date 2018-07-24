@@ -4,7 +4,7 @@
 
 ## Usage
 
-Simply move the add-on directory `Focus` into `World of Warcraft\Interface\AddOns` before launching the game. Nothing else to do or configure.
+Move the add-on directory `Focus` into `World of Warcraft\Interface\AddOns` before launching the game. After it's installed both your charater's frame and your target's frame are going to be repositioned to the center of the screen. Type `/focus` so you can your character's frame around while the target's frame mirrors your movement across the vertical axis. If you need you can type `/focus reset` to have them reset to their original position.
 
 ## License
 
