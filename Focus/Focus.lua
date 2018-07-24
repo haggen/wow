@@ -1,54 +1,161 @@
 -- Focus 1.0.0
 -- The MIT License © 2017 Arthur Corenzan
 
-local function d(text)
-    DEFAULT_CHAT_FRAME:AddMessage(text, 1, 1, 1)
+-- Hook around a frame's script handler.
+local function HookScript(frame, script, hook)
+    local handler = frame:GetScript(script)
+    frame:SetScript(script, function()
+        hook(function()
+            if handler then
+                handler()
+            end
+        end)
+    end)
 end
 
-local function df(text, ...)
-    DEFAULT_CHAT_FRAME:AddMessage(format(text, unpack(arg)), 1, 1, 1)
-end
-
 --
 --
 --
 
-local function FocusPlayerFrame()
+-- Used during setup to rollback the changes
+-- in case the player clicks on Discard.
+local savedPlayerFrameOffsetX
+local savedPlayerFrameOffsetY
+local savedTargetFrameOffsetX
+local savedTargetFrameOffsetY
+
+local function Focus_Setup()
+
+    -- First of all let's re-anchor both PlayerFrame and TargetFrame 
+    -- smackdab at the center of the screen. The first time it happens
+    -- both frames will be repositioned but on subsequential runs they won't.
+    -- That's because by then they'll have been flagged as "user placed"
+    -- and as such their position is handled by the layout cache.
     PlayerFrame:ClearAllPoints()
-    PlayerFrame:SetPoint("RIGHT", UIParent, "CENTER", -100, -200)
-end
+    PlayerFrame:SetPoint("RIGHT", nil, "CENTER", 0, 0)
 
-local function FocusTargetFrame()
     TargetFrame:ClearAllPoints()
-    TargetFrame:SetPoint("LEFT", UIParent, "CENTER", 100, -200)
+    TargetFrame:SetPoint("LEFT", nil, "CENTER", 0, 0)
+
+    -- Flag both frames as "user placed". This makes the previous lines
+    -- void ofter the first run and makes the game remember the frame's
+    -- position after login.
+    PlayerFrame:SetUserPlaced(true)
+    TargetFrame:SetUserPlaced(true)
+
+    -- PlayerFrame is already "movable" and "mouse enabled" so
+    -- all is left is to allow dragging with the left click.
+    -- Before allowing it to move we check the "lock", plus
+    -- once it starts moving we flag it so the TargetFrame
+    -- can mirror its movement.
+    PlayerFrame:RegisterForDrag("LeftButton")
+    PlayerFrame:SetScript("OnDragStart", function()
+        if not this.isLocked then
+            this:StartMoving()
+            this.isMoving = true
+        end
+    end)
+    PlayerFrame:SetScript("OnDragStop", function()
+        if this.isMoving then
+            this:StopMovingOrSizing()
+            this.isMoving = nil
+        end
+    end)
+
+    -- Starts locked.
+    PlayerFrame.isLocked = true
+
+    -- Here we hook after the OnUpdate handler of TargetFrame and 
+    -- check if the PlayerFrame's being moved. If so we do some 
+    -- calcuation to mirror its movement across the Y axis.
+    HookScript(TargetFrame, "OnUpdate", function(originalHandler)
+        originalHandler()
+
+        if PlayerFrame.isMoving then
+            local _, _, _, offsetX, offsetY = PlayerFrame:GetPoint(1)
+            local mirroredOffsetX = GetScreenWidth() - offsetX - TargetFrame:GetWidth()
+
+            TargetFrame:ClearAllPoints()
+            TargetFrame:SetPoint("TOPLEFT", nil, "TOPLEFT", mirroredOffsetX, offsetY)
+        end    
+    end)
 end
 
-FocusPlayerFrame()
-FocusTargetFrame()
+-- Reset both PlayerFrame and TargetFrame
+-- back to the center of the screen.
+-- Prompt before reloading the UI.
+local function Focus_Reset()
+    PlayerFrame:SetMovable(false)
+    TargetFrame:SetMovable(false)
 
-local castingBarFrameWasFocused
-
-local function FocusCastingBar()
-    CastingBarFrame:ClearAllPoints()
-    CastingBarFrame:SetPoint("BOTTOM", CastingBarFrame:GetParent(), "BOTTOM", 0, 200)
-    castingBarFrameWasFocused = true
+    StaticPopup_Show("FOCUS_RESET")
 end
 
-local CastingBarFrameOnShow = CastingBarFrame:GetScript("OnShow")
-CastingBarFrame:SetScript("OnShow", function(self)
-    if CastingBarFrameOnShow then 
-        CastingBarFrameOnShow(self)
+-- Unlock PlayerFrame for moving. Save both PlayerFrame
+-- and TargetFrame positions in case of rollback, and then
+-- prompt for an interface reload.
+local function Focus_Unlock()
+    if not UnitExists("target") then
+        TargetUnit("player")
     end
-    castingBarFrameWasFocused = false
-end)
 
-local CastingBarFrameOnUpdate = CastingBarFrame:GetScript("OnUpdate")
-CastingBarFrame:SetScript("OnUpdate", function(self)
-    if CastingBarFrameOnUpdate then 
-        CastingBarFrameOnUpdate(self)
-    end
-    if not castingBarFrameWasFocused then
-        FocusCastingBar()
-    end
-end)
+    _, _, _, savedPlayerFrameOffsetX, savedPlayerFrameOffsetY = PlayerFrame:GetPoint(1)
+    _, _, _, savedTargetFrameOffsetX, savedTargetFrameOffsetY = TargetFrame:GetPoint(1)
 
+    PlayerFrame.isLocked = false
+    StaticPopup_Show("FOCUS_SETUP")
+end
+
+-- Lock PlayerFrame for moving and hide the prompt.
+local function Focus_Lock()
+    PlayerFrame.isLocked = true
+    StaticPopup_Hide("FOCUS_SETUP")
+end
+
+local function Focus_Apply()
+    Focus_Lock()
+end
+
+local function Focus_Discard()
+    PlayerFrame:ClearAllPoints()
+    PlayerFrame:SetPoint("TOPLEFT", nil, "TOPLEFT", savedPlayerFrameOffsetX, savedPlayerFrameOffsetY)
+
+    TargetFrame:ClearAllPoints()
+    TargetFrame:SetPoint("TOPLEFT", nil, "TOPLEFT", savedTargetFrameOffsetX, savedTargetFrameOffsetY)
+
+    Focus_Lock()
+end
+
+StaticPopupDialogs.FOCUS_SETUP = {
+    text = "Move your health bar around until you're satisfied with its position. Once you're done press Save. Otherwise you can press Discard to undo any changes.",
+    button1 = "Save",
+    button2 = "Discard",
+    OnAccept = function() Focus_Apply() end,
+    OnCancel = function() Focus_Discard() end,
+    timeout = 0,
+    whileDead = 1,
+    hideOnEscape = true,
+}
+
+StaticPopupDialogs.FOCUS_RESET = {
+    text = "Would you like to reload your interface now?",
+    button1 = "Reload",
+    button2 = "Abort",
+    OnAccept = function() ReloadUI() end,
+    OnCancel = function() print("Your health bar will reset on your next login. You can type /reload to do it sooner.") end,
+    timeout = 0,
+    whileDead = 1,
+    hideOnEscape = true,
+}
+
+SLASH_FOCUS1 = "/focus"
+
+SlashCmdList.FOCUS = function(...)
+    if arg[1] == "reset" then
+        Focus_Reset()
+    else
+        Focus_Unlock()
+    end
+end
+
+Focus_Setup()
