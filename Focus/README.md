@@ -1,4 +1,6 @@
-<img src="https://thumbs.gfycat.com/LightGlassDogwoodtwigborer-size_restricted.gif" width="100%">
+<a href="https://gfycat.com/LightGlassDogwoodtwigborer">
+	<img src="https://thumbs.gfycat.com/LightGlassDogwoodtwigborer-size_restricted.gif" width="100%">
+</a>
 
 # Focus
 
