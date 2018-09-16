@@ -4,4 +4,4 @@
 ## Notes: Bring your character's health as well your target's health closer to the center of the screen.
 ## DefaultState: enabled
 ## SavedVariablesPerCharacter: FocusSavedVars
-Focus.lua
+Focus.xml
