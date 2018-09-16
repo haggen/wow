@@ -25,7 +25,6 @@ local savedTargetFrameOffsetX
 local savedTargetFrameOffsetY
 
 local function Focus_Setup()
-
     -- First of all let's re-anchor both PlayerFrame and TargetFrame 
     -- smackdab at the center of the screen. The first time it happens
     -- both frames will be repositioned but on subsequential runs they won't.
@@ -107,15 +106,17 @@ local function Focus_Unlock()
 end
 
 -- Lock PlayerFrame for moving and hide the prompt.
-local function Focus_Lock()
+local function Focus_Relock()
     PlayerFrame.isLocked = true
     StaticPopup_Hide("FOCUS_SETUP")
 end
 
+-- Called when the player clicks Apply in the prompt.
 local function Focus_Apply()
-    Focus_Lock()
+    Focus_Relock()
 end
 
+-- Called when the player clicks Discard in the prompt.
 local function Focus_Discard()
     PlayerFrame:ClearAllPoints()
     PlayerFrame:SetPoint("TOPLEFT", nil, "TOPLEFT", savedPlayerFrameOffsetX, savedPlayerFrameOffsetY)
@@ -123,11 +124,12 @@ local function Focus_Discard()
     TargetFrame:ClearAllPoints()
     TargetFrame:SetPoint("TOPLEFT", nil, "TOPLEFT", savedTargetFrameOffsetX, savedTargetFrameOffsetY)
 
-    Focus_Lock()
+    Focus_Relock()
 end
 
+-- Prompt during Focus repositioning.
 StaticPopupDialogs.FOCUS_SETUP = {
-    text = "Move your health bar around until you're satisfied with its position. Once you're done press Save. Otherwise you can press Discard to undo any changes.",
+    text = "Move your health around until you're satisfied with its position. Once you're done press Save. You can press Discard to undo any changes.",
     button1 = "Save",
     button2 = "Discard",
     OnAccept = function() Focus_Apply() end,
@@ -137,19 +139,20 @@ StaticPopupDialogs.FOCUS_SETUP = {
     hideOnEscape = true,
 }
 
+-- Prompt to reload the UI after reset.
 StaticPopupDialogs.FOCUS_RESET = {
     text = "Would you like to reload your interface now?",
     button1 = "Reload",
     button2 = "Abort",
     OnAccept = function() ReloadUI() end,
-    OnCancel = function() print("Your health bar will reset on your next login. You can type /reload to do it sooner.") end,
+    OnCancel = function() print("Your health's position will reset on your next login. You can type /reload to do it sooner.") end,
     timeout = 0,
     whileDead = 1,
     hideOnEscape = true,
 }
 
+-- Slash command setup.
 SLASH_FOCUS1 = "/focus"
-
 SlashCmdList.FOCUS = function(...)
     if arg[1] == "reset" then
         Focus_Reset()
@@ -158,4 +161,5 @@ SlashCmdList.FOCUS = function(...)
     end
 end
 
-Focus_Setup()
+-- Entrypoint.
+-- Focus_Setup()

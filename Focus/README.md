@@ -4,11 +4,11 @@
 
 # Focus
 
-> Bring your character's frame as well your target's frame to closer to the center of the screen.
+> Bring your character's health as well your target's health closer to the center of the screen.
 
 ## Usage
 
-Move the add-on directory `Focus` into `World of Warcraft\Interface\AddOns` before launching the game. After it's installed both your charater's frame and your target's frame are going to appear justr above the center of the screen. Type `/focus` if you want to reposition them. You can drag your character's frame around and the target's frame will mirror its movement across the vertical axis.
+Move the add-on directory `Focus` into `World of Warcraft\Interface\AddOns` before launching the game. After it's installed both your charater's health and your target's health are going to appear just above the center of the screen. Type `/focus` if you want to move them around. You can drag your character's health around and the target's health will mirror its movement across the vertical axis.
 
 ## License
 
