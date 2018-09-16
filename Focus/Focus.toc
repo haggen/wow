@@ -1,5 +1,5 @@
 ## Interface: 11200
-## Version: 1.0.0
+## Version: 1.1.0
 ## Title: Focus
 ## Notes: Bring your character's health as well your target's health closer to the center of the screen.
 ## DefaultState: enabled
