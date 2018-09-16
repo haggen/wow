@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+name="$1"
+test "$name" = "" && { echo "Usage: $0 <name>" >&2; exit 1; }
+version="$(grep -Po "Version: \K.+" "$name/$name.toc")"
+git archive --format=zip -o "$name-$version.zip" HEAD "$name"
