@@ -1,4 +1,4 @@
--- Focus 1.0.0
+-- Focus
 -- The MIT License © 2017 Arthur Corenzan
 
 -- Shortcut to print in chat.
