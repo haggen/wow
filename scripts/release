@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
-name="$1"
-test "$name" = "" && { echo "Usage: $0 <name>" >&2; exit 1; }
-version="$(grep -Po "Version: \K.+" "$name/$name.toc")"
-git archive --format=zip -o "$name-$version.zip" HEAD "$name"
+path="$1"
+test "$path" = "" && { echo "Usage: $0 <path>" >&2; exit 1; }
+test -d "$path" || { echo "$path does not exist" >&2; exit 1; }
+cd $path
+name="$(basename "$path")"
+version="$(grep -Po "Version: \K.+" "$name.toc")"
+git archive --format=zip -o "../$name-$version.zip" --prefix="$name/" HEAD .
