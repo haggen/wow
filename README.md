@@ -3,17 +3,17 @@
 
 ## Modern
 
-Branch [`master`](https://github.com/haggen/wow/tree/master) holds add-ons compatible with the modern version:
+Add-ons compatible with the modern version of WoW.
 
-- [Fastbind](https://github.com/haggen/wow/tree/master/Fastbind)
+- [Fastbind](https://github.com/haggen/wow/tree/master/modern/Fastbind)
 
 ## Vanilla
 
-Branch [`vanilla`](https://github.com/haggen/wow/tree/vanilla) holds add-ons compatible with version 1.12:
+Add-ons compatible with Vanilla WoW (1.12).
 
-- [Fastbind](https://github.com/haggen/wow/tree/vanilla/Fastbind/)
-- [Compare](https://github.com/haggen/wow/tree/vanilla/Compare/)
-- [Focus](https://github.com/haggen/wow/tree/vanilla/Focus/)
+- [Fastbind](https://github.com/haggen/wow/tree/master/vanilla/Fastbind/)
+- [Compare](https://github.com/haggen/wow/tree/master/vanilla/Compare/)
+- [Focus](https://github.com/haggen/wow/tree/master/vanilla/Focus/)
 
 ## Legal
 
