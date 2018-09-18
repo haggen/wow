@@ -1,0 +1,7 @@
+## Interface: 11200
+## Version: 1.0.0
+## Title: Developer
+## Notes: ...
+## DefaultState: disabled
+## SavedVariables: DeveloperSavedVars
+Developer.xml
