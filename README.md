@@ -13,7 +13,7 @@ Add-ons compatible with Vanilla WoW (1.12).
 
 - [Fastbind](https://github.com/haggen/wow/tree/master/vanilla/Fastbind/)
 - [Compare](https://github.com/haggen/wow/tree/master/vanilla/Compare/)
-- [Focus](https://github.com/haggen/wow/tree/master/vanilla/Focus/)
+- [Focused](https://github.com/haggen/wow/tree/master/vanilla/Focused/)
 
 ## Legal
 

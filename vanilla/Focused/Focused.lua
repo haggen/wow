@@ -1,4 +1,4 @@
--- Focus
+-- Focused
 -- The MIT License © 2017 Arthur Corenzan
 
 -- Shortcut to print in chat.
@@ -19,18 +19,18 @@ local savedPlayerFrameOffsetY;
 local savedTargetFrameOffsetX;
 local savedTargetFrameOffsetY;
 
--- Run once after install and on the first "/focus" after a reset.
+-- Run once after install and on the first "/focused" after a reset.
 local function Setup()
     -- Save default position of both frames but drop the relativeFrame 
     -- value since it's a frame can't be encoded in saved variables.
     -- nil will default to UIParent which is the original value.
-    FocusSavedVars.defaultPlayerFramePoint = { PlayerFrame:GetPoint(1) };
-    FocusSavedVars.defaultTargetFramePoint = { TargetFrame:GetPoint(1) };
-    if (type(FocusSavedVars.defaultPlayerFramePoint[2]) == "userdata") then
-        FocusSavedVars.defaultPlayerFramePoint[2] = FocusSavedVars.defaultPlayerFramePoint[2]:GetName();
+    FocusedSavedVars.defaultPlayerFramePoint = { PlayerFrame:GetPoint(1) };
+    FocusedSavedVars.defaultTargetFramePoint = { TargetFrame:GetPoint(1) };
+    if (type(FocusedSavedVars.defaultPlayerFramePoint[2]) == "userdata") then
+        FocusedSavedVars.defaultPlayerFramePoint[2] = FocusedSavedVars.defaultPlayerFramePoint[2]:GetName();
     end
-    if (type(FocusSavedVars.defaultTargetFramePoint[2]) == "userdata") then
-        FocusSavedVars.defaultTargetFramePoint[2] = FocusSavedVars.defaultTargetFramePoint[2]:GetName();
+    if (type(FocusedSavedVars.defaultTargetFramePoint[2]) == "userdata") then
+        FocusedSavedVars.defaultTargetFramePoint[2] = FocusedSavedVars.defaultTargetFramePoint[2]:GetName();
     end
 
     -- Move both PlayerFrame and TargetFrame smackdab at the center of the screen.
@@ -43,13 +43,13 @@ local function Setup()
     TargetFrame:ClearAllPoints();
     TargetFrame:SetPoint("LEFT", nil, "CENTER", 0, 0);
 
-    FocusSavedVars.setup = true;
-    FocusSavedVars.reset = nil;
+    FocusedSavedVars.setup = true;
+    FocusedSavedVars.reset = nil;
 end
 
 -- Run on UI load as long as it's not been reset.
 local function Startup()
-    if (not FocusSavedVars.setup) then
+    if (not FocusedSavedVars.setup) then
         Setup();
     end
 
@@ -77,7 +77,7 @@ local function Startup()
         end
     end);
 
-    -- Unlocks with "/focus".
+    -- Unlocks with "/focused".
     isPlayerFrameLocked = true;
 end
 
@@ -88,18 +88,18 @@ local function Reset()
     TargetFrame:SetUserPlaced(false);
 
     PlayerFrame:ClearAllPoints();
-    PlayerFrame:SetPoint(unpack(FocusSavedVars.defaultPlayerFramePoint));
+    PlayerFrame:SetPoint(unpack(FocusedSavedVars.defaultPlayerFramePoint));
 
     TargetFrame:ClearAllPoints();
-    TargetFrame:SetPoint(unpack(FocusSavedVars.defaultTargetFramePoint));
+    TargetFrame:SetPoint(unpack(FocusedSavedVars.defaultTargetFramePoint));
     
     PlayerFrame:SetScript("OnDragStart", nil);
     PlayerFrame:SetScript("OnDragStop", nil);
     
     PlayerFrame:RegisterForDrag(nil);
 
-    FocusSavedVars.reset = true;
-    FocusSavedVars.setup = nil;
+    FocusedSavedVars.reset = true;
+    FocusedSavedVars.setup = nil;
 end
 
 -- Unlock PlayerFrame for moving. Save both PlayerFrame
@@ -119,13 +119,13 @@ local function Unlock()
     -- Unlock dragging for PlayerFrame.
     isPlayerFrameLocked = false;
 
-    StaticPopup_Show("FOCUS_SETUP");
+    StaticPopup_Show("FOCUSED_SETUP");
 end
 
 -- Lock PlayerFrame for moving and hide the prompt.
 local function Relock()
     isPlayerFrameLocked = true;
-    StaticPopup_Hide("FOCUS_SETUP");
+    StaticPopup_Hide("FOCUSED_SETUP");
 end
 
 -- Called when the player clicks Apply in the prompt.
@@ -154,8 +154,8 @@ end
 
 -- TODO: Translate strings.
 
--- Prompt during Focus repositioning.
-StaticPopupDialogs.FOCUS_SETUP = {
+-- Prompt during Focused repositioning.
+StaticPopupDialogs.FOCUSED_SETUP = {
     text = "Drag your character's health around and your target's health will mirror its movement. Once you're done press Save. You can press Discard to undo any changes.",
     button1 = "Save",
     button2 = "Discard",
@@ -171,9 +171,9 @@ StaticPopupDialogs.FOCUS_SETUP = {
 };
 
 -- Slash command setup.
-SLASH_FOCUS1 = "/focus";
-SlashCmdList.FOCUS = function(option)
-    if (FocusSavedVars.reset) then
+SLASH_FOCUSED1 = "/focused";
+SlashCmdList.FOCUSED = function(option)
+    if (FocusedSavedVars.reset) then
         Startup();
     end
 
@@ -184,23 +184,23 @@ SlashCmdList.FOCUS = function(option)
     end
 end;
 
-function FocusFrame_OnLoad()
+function FocusedFrame_OnLoad()
     this:RegisterEvent("ADDON_LOADED");    
 end
 
-function FocusFrame_OnEvent()
+function FocusedFrame_OnEvent()
     if (event == "ADDON_LOADED") then
-        if (not FocusSavedVars) then
-            FocusSavedVars = {};
+        if (not FocusedSavedVars) then
+            FocusedSavedVars = {};
         end
 
-        if (not FocusSavedVars.reset) then
+        if (not FocusedSavedVars.reset) then
             Startup();
         end
     end
 end
 
-function FocusFrame_OnUpdate()
+function FocusedFrame_OnUpdate()
     -- Whenever the player is dragging PlayerFrame around 
     -- we do a calculation to mirror its movement across 
     -- the Y axis and reposition TargetFrame accordingly.
