@@ -5,15 +5,16 @@
 
 Add-ons compatible with the modern version of WoW.
 
-- [Fastbind](https://github.com/haggen/wow/tree/master/modern/Fastbind)
+- [Fastbind](/modern/Fastbind)
+- [Focused](/modern/Focused/)
 
 ## Vanilla
 
 Add-ons compatible with Vanilla WoW (1.12).
 
-- [Fastbind](https://github.com/haggen/wow/tree/master/vanilla/Fastbind/)
-- [Compare](https://github.com/haggen/wow/tree/master/vanilla/Compare/)
-- [Focused](https://github.com/haggen/wow/tree/master/vanilla/Focused/)
+- [Fastbind](/vanilla/Fastbind/)
+- [Compare](/vanilla/Compare/)
+- [Focused](/vanilla/Focused/)
 
 ## Legal
 
