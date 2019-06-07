@@ -1,3 +1,7 @@
+<a href="https://gfycat.com/whichsatisfiedgreatargus-worldofwarcraft">
+	<img src="https://thumbs.gfycat.com/whichsatisfiedgreatargus-worldofwarcraft-size_restricted.gif" width="100%">
+</a>
+
 # Fastbind
 
 > Fast keybinding for your action bars.
