@@ -1,79 +1,19 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-    <Script file="Fastbind.lua"/>
-    <Button name="FastbindMinimapButton" parent="MinimapBackdrop" hidden="true" enableMouse="true">
-        <Size x="33" y="33"/>
-        <Anchors>
-            <Anchor point="CENTER">
-                <Offset>
-                    <AbsDimension x="0" y="0"/>
-                </Offset>
-            </Anchor>
-        </Anchors>
-        <Layers>
-            <Layer level="ARTWORK">
-                <Texture name="MiniMapMeetingStoneIcon" file="Interface\Icons\INV_Misc_Rune_06">
-                    <Size>
-                        <AbsDimension x="18" y="18"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="7" y="-6"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </Texture>
-            </Layer>
-            <Layer level="OVERLAY">
-                <Texture name="MiniMapMeetingStoneBorder" file="Interface\Minimap\MiniMap-TrackingBorder">
-                    <Size>
-                        <AbsDimension x="52" y="52"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT"/>
-                    </Anchors>
-                </Texture>
-            </Layer>
-        </Layers>
-        <HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
-        <Scripts>
-            <OnLoad>
-                this:RegisterForClicks("LeftButtonUp")
-            </OnLoad>
-            <OnEnter>
-                GameTooltip:SetOwner(this, "ANCHOR_LEFT")
-                GameTooltip:SetText("Fastbind", 1, 1, 1)
-                GameTooltip:AddLine("Click to activate.", nil, nil, nil, 1)
-                GameTooltip:Show()
-            </OnEnter>
-            <OnLeave>
-                GameTooltip:Hide()
-            </OnLeave>
-            <OnClick>
-                Fastbind_Activate()
-            </OnClick>
-        </Scripts>
-    </Button>
-    <Frame name="Fastbind" toplevel="true" frameStrata="FULLSCREEN" enableMouse="true" enableKeyboard="true" hidden="true" parent="UIParent">
-        <Scripts>
-            <OnKeyUp>
-                Fastbind_SetBinding(arg1)
-                Fastbind_UpdateTooltip()
-            </OnKeyUp>
-            <OnMouseUp>
-                Fastbind_SetBinding(arg1)
-                Fastbind_UpdateTooltip()
-            </OnMouseUp>
-            <OnEnter>
-                Fastbind_UpdateTooltip()
-            </OnEnter>
-            <OnLeave>
-                Fastbind_ClearTarget()
-            </OnLeave>
-            <OnEvent function="Fastbind_OnEvent"/>
-            <OnLoad>
-                this:RegisterEvent("ADDON_LOADED")
-            </OnLoad>
-        </Scripts>
-    </Frame>
+	<Script file="Fastbind.lua"/>
+	<Frame name="Fastbind" toplevel="true" frameStrata="FULLSCREEN" enableMouse="true" enableKeyboard="true" hidden="true" parent="UIParent">
+		<Scripts>
+			<OnEnter>
+				Fastbind_OnEnter();
+			</OnEnter>
+			<OnLeave>
+				Fastbind_OnLeave();
+			</OnLeave>
+			<OnKeyUp>
+				Fastbind_OnKeyUp();
+			</OnKeyUp>
+			<OnMouseUp>
+				Fastbind_OnMouseUp();
+			</OnMouseUp>
+		</Scripts>
+	</Frame>
 </Ui>

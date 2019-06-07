@@ -1,12 +1,12 @@
 # Fastbind
 
-> Easily change keybindings in your action bar.
+> Fast keybinding for your action bars.
 
 ## Usage
 
 Move the add-on directory `Fastbind` into `World of Warcraft\Interface\AddOns` before launching the game.
 
-Type `/fastbind`, or `/fb` to start. Once the prompt is showing on your screen, move your mouse over any icon on your action bar to see what key was bound to it. While hovering the icon, press a new key or key combination to bind it. Once you're happy with your changes click **Save**. At any time you can undo all the changes by pressing **Discard**.
+Type `/fastbind`, or `/fb` to start. While the prompt is showing, you can move your mouse over any of the icons on your action bars to check what keys are currently bound or press a new key or key combination to change it. Once you're done press **Save** to persist your new configuration or **Discard** to undo any of the changes.
 
 ## License
 

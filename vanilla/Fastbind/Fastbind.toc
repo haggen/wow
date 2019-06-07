@@ -1,7 +1,6 @@
 ## Interface: 11200
-## Version: 1.0.0
+## Version: 1.1.0
 ## Title: Fastbind
-## Notes: Easily change keybindings in your action bar.
+## Notes: Fast keybinding for your action bars.
 ## DefaultState: enabled
-## SavedVariablesPerCharacter: FastbindSavedVars
 Fastbind.xml

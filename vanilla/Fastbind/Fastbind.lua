@@ -1,267 +1,247 @@
--- Fastbind 1.0.0
+-- Fastbind
 -- The MIT License © 2017 Arthur Corenzan
 -- More on https://github.com/haggen/fastbind
 
-local function d(text)
-    DEFAULT_CHAT_FRAME:AddMessage(text, 1,1,1)
+local function print(...)
+	for i = 1, getn(arg) do
+		DEFAULT_CHAT_FRAME:AddMessage(tostring(arg[i]), 1, 1, 1);
+	end
 end
 
-local function df(text, ...)
-    DEFAULT_CHAT_FRAME:AddMessage(format(text, unpack(arg)), 1,1,1)
+local function printf(...)
+	print(format(unpack(arg)));
 end
 
 -- Comment the following lines to enable debug message.
-local function d() end
-local function df() end
+local function print() end
+local function printf() end
 
-local _G = getfenv(0)
+--
+--
+--
 
-local MAX_MACROS = 18
+-- By default save the bindings to this character.
+local characterBindingSet = 2;
 
-local EXCLUDED_KEYS = {
-    "LSHIFT",
-    "RSHIFT",
-    "LCTRL",
-    "RCTRL",
-    "LALT",
-    "RALT",
-    "ESCAPE",
-    "UNKNOWN",
-    "LeftButton",
-    "RightButton",
-}
+-- Skip binding some keys for the sake of the player.
+local excludedKeys = {
+	"SHIFT",
+	"CTRL",
+	"ALT",
+	"ESCAPE",
+	"UNKNOWN",
+	"LeftButton",
+	"RightButton",
+};
 
-FastbindSavedVars = {
-    minimapButtonPosition = 145
-}
+-- 
+local selfActionCommands = {
+	"ACTIONBAR",
+};
 
-function Fastbind_OnEvent(self, event, ...)
-    if (event == "ADDON_LOADED") then
-        local name = arg[0]
-        if (name == "Fastbind") then
-            for key, value in pairs(FastbindSavedVars) do
-                d(key, '=', value)
-            end
-            FastbindMinimapButton_UpdatePosition()
-            FastbindMinimapButton:Show()
-        end
-    end
+-- Tells us when we're actively changing bindings.
+local isFastBinding = false;
+
+-- Store which command are we binding.
+-- This is derived from what control the 
+-- player is hovering with the mouse cursor.
+local bindingCommand = nil;
+
+-- Update tooltip to show what key is bound to the engaged bindable control.
+local function UpdateTooltip()
+	if (not bindingCommand) then 
+		return;
+	end
+
+	GameTooltip:SetOwner(Fastbind, "ANCHOR_TOPLEFT", -10, 5);
+
+	local bindingKeys = {
+		GetBindingKey(bindingCommand)
+	};
+	for _, key in pairs(bindingKeys) do
+		GameTooltip:AddLine(key, 1, 1, 1);
+	end
+
+	if (getn(bindingKeys) == 0) then
+		GameTooltip:AddLine("Not Bound", 0.5, 0.5, 0.5);
+	end
+
+	GameTooltip:Show();
 end
 
-function Fastbind_Activate()
-    if Fastbind.isActive then
-        return
-    elseif UnitAffectingCombat("player") then
-        print("You can't use it in combat.")
-    else
-        Fastbind_FindBindables()
-        Fastbind.isActive = true
-        StaticPopup_Show("FASTBIND")
-    end
+-- Engage the target control with the Fastbind frame.
+-- This allows us to show the tooltip as well as intercept any keystrokes.
+local function EngageBindableControl(control)
+	local name = control:GetName();
+
+	if string.find(name, "Action") then
+		bindingCommand = string.upper(control:GetName());
+	elseif string.find(name, "MultiBar") then
+		bindingCommand = control.buttonType..control:GetID();
+	elseif string.find(name, "PetAction") then
+		bindingCommand = "BONUSACTIONBUTTON"..control:GetID();
+	elseif string.find(name, "Bonus") then
+		bindingCommand = "BONUSACTIONBUTTON"..control:GetID();
+	elseif string.find(name, "Shapeshift") then
+		bindingCommand = "SHAPESHIFTBUTTON"..control:GetID();
+	end
+
+	if (bindingCommand) then
+		print("GetID: "..tostring(control:GetID()));
+		print("GetName: "..tostring(control:GetName()));
+		print("GetObjectType: "..tostring(control:GetObjectType()));
+		print("bindingCommand: "..bindingCommand);
+
+		Fastbind:ClearAllPoints();
+		Fastbind:SetAllPoints(control);
+		Fastbind:Show();
+	else 
+		print("Couldn't derived a valid command from this control");
+	end
 end
 
-function Fastbind_Deactivate()
-    if Fastbind.isActive then
-        Fastbind.isActive = nil
-        Fastbind_ClearTarget()
-        StaticPopup_Hide("FASTBIND")
-    end
+-- Disengage the currently engaged bindable control.
+local function DisengageBindableControl()
+	bindingCommand = nil;
+	Fastbind:Hide();
+	GameTooltip:Hide();
 end
 
-function Fastbind_Toggle()
-    if Fastbind.isActive then
-        Fastbind_Deactivate()
-    else
-        Fastbind_Activate()
-    end
+-- Helper to hook a script handler from existing control.
+local function HookScript(control, script, newHandler)
+	local prevHandler = control:GetScript(script);
+	control:SetScript(script, function(...)
+		if (prevHandler) then
+			prevHandler(control, unpack(arg));
+		end
+		newHandler(control, unpack(arg));
+	end)
 end
 
-function Fastbind_UpdateTooltip()
-    if (not Fastbind.command) then return end
-
-    GameTooltip:SetOwner(Fastbind, "ANCHOR_TOPLEFT", -10, 5)
-
-    local bindingKeys = {GetBindingKey(Fastbind.command)}
-    for _, key in pairs(bindingKeys) do
-        GameTooltip:AddLine(key, 1, 1, 1)
-    end
-
-    if (getn(bindingKeys) == 0) then
-        GameTooltip:AddLine("Not bound.", 0.5, 0.5, 0.5)
-    end
-
-    GameTooltip:Show()
+-- Set necessary hooks the given control.
+local function HookBindableControl(name)
+	assert(type(name) == "string", "Invalid argument: expected a string");
+	
+	local control = getglobal(name);
+	if (not control) then
+		print("Invalid control: "..name);
+	elseif (not control.fastbindHook) then
+		print("Hooking: "..control:GetName());
+		control.fastbindHook = true;
+		HookScript(control, "OnEnter", function(control)
+			if (isFastBinding) then
+				EngageBindableControl(control);
+			end
+		end);
+	end
 end
 
-function Fastbind_ClearTarget()
-    Fastbind.target = nil
-    Fastbind.command = nil
-    Fastbind:Hide()
-    GameTooltip:Hide()
+local function FindBindableControls()
+	local prefixes = {
+		"MultiBarBottomLeftButton",
+		"MultiBarBottomRightButton",
+		"MultiBarRightButton",
+		"MultiBarLeftButton",
+		"ActionButton",
+		"PetActionButton",
+		"BonusActionButton",
+	};
+	for i = 1, NUM_ACTIONBAR_BUTTONS do
+		for _, prefix in ipairs(prefixes) do
+			HookBindableControl(prefix..i);
+		end
+	end
 end
 
-function Fastbind_SetTarget(target)
-    if target.action then
-        local actionType = GetActionInfo(target.action)
-        if (actionType == "flyout") then
-            return
-        end
-    end
-
-    d("GetID = "..tostring(target:GetID()))
-    d("GetName = "..tostring(target:GetName()))
-    d("GetObjectType = "..tostring(target:GetObjectType()))
-    d("buttonType = "..tostring(target.buttonType))
-    d("action = "..tostring(target.action))
-    d("spellID = "..tostring(target.spellID))
-    d("itemID = "..tostring(target.itemID))
-    d("skillID = "..tostring(target.skillID))
-    d("binding = "..tostring(target.binding))
-    d("location = "..tostring(target.location))
-    d("slotType = "..tostring(target.slotType))
-    d("slot = "..tostring(target.slot))
-    d("slot = "..tostring(target.macroID))
-
-    local name = target:GetName()
-
-    if string.find(name, "PetAction") then
-        Fastbind.command = "BONUSACTIONBUTTON"..target:GetID()
-    elseif string.find(name, "Action") then
-        Fastbind.command = string.upper(target:GetName())
-    elseif string.find(name, "MultiBar") then
-        Fastbind.command = target.buttonType..target:GetID()
-    elseif string.find(name, "Stance") then
-        Fastbind.command = "SHAPESHIFTBUTTON"..target:GetID()
-    elseif string.find(name, "SpellButton") then
-        local slot, slotType = SpellBook_GetSpellBookSlot(target)
-        if slotType == "SPELL" then
-            local name = GetSpellBookItemName(slot, SpellBookFrame.bookType)
-            Fastbind.command = "SPELL "..name
-        end
-    elseif string.find(name, "SpellFlyoutButton") then
-        local name = GetSpellInfo(target.spellID)
-        Fastbind.command = "SPELL "..name
-    elseif string.find(name, "ContainerFrame") then
-        local id = GetContainerItemID(target:GetParent():GetID(), target:GetID())
-        if id then
-            local name = GetItemInfo(id)
-            if name then
-                Fastbind.command = "ITEM "..name
-            end
-        end
-    elseif string.find(name, "Macro") then
-        local id = MacroFrame.macroBase + target:GetID()
-        Fastbind.command = "MACRO "..id
-    end
-
-    d(Fastbind.command)
-
-    if Fastbind.command then
-        Fastbind.target = target
-        Fastbind:ClearAllPoints()
-        Fastbind:SetAllPoints(target)
-        Fastbind:Show()
-    end
+local function ClearBinding()
+	local bindingKeys = {
+		GetBindingKey(bindingCommand)
+	};
+	for _, key in pairs(bindingKeys) do
+		print("Clear binding: "..key);
+		SetBinding(key);
+	end
 end
 
-function Fastbind_ClearBinding()
-    local bindingKeys = {GetBindingKey(Fastbind.command)}
-    for _, key in pairs(bindingKeys) do
-        SetBinding(key)
-    end
+local function UpdateBinding(key)
+	print("Key: "..key);
+
+	if (not bindingCommand) then
+		return;
+	end
+
+	if (key == "RightButton") then
+		ClearBinding();
+	end
+
+	for i = 1, getn(excludedKeys) do
+		if (key == excludedKeys[i]) then
+			return;
+		end
+	end
+
+	-- We don't support combinations with ALT. See below.
+	if IsControlKeyDown() then 
+		key = "CTRL-"..key;
+	end
+	if IsShiftKeyDown() then
+		key = "SHIFT-"..key;
+	end
+
+	if SetBinding(key, bindingCommand) then
+		print("SetBinding("..key..", "..bindingCommand..")");
+	else
+		print("SetBinding failed: "..key);
+	end
+
+	-- Auto bind ALT-key as self-action.
+	for i = 1, getn(selfActionCommands) do
+		if string.find(bindingCommand, selfActionCommands[i]) then
+			if SetBinding("ALT-"..key, "SELF"..bindingCommand) then
+				print("SetBinding(ALT-"..key..", SELF"..bindingCommand..")");
+			else
+				print("SetBinding failed: ALT-"..key);
+			end
+		end
+	end
 end
 
-function Fastbind_SetBinding(key)
-    if (not Fastbind.target) then return end
-
-    if (key == "RightButton") then
-        Fastbind_ClearBinding()
-    end
-
-    for i = 1, getn(EXCLUDED_KEYS) do
-        if (key == EXCLUDED_KEYS[i]) then
-            return
-        end
-    end
-
-    if key == "Button4" then key = "BUTTON4" end
-    if key == "Button5" then key = "BUTTON5" end
-
-    local ctrl = IsControlKeyDown() and "CTRL-" or ""
-    local alt = IsAltKeyDown() and "ALT-" or ""
-    local shift = IsShiftKeyDown() and "SHIFT-" or ""
-
-    d(ctrl..alt..shift..key, Fastbind.command)
-
-    -- SetBinding(ctrl..alt..shift..key)
-    SetBinding(ctrl..alt..shift..key, Fastbind.command)
+local function Activate()
+	if (isFastBinding) then
+		return;
+	elseif UnitAffectingCombat("player") then
+		print("You can't use it in combat.");
+	else
+		FindBindableControls();
+		isFastBinding = true;
+		StaticPopup_Show("FASTBIND");
+	end
 end
 
-function Fastbind_Apply()
-    SaveBindings(2)
-    Fastbind_Deactivate()
+local function Deactivate()
+	if (isFastBinding) then
+		DisengageBindableControl();
+		isFastBinding = false;
+		StaticPopup_Hide("FASTBIND");
+	end
 end
 
-function Fastbind_Discard()
-    LoadBindings(2)
-    Fastbind_Deactivate()
+local function Toggle()
+	if (isFastBinding) then
+		Deactivate();
+	else
+		Activate();
+	end
 end
 
-function hookScript(frame, handle, func)
-    local prevScript = frame:GetScript(handle)
-    frame:SetScript(handle, function(...)
-        prevScript(frame, unpack(arg))
-        func(frame, unpack(arg))
-    end)
+local function Apply()
+	SaveBindings(GetCurrentBindingSet() or characterBindingSet);
+	Deactivate();
 end
 
-function Fastbind_SetHook(name)
-    local frame = _G[name]
-    if (frame and not frame.hookedForFastbind) then
-        d("Hooking "..frame:GetName())
-        frame.hookedForFastbind = true
-        hookScript(frame, "OnEnter", function(frame)
-            if Fastbind.isActive then
-                Fastbind_SetTarget(frame)
-            end
-        end)
-        hookScript(frame, "OnClick", function(frame)
-            if Fastbind.isActive then
-                Fastbind_FindBindables(frame)
-            end
-        end)
-    end
-end
-
-function Fastbind_FindBindables()
-    local prefixes =
-    {
-        "MultiBarBottomLeftButton",
-        "MultiBarBottomRightButton",
-        "MultiBarRightButton",
-        "MultiBarLeftButton",
-        "SpellButton",
-        "SpellFlyoutButton",
-        "ActionButton",
-        "StanceButton",
-        "PetActionButton",
-    }
-
-    for i = 1, NUM_ACTIONBAR_BUTTONS do
-        for _, prefix in ipairs(prefixes) do
-            Fastbind_SetHook(prefix..i)
-        end
-    end
-
-    for i = 1, MAX_MACROS do
-        Fastbind_SetHook("MacroButton"..i)
-    end
-
-    for i = 1, NUM_CONTAINER_FRAMES do
-        for j = 1, MAX_CONTAINER_ITEMS do
-            Fastbind_SetHook("ContainerFrame"..i.."Item"..j)
-        end
-    end
+local function Discard()
+	LoadBindings(GetCurrentBindingSet() or characterBindingSet);
+	Deactivate();
 end
 
 --
@@ -269,19 +249,38 @@ end
 --
 
 StaticPopupDialogs.FASTBIND = {
-    text = "Move your mouse over any action bar slot, inventory item, spell or macro, to see the its keybinding. Press a new key or key combination to change it. Press ESC or click on Discard to undo any changes.",
-    button1 = "Save",
-    button2 = "Discard",
-    OnAccept = function() Fastbind_Apply() end,
-    OnCancel = function() Fastbind_Discard() end,
-    timeout = 0,
-    whileDead = 1,
-    hideOnEscape = true,
-}
+	text = "Move your cursor over any action slot and press the desired key or key combination to change its keybind.",
+	button1 = "Save",
+	button2 = "Discard",
+	OnAccept = function() Apply() end,
+	OnCancel = function() Discard() end,
+	timeout = 0,
+	whileDead = 1,
+	hideOnEscape = true,
+};
+	
+function SlashCmdList.FASTBIND()
+	Toggle();
+end
+SLASH_FASTBIND1 = "/fastbind";
+SLASH_FASTBIND2 = "/fb";
 
-SLASH_FASTBIND1 = "/fastbind"
-SLASH_FASTBIND2 = "/fb"
+--
+--
+--
 
-SlashCmdList.FASTBIND = function()
-    Fastbind_Toggle()
+function Fastbind_OnEnter()
+	UpdateTooltip();
+end
+
+function Fastbind_OnLeave()
+	DisengageBindableControl();
+end
+
+function Fastbind_OnKeyUp()
+	UpdateBinding(arg1);
+end
+
+function Fastbind_OnMouseUp()
+	UpdateBinding(arg1);
 end
