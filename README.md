@@ -1,23 +1,21 @@
 <p align="center"><img src="wow.png" height="250" width="300"></p>
-<p align="center">Repository with all my add-ons for World of Wacraft.</p>
+<p align="center">Repository for my World of Warcraft add-ons.</p>
 
-## Modern
+## Retail
 
-Add-ons compatible with the modern version of WoW.
+Add-ons compatible with retail version of WoW.
 
-- [Fastbind](/modern/Fastbind)
-- [Focused](/modern/Focused/)
+- [Fastbind](/retail/Fastbind)
+- [Focused](/retail/Focused)
 
-## Vanilla
+## Classic
 
-Add-ons compatible with Vanilla WoW (1.12).
+Add-ons compatible with WoW Classic (1.12).
 
-- [Fastbind](/vanilla/Fastbind/)
-- [Compare](/vanilla/Compare/)
-- [Focused](/vanilla/Focused/)
+- 🚧...
 
 ## Legal
 
-The MIT License © 2017-2018 Arthur Corenzan
+The MIT License © 2017 Arthur Corenzan
 
 These Add-ons are not created by, affiliated with or sponsored by Blizzard Entertainment, Inc. or its affiliates. The World of Wacraft® and related logos are registered trademarks or trademarks of Blizzard Entertainment, Inc. in the United States and/or other countries. All rights reserved.
