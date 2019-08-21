@@ -1,8 +1,27 @@
 #!/usr/bin/env sh
-path="$1"
-test "$path" = "" && { echo "Usage: $0 <path>" >&2; exit 1; }
-test -d "$path" || { echo "$path does not exist" >&2; exit 1; }
-cd $path
-name="$(basename "$path")"
-version="$(grep -Po "Version: \K.+" "$name.toc")"
-git archive --format=zip -o "../$name-$version.zip" --prefix="$name/" HEAD .
+
+set -eu
+
+if test "$1" = ""; then
+    echo "Missing argument, e.g. retail/Fastbind" >&2
+    exit 1
+fi
+
+if ! test -d "$1"; then
+    echo "$1 does not exist" >&2
+    exit 1
+fi
+
+if ! git diff --quiet; then
+    echo "The working tree is dirty, please clean up" >&2
+    # exit 1
+fi
+
+mode="$(dirname \"$1\")"
+name="$(basename \"$1\")"
+version="$(grep -Po "Version: \K.+" \"$1/$name.toc\")"
+tag="$(echo \"$mode/$name/$version\" | tr '[:upper:]' '[:lower:]')"
+
+git tag "$tag"
+git push --tags
+git archive --format=zip -o "$mode/$name-$version.zip" --prefix="$1" HEAD .
