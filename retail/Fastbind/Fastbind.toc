@@ -1,4 +1,4 @@
-## Interface: 60200
+## Interface: 80200
 ## Version: 1.0.0
 ## Title: Fastbind
 ## Notes: Quickly bind keys to your action bar, items in your bags, spells, or macros.

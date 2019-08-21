@@ -1,0 +1,7 @@
+## Interface: 80200
+## Version: 1.0.0
+## Title: Focused
+## Notes: Bring your character's and target's health to the center of the screen.
+## DefaultState: enabled
+## SavedVariablesPerCharacter: FOCUSED_ACTIVE
+Focused.xml

@@ -1,0 +1,7 @@
+## Interface: 11200
+## Version: 1.2.0
+## Title: Standard
+## Notes: My standard UI configuration.
+## DefaultState: enabled
+## SavedVariablesPerCharacter: StandardSavedVars
+Standard.xml
