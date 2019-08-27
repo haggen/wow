@@ -10,9 +10,10 @@ Add-ons compatible with retail version of WoW.
 
 ## Classic
 
-Add-ons compatible with WoW Classic (1.12).
+Add-ons compatible with WoW Classic (1.13).
 
-- 🚧...
+- [Fastbind](/classic/Fastbind)
+- [Focused](/classic/Focused)
 
 ## Legal
 
