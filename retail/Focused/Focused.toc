@@ -1,7 +1,6 @@
 ## Interface: 80200
 ## Version: 1.0.0
 ## Title: Focused
-## Notes: Bring your character's and target's health to the center of the screen.
+## Notes: Tether your character's and your target's portraits together.
 ## DefaultState: enabled
-## SavedVariablesPerCharacter: FOCUSED_ACTIVE
 Focused.xml

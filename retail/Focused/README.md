@@ -1,24 +1,22 @@
 # Focused
 
-> Bring your character's and target's health to the center of the screen.
+> Tether your character's and your target's portraits together.
 
-<a href="https://gfycat.com/LightGlassDogwoodtwigborer">
-	<img src="https://thumbs.gfycat.com/LightGlassDogwoodtwigborer-size_restricted.gif" width="100%">
-</a>
+![Video showing off the add-on in action](https://i.imgur.com/WHc1hCv.gifv)
 
 ## Installation
 
-Download the package and extract it into `<Game>\_retail_\World of Warcraft\Interface\AddOns` prior to launching the game.
+Download the package and extract it into `World of Warcraft\_retail_\Interface\AddOns` prior to launching the game.
 
 ## Usage
 
-Type `/focused` to get started. Both your charater's and your target's health bars are going to appear near the center of the screen. Move around any of them, and the other will mirror the movement. Select `Apply` to retain your configuration or `Discard` to undo. Type `/focused` again any time you want to move them around. Type `/focused reset` to reset the frame to their default position. This feature does not interfere with the option to move these frames around via the `Unlock Frame` option.
+Upon logging in after the add-on's been installed the default position of your character's and target's portrait will be close to the center of the screen. If you have moved these around you might want to reset their position via the right-click menu. Now whenever you move either of them, the other will mirror this movement across the vertical axis.
 
 ## Uninstall
 
 Simply delete the `Focused` folder in your add-ons directory.
 
-Please note that uninstalling the add-on won't restore your character's and target's health position. That's because it's being handled by the _layout cache_ of the game. To **restore the default position** use `/focused reset`.
+Please note that uninstalling the add-on won't restore your character's and target's portrait position. For that you'll need to reset their position via the right-click menu.
 
 ## License
 

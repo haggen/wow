@@ -5,10 +5,4 @@
             <OnUpdate function="FocusedFrame_OnUpdate"/>
         </Scripts>
     </Frame>
-    <Frame name="FauxTargetFrame" parent="UIParent">
-        <Scripts>
-            <OnLoad function="FauxTargetFrame_OnLoad"/>
-            <OnEvent function="FauxTargetFrame_OnEvent"/>
-        </Scripts>
-    </Frame>
 </Ui>
