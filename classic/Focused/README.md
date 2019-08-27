@@ -2,7 +2,7 @@
 
 > Tether your character's and your target's portraits together.
 
-![Video showing off the add-on in action](https://i.imgur.com/WHc1hCv.gifv)
+![Video showing off the add-on in action](https://i.imgur.com/WHc1hCv.gif)
 
 ## Installation
 
