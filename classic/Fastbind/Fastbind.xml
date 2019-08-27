@@ -1,0 +1,86 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+    <Script file="Fastbind.lua"/>
+    <Button name="FastbindMinimapButton" parent="MinimapBackdrop" hidden="true" movable="true" frameStrata="MEDIUM">
+        <Size x="32" y="32"/>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentBackground" file="Interface\Minimap\UI-Minimap-Background">
+                    <Size x="25" y="25"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="2" y="-4"/>
+                        </Anchor>
+                    </Anchors>
+                    <Color r="1" g="1" b="1" a="0.6"/>
+                </Texture>
+            </Layer>
+            <Layer level="ARTWORK">
+                <Texture name="$parentIcon" file="Interface\Worldmap\Gear_64Grey">
+                    <Size x="19" y="19"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="7" y="-6"/>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="BORDER">
+                <Texture name="$parentBorder" file="Interface\Minimap\MiniMap-TrackingBorder">
+                    <Size x="54" y="54"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture name="$parentShine" file="Interface\ComboFrame\ComboPoint" alphaMode="ADD" hidden="true">
+                    <Size x="27" y="27"/>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset x="2" y="-2"/>
+                        </Anchor>
+                    </Anchors>
+                    <TexCoords left="0.5625" right="1" top="0" bottom="1"/>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad function="FastbindMinimapButton_OnLoad"/>
+            <OnEnter function="FastbindMinimapButton_OnEnter"/>
+            <OnLeave function="FastbindMinimapButton_OnLeave"/>
+            <OnMouseDown function="FastbindMinimapButton_OnMouseDown"/>
+            <OnMouseUp function="FastbindMinimapButton_OnMouseUp"/>
+            <OnClick function="FastbindMinimapButton_OnClick"/>
+            <OnDragStart function="FastbindMinimapButton_OnDragStart"/>
+            <OnDragStop function="FastbindMinimapButton_OnDragStop"/>
+        </Scripts>
+        <HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+    </Button>
+    <Frame name="Fastbind" toplevel="true" frameStrata="FULLSCREEN" enableMouse="true" enableKeyboard="true" hidden="true" parent="UIParent">
+        <Scripts>
+            <OnKeyUp>
+                Fastbind_SetBinding(key)
+                Fastbind_UpdateTooltip()
+            </OnKeyUp>
+
+            <OnMouseUp>
+                Fastbind_SetBinding(button)
+                Fastbind_UpdateTooltip()
+            </OnMouseUp>
+
+            <OnEnter>
+                Fastbind_UpdateTooltip()
+            </OnEnter>
+
+            <OnLeave>
+                Fastbind_ClearTarget()
+            </OnLeave>
+
+            <OnEvent function="Fastbind_OnEvent"/>
+
+            <OnLoad>
+                self:RegisterEvent("ADDON_LOADED")
+            </OnLoad>
+        </Scripts>
+    </Frame>
+</Ui>
