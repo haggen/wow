@@ -1,5 +1,6 @@
 -- Focused
--- The MIT License © 2018 Arthur Corenzan
+-- MIT License © 2018 Arthur Corenzan
+-- More on https://github.com/haggen/wow
 
 local function SetMirroredPosition(a, b)
 	local _, _, _, offsetX, offsetY = b:GetPoint(1);
@@ -45,10 +46,6 @@ if (not TargetFrame:IsUserPlaced()) then
 	SetInitialPosition(TargetFrame);
 end
 
---
---
---
-
 function FocusedFrame_OnUpdate(self, elapsed)
 	if (PlayerFrame:IsDragging()) then
 		SetMirroredPosition(TargetFrame, PlayerFrame);
@@ -56,3 +53,4 @@ function FocusedFrame_OnUpdate(self, elapsed)
 		SetMirroredPosition(PlayerFrame, TargetFrame);
 	end
 end
+
