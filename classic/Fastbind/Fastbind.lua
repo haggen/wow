@@ -1,6 +1,6 @@
--- Fastbind 1.0.0
+-- Fastbind
 -- The MIT License © 2017 Arthur Corenzan
--- More on https://github.com/haggen/fastbind
+-- More on https://github.com/haggen/wow
 
 local function d() end
 -- local function d(...) print(...) end

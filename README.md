@@ -1,12 +1,5 @@
 <p align="center"><img src="wow.png" height="250" width="300"></p>
-<p align="center">Repository for my World of Warcraft add-ons.</p>
-
-## Retail
-
-Add-ons compatible with retail version of WoW.
-
-- [Fastbind](/retail/Fastbind)
-- [Focused](/retail/Focused)
+<p align="center">Repository of my World of Warcraft add-ons.</p>
 
 ## Classic
 
@@ -14,6 +7,14 @@ Add-ons compatible with WoW Classic (1.13).
 
 - [Fastbind](/classic/Fastbind)
 - [Focused](/classic/Focused)
+- [Developer](/classic/Developer)
+
+## Retail
+
+Add-ons compatible with retail version of WoW.
+
+- [Fastbind](/retail/Fastbind)
+- [Focused](/retail/Focused)
 
 ## Legal
 
