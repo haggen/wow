@@ -1,0 +1,24 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+	<Script file="Powerythm.lua"/>
+	<Frame name="PowerythmFrame" parent="UIParent" enableMouse="true" movable="true" hidden="false">
+		<Size x="32" y="32"/>
+		<Anchors>
+		   <!-- <Anchor point="LEFT" relativeTo="PlayerFrame" relativePoint="RIGHT" x="-3"/> -->
+		   <Anchor point="CENTER"/> -->
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="$parentTexture" setAllPoints="true">
+					<Color r="0.0" g="0.0" b="0.0" a="0.5"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad function="PowerythmFrame_OnLoad"/>
+			<OnEvent function="PowerythmFrame_OnEvent"/>
+			<OnDragStart function="PowerythmFrame_OnDragStart"/>
+			<OnDragStop function="PowerythmFrame_OnDragStop"/>
+			<OnUpdate function="PowerythmFrame_OnUpdate"/>
+		</Scripts>
+	</Frame>
+</Ui>
