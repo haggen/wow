@@ -14,8 +14,8 @@ fi
 
 platform="$(dirname "$1")"
 name="$(basename "$1")"
-version="$(grep -Po "Version: \K.+" "$1/$name.toc")"
-tag="$1/$version"
+version="$(grep -Po "Version: \K.+" "$platform/$name/$name.toc")"
+tag="$platform/$name/$version"
 
 if git tag "$tag" > /dev/null 2>&1; then
     git push --tags
