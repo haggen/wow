@@ -2,7 +2,13 @@
 
 > Tether your character's and your target's portraits together.
 
-![Video showing off the add-on in action](https://i.imgur.com/WHc1hCv.gif)
+## About
+
+![Video showing off the add-on in action](https://i.imgur.com/WHc1hCv.gifv)
+
+1. Changes the default position of your character's and target's portraits, so if you right-click them and select Move Frame > Reset Position they go to the center of the screen.
+2. Tether the portraits together so when you drag one around, the other follows, mirroring the movement across the vertical axis.
+3. When status bar text is enabled in Interface Options displays the target's health percentage over its health bar.
 
 ## Installation
 
