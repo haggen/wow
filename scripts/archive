@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -eu
+
+if test -z "$1"; then
+    echo "Missing argument, e.g. $0 classic/Fastbind/1.0.0" >&2
+    exit 1
+fi
+
+if ! git rev-parse "$1" >/dev/null 2>&1; then
+    echo "$1 is not an existing tag." >&2
+    exit 1
+fi
+
+tag="$1"
+platform="$(echo "$tag" | cut -f1 -d/)"
+name="$(echo "$tag" | cut -f2 -d/)"
+version="$(echo "$tag" | cut -f3 -d/)"
+archive="$name-$version-$platform.zip"
+
+if git archive --format=zip -o "$archive" --prefix="$name/" "$tag":"$platform/$name/"; then
+    echo "$archive"
+fi
