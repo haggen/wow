@@ -8,7 +8,7 @@ install:
 env:
   - PACKAGE="${TRAVIS_TAG%/*}"
 script:
-  - luacheck -g "${PACKAGE:-.}"
+  - luacheck -g "${PACKAGE:-classic retail}"
 before_deploy:
   - export ARTIFACT="$(scripts/archive "$TRAVIS_TAG")"
 deploy:
