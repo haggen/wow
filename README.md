@@ -1,5 +1,7 @@
 <p align="center"><img src="wow.png" height="250" width="300"></p>
-<p align="center">Repository of my World of Warcraft add-ons.</p>
+<p align="center">Repository of all my World of Warcraft add-ons. <a href="https://travis-ci.org/haggen/wow"><img src="https://travis-ci.org/haggen/wow.svg?branch=master" valign="middle"></a></p>
+
+---
 
 ## Classic
 
