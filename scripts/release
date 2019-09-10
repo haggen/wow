@@ -22,5 +22,5 @@ name="$(basename "$1")"
 version="$(grep -Po "Version: \K.+" "$1/$name.toc")"
 tag="$(echo "$mode/$name/$version" | tr "[:upper:]" "[:lower:]")"
 
-git tag "$tag"
+git tag "$tag" > /dev/null 2>&1 || echo "Already tagged."
 git archive --format=zip -o "$mode/$name-$version.zip" --prefix="$1" HEAD .
