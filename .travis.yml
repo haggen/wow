@@ -1,7 +1,7 @@
 language: python
 before_install:
   - pip install hererocks
-  - hererocks lua5.3 -l5.3 -rlatest
+  - hererocks lua53 -l5.3 -rlatest
   - source lua53/bin/activate
 install:
   - luarocks install luacheck
@@ -15,3 +15,5 @@ deploy:
   file: "$ARCHIVE"
   on:
     repo: haggen/wow
+    tags: true
+    branch: master
