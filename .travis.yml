@@ -1,8 +1,13 @@
 language: python
-install:
+addons:
+  apt:
+    packages:
+      - libxml2-utils
+before_install:
   - pip install hererocks
-  - hererocks lua53 -l5.3 -rlatest
-  - source lua53/bin/activate
+  - hererocks ~/lua53 -l5.3 -rlatest
+  - source ~/lua53/bin/activate
+install:
   - luarocks install luacheck
 script:
   - scripts/test "${TRAVIS_TAG%/*}"
