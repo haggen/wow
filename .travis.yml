@@ -5,14 +5,17 @@ before_install:
   - source lua53/bin/activate
 install:
   - luarocks install luacheck
+env:
+  - PACKAGE="${TRAVIS_TAG%/*}"
 script:
-  - luacheck -g "${TRAVIS_TAG%/*}"
-  - export ARCHIVE="$(scripts/archive $TRAVIS_TAG)"
+  - luacheck -g "${PACKAGE:-.}"
+before_deploy:
+  - export ARTIFACT="$(scripts/archive "$TRAVIS_TAG")"
 deploy:
   provider: releases
   api_key:
     secure: RnZevB24DD4pSIoFpdH5nuzVDh6AX+Me53uSb9CRKQ24NVaEzPuG2/rAQZ5dqJjRwSmxKqJ0t5i/MzSduIlQIzixMId9CXged3MifSOv/GR88ZlN4NtqWYB2G5gsYfLwxaAjUx/xnXTuId9PXJxpL9VLBaNuKJJbbd9q0rO83L5waupxA9CngjIamFdhYxyurT59BJtyTCVvEQG5pa2GtD3TW4ldzbuEdcdUocElzoTsSabaauK6Cwvwj+ops2NYZXQNIvsnAlEXB1ZEQgwlRiyW0pC9qMqT3zxhQa2kdR9c660mmPbCu5S5DCnS+iS+mnvAaD/RN4FpMEAP1MA47gojMt8u6yTece6S8zs3aF6m8DtGDB47HEAbSZmMslyot3KkW/ncAyBKUBI5stw7Ft3hexikfY2rS0HglGYDaJPJY8Zv4LfnLAGFGEMiMfN+CBLhxw7BzGyVSKXEKkwihDUgtSFU7XM6Xi2u5AVSySBZ0KiVP2mIn4ltYpF5+3eR5zVY4zEg+9KNPHVskH6CfRKZ9WWq6pdRMm5SmrLv9e7rOMIHFSJaJkFBcdcfUlQWQDpke2zf+beAfPhkns8aCN7S+Ilr9Ark9RevSKM2nKo6SgYn9pmV1UilGGgS3URP2RAPIzNlTjrQ2OLMipJ+nT1gEmeZbvBL0GLbmnytAvQ=
-  file: "$ARCHIVE"
+  file: "$ARTIFACT"
   on:
     repo: haggen/wow
     tags: true
