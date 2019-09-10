@@ -19,5 +19,5 @@ version="$(echo "$tag" | cut -f3 -d/)"
 archive="$name-$version-$platform.zip"
 
 if git archive --format=zip -o "$archive" --prefix="$name/" "$tag":"$platform/$name/"; then
-    echo "$archive"
+    printf "%s" "$archive"
 fi
