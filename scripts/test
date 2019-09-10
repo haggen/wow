@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -eu
+
+if test -n "$1"; then
+    luacheck -g "$1"
+else
+    luacheck -g .
+fi
