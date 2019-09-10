@@ -4,7 +4,7 @@
 
 ## Installation
 
-Download the package and extract it into `World of Warcraft\_classic_\Interface\AddOns` prior to launching the game.
+Download the latest version from the [Releases page](https://github.com/haggen/wow/releases) and extract it into `World of Warcraft\_classic_\Interface\AddOns` prior to launching the game.
 
 ## Usage
 

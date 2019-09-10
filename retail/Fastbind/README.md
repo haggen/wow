@@ -1,12 +1,27 @@
 # Fastbind
 
-> Easily change keybindings in your action bar.
+> Easily change your keybindings.
+
+## About
+
+Bind keys directly to action bar slots, spells, macros and inventory items without having to visit the settings menu.
+
+## Installation
+
+Download the package from [Releases page](https://github.com/haggen/wow/releases) and extract it into `World of Warcraft\_retail_\Interface\AddOns` prior to launching the game.
 
 ## Usage
 
-Move the add-on directory `Fastbind` into `World of Warcraft\Interface\AddOns` before launching the game.
+1. Type `/fastbind`, `/fb`, or click on the cog icon next to your minimap.
+2. While the prompt is showing, move your mouse over any icon on your action bar to see what keys or key combinations are bound to it.
+3. While hovering your target, press a new key or key combination to bind to it.
+4. At any time you can press **Save** to commit or **Discard** to undo any changes.
 
-Type `/fastbind`, or `/fb` to start. Once the prompt is showing on your screen, move your mouse over any icon on your action bar to see what key was bound to it. While hovering the icon, press a new key or key combination to bind it. Once you're happy with your changes click **Save**. At any time you can undo all the changes by pressing **Discard**.
+## Uninstall
+
+Simply delete the `Fastbind` folder in your add-ons directory.
+
+Please note that uninstalling the add-on won't restore your keybindings.
 
 ## License
 
