@@ -1,0 +1,6 @@
+## Interface: 11302
+## Version: 0.0.0
+## Title: Developer
+## Notes: Toolkit for add-on developers.
+## DefaultState: enabled
+Developer.xml

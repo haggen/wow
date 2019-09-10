@@ -1,0 +1,25 @@
+# Developer
+
+> Toolkit for add-on developers.
+
+## About
+
+...
+
+## Installation
+
+Download the package and extract it into `World of Warcraft\_classic_\Interface\AddOns` prior to launching the game.
+
+## Usage
+
+...
+
+## Uninstall
+
+Simply delete the `Developer` folder from your add-ons directory.
+
+## License
+
+The MIT License © 2019 Arthur Corenzan
+
+This Add-on is not created by, affiliated with or sponsored by Blizzard Entertainment, Inc. or its affiliates. The World of Wacraft® and related logos are registered trademarks or trademarks of Blizzard Entertainment, Inc. in the United States and/or other countries. All rights reserved.

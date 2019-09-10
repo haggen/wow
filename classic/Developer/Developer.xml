@@ -1,0 +1,12 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+	<Script file="Developer.lua"/>
+	<Frame name="DeveloperFrame" parent="UIParent">
+		<Scripts>
+			<!-- <OnLoad function="DeveloperFrame_OnLoad"/> -->
+			<!-- <OnEvent function="DeveloperFrame_OnEvent"/> -->
+			<!-- <OnDragStart function="DeveloperFrame_OnDragStart"/> -->
+			<!-- <OnDragStop function="DeveloperFrame_OnDragStop"/> -->
+			<!-- <OnUpdate function="DeveloperFrame_OnUpdate"/> -->
+		</Scripts>
+	</Frame>
+</Ui>
