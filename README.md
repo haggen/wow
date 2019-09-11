@@ -1,4 +1,4 @@
-<p align="center"><img src="wow.png" height="250" width="300"></p>
+<p align="center"><img src="wow.jpg" width="600" height="300"></p>
 <p align="center">Repository of all my World of Warcraft add-ons. <a href="https://travis-ci.org/haggen/wow"><img src="https://travis-ci.org/haggen/wow.svg?branch=master" valign="middle"></a></p>
 
 ---
@@ -17,6 +17,13 @@ Add-ons compatible with retail version of WoW.
 
 - [Fastbind](/retail/Fastbind)
 - [Focused](/retail/Focused)
+
+## Development
+
+This is a monorepo, meaning there are multiple projects being tracked in the same repository. As such here are some guidelines to follow:
+
+- Avoid commiting multiple projects at the same time.
+- Release tags must specify which project they're refering to.
 
 ## Legal
 
