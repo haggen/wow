@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-set -eu
+set -euo pipefail
 
-if test -z "$1"; then
+if test -z "$*"; then
     echo "Missing argument, e.g. $0 classic/Fastbind" >&2
     exit 1
 fi
@@ -14,7 +14,14 @@ fi
 
 platform="$(dirname "$1")"
 name="$(basename "$1")"
-version="$(grep -Po "Version: \K.+" "$platform/$name/$name.toc")"
+toc="$platform/$name/$name.toc"
+version="$(grep -Po "Version: \K.+" "$toc")"
+
+if ! test -f "$toc"; then
+    echo "$toc is not a file" >&2
+    exit 1
+fi
+
 tag="$platform/$name/$version"
 
 if git tag "$tag" > /dev/null 2>&1; then

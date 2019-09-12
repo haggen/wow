@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eu
+set -euo pipefail
 
 if test -z "$*"; then
     $0 classic retail
@@ -8,21 +8,29 @@ if test -z "$*"; then
 fi
 
 test-lua() {
-    luacheck --no-global --no-max-line-length "$1" || echo
+    luacheck --no-global --no-max-line-length "$1"
 }
 
 test-xml() {
-    xmllint --schema UI.xsd $(find $1 -name '*.xml') --noout || echo 
+    xmllint --schema UI.xsd $(find "$1" -name '*.xml') --noout
 }
 
-for argument in "$@"; do
-    target="$(realpath $argument)"
+failed=0
 
-    if ! test -d "$target"; then
-        echo "$target is not a directory." >&2
+for argument in "$@"; do
+    subject="$(realpath $argument)"
+
+    if ! test -d "$subject"; then
+        echo "$subject is not a directory." >&2
         exit 1
     fi
 
-    test-xml "$target"
-    test-lua "$target"
+    if ! test-xml "$subject"; then
+        failed=1
+    fi
+    if ! test-lua "$subject"; then
+        failed=1
+    fi
 done
+
+exit $failed

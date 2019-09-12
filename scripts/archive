@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-set -eu
+set -euo pipefail
 
-if test -z "$1"; then
+if test -z "$*"; then
     echo "Missing argument, e.g. $0 classic/Fastbind/1.0.0" >&2
     exit 1
 fi
 
 if ! git rev-parse "$1" >/dev/null 2>&1; then
-    echo "$1 is not an existing tag." >&2
+    echo "$1 is not an existing tag" >&2
     exit 1
 fi
 
@@ -17,6 +17,8 @@ platform="$(echo "$tag" | cut -f1 -d/)"
 name="$(echo "$tag" | cut -f2 -d/)"
 version="$(echo "$tag" | cut -f3 -d/)"
 archive="$name-$version-$platform.zip"
+
+export RELEASE="$name $version-$platform"
 
 mkdir -p dist
 git archive --format=zip -o "dist/$archive" --prefix="$name/" "$tag":"$platform/$name/"
