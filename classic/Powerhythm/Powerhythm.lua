@@ -1,4 +1,4 @@
--- Powerythm
+-- Powerhythm
 -- The MIT License © 2019 Arthur Corenzan
 
 UIParentLoadAddOn("Blizzard_DebugTools");
@@ -22,19 +22,19 @@ local function UpdatePower()
 	power.value = value;
 
 	if (power.delta < 0) then
-		PowerythmFrameTexture.color = {1.0, 0.5, 0.0, 1.0};
+		PowerhythmFrameTexture.color = {1.0, 0.5, 0.0, 1.0};
 	elseif (power.delta > 0) then
 		if (power.type == "MANA") then
-			PowerythmFrameTexture.color = {0.0, 0.0, 1.0, 1.0};
+			PowerhythmFrameTexture.color = {0.0, 0.0, 1.0, 1.0};
 		elseif (power.type == "ENERGY") then
-			PowerythmFrameTexture.color = {1.0, 1.0, 0.0, 1.0};
+			PowerhythmFrameTexture.color = {1.0, 1.0, 0.0, 1.0};
 		else
-			PowerythmFrameTexture.color = {0.5, 0.5, 0.5, 1.0};
+			PowerhythmFrameTexture.color = {0.5, 0.5, 0.5, 1.0};
 		end
 	end
 end
 
-function PowerythmFrame_OnLoad(self)
+function PowerhythmFrame_OnLoad(self)
 	self:RegisterEvent("PLAYER_ENTERING_WORLD");
 	self:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
 	self:RegisterEvent("UNIT_POWER_UPDATE");
@@ -44,10 +44,10 @@ function PowerythmFrame_OnLoad(self)
 
 	self:RegisterForDrag("LeftButton");
 
-	PowerythmFrameTexture.color = {0.0, 0.0, 0.0, 0.0};
+	PowerhythmFrameTexture.color = {0.0, 0.0, 0.0, 0.0};
 end
 
-function PowerythmFrame_OnEvent(self, event, ...)
+function PowerhythmFrame_OnEvent(self, event, ...)
 	if (event == "PLAYER_ENTERING_WORLD") then
 		UpdatePower();
 	elseif (event == "UPDATE_SHAPESHIFT_FORM") then
@@ -60,23 +60,23 @@ function PowerythmFrame_OnEvent(self, event, ...)
 	end
 end
 
-function PowerythmFrame_OnDragStart(self)
+function PowerhythmFrame_OnDragStart(self)
 	if (not self.isLocked) then
 		self:StartMoving()
 	end
 end
 
-function PowerythmFrame_OnDragStop(self)
+function PowerhythmFrame_OnDragStop(self)
 	self:StopMovingOrSizing()
 end
 
 local step = 0.001;
 
-function PowerythmFrame_OnUpdate(self, elapsed)
-	PowerythmFrameTexture:SetColorTexture(unpack(PowerythmFrameTexture.color));
+function PowerhythmFrame_OnUpdate(self, elapsed)
+	PowerhythmFrameTexture:SetColorTexture(unpack(PowerhythmFrameTexture.color));
 
-	local r, g, b, a = unpack(PowerythmFrameTexture.color);
-	PowerythmFrameTexture.color = {
+	local r, g, b, a = unpack(PowerhythmFrameTexture.color);
+	PowerhythmFrameTexture.color = {
 		r * 0.995,
 		g * 0.995,
 		b * 0.995,

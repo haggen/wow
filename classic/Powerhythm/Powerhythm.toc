@@ -1,6 +1,6 @@
 ## Interface: 11302
 ## Version: 0.0.0
-## Title: Powerythm
+## Title: Powerhythm
 ## Notes: Track your mana, energy, rage, etc. with a rythmic sound.
 ## DefaultState: enabled
-Powerythm.xml
+Powerhythm.xml
