@@ -1,0 +1,144 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
+	<Script file="Data/Textures.lua"/>
+	<Script file="Texturer.lua"/>
+
+	<Button name="TexturerButtonTemplate" registerForClicks="LeftButtonDown" virtual="true" mixin="TexturerButtonMixin">
+		<Size x="535" y="20"/>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString parentKey="Path" inherits="ChatFontNormal" justifyH="LEFT" wordwrap="false">
+					<Size x="500"/>
+					<Anchors>
+						<Anchor point="LEFT" x="5"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnEnter method="OnEnter"/>
+			<OnLeave method="OnLeave"/>
+			<OnClick method="OnClick"/>
+		</Scripts>
+		<HighlightTexture file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar" alphaMode="ADD" setAllPoints="true"/>
+	</Button>
+
+	<Frame name="Texturer" toplevel="true" parent="UIParent" mixin="TexturerMixin">
+		<Size x="590" y="510"/>
+		<Anchors>
+			<Anchor point="RIGHT" relativePoint="CENTER"/>
+		</Anchors>
+		<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+			<Color r="0.0" g="0.0" b="0.0" a="0.9"/>
+			<BorderColor r="0.5" g="0.5" b="0.5" a="1"/>
+			<EdgeSize>
+				<AbsValue val="16"/>
+			</EdgeSize>
+			<TileSize>
+				<AbsValue val="16"/>
+			</TileSize>
+			<BackgroundInsets>
+				<AbsInset left="3" right="3" top="3" bottom="3"/>
+			</BackgroundInsets>
+		</Backdrop>
+		<Frames>
+			<EditBox name="$parentEditBox" autoFocus="false">
+				<Size x="547" y="20"/>
+				<Anchors>
+					<Anchor point="TOPLEFT" x="20" y="-20"/>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture setAllPoints="true">
+							<Color r="0.5" g="0.5" b="0.5" a="0.5"/>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnEscapePressed>
+						self:ClearFocus();
+					</OnEscapePressed>
+					<OnTextChanged>
+						local parent = self:GetParent();
+						parent:FilterTextureData(self:GetText());
+						parent:Update();
+					</OnTextChanged>
+					<OnArrowPressed>
+						local parent = self:GetParent();
+						if (key == "UP") then
+							parent:SelectPreviousTexture();
+						else
+							parent:SelectNextTexture();
+						end
+						parent:Update();
+						PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON);
+					</OnArrowPressed>
+				</Scripts>
+				<FontString inherits="ChatFontNormal"/>
+			</EditBox>
+			<ScrollFrame parentKey="ScrollFrame" inherits="HybridScrollFrameTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="TexturerEditBox" x="0" y="-30"/>
+					<Anchor point="BOTTOMRIGHT" x="-20" y="20"/>
+				</Anchors>
+				<Frames>
+					<Slider parentKey="scrollBar" inherits="HybridScrollBarTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="-23" y="-15"/>
+							<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="-23" y="15"/>
+						</Anchors>
+					</Slider>
+				</Frames>
+				<Scripts>
+					<OnLoad>
+						self:HookScript("OnMouseWheel", function()
+							local frame = GetMouseFocus();
+							if (frame:GetParent() == self.scrollChild) then
+								local script = frame:GetScript("OnEnter");
+								if (script) then
+									script(frame);
+								end
+							end
+						end);
+					</OnLoad>
+				</Scripts>
+			</ScrollFrame>
+			<Frame parentKey="Preview" mixin="TexturerPreviewMixin">
+				<Size x="700" y="700"/>
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT"/>
+				</Anchors>
+				<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+					<Color r="0.0" g="0.0" b="0.0" a="0.9"/>
+					<BorderColor r="0.5" g="0.5" b="0.5" a="1"/>
+					<EdgeSize>
+						<AbsValue val="16"/>
+					</EdgeSize>
+					<TileSize>
+						<AbsValue val="16"/>
+					</TileSize>
+					<BackgroundInsets>
+						<AbsInset left="3" right="3" top="3" bottom="3"/>
+					</BackgroundInsets>
+				</Backdrop>
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture parentKey="Texture">
+							<Anchors>
+								<Anchor point="CENTER"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad method="OnLoad"/>
+					<OnUpdate method="OnUpdate"/>
+				</Scripts>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnShow method="OnShow"/>
+		</Scripts>
+	</Frame>
+</Ui>
