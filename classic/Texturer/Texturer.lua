@@ -58,6 +58,7 @@ function TexturerButtonMixin:Update()
 end
 
 function TexturerButtonMixin:OnEnter()
+	local _ = self;
 end
 
 function TexturerButtonMixin:OnClick()
@@ -67,6 +68,7 @@ function TexturerButtonMixin:OnClick()
 end
 
 function TexturerButtonMixin:OnLeave()
+	local _ = self;
 end
 
 --
