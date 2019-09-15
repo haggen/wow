@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if test -z "$*"; then
+    echo "Missing argument. e.g. $0 classic/Fastbind" >&2
+    exit 1
+fi
+
+for argument in "$@"; do
+    subject="$(realpath $argument)"
+
+    if ! test -d "$subject"; then
+        echo "$subject is not a directory." >&2
+        exit 1
+    fi
+
+    luacheck --no-global --no-max-line-length "$1"
+done

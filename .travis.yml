@@ -10,7 +10,8 @@ before_install:
 install:
   - luarocks install luacheck
 script:
-  - scripts/test "${TRAVIS_TAG%/*}"
+  - scripts/validate-lua "${TRAVIS_TAG%/*}"
+  - scripts/validate-xml "${TRAVIS_TAG%/*}"
 before_deploy:
   - scripts/archive "${TRAVIS_TAG}"
 deploy:
