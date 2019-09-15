@@ -10,8 +10,9 @@ before_install:
 install:
   - luarocks install luacheck
 script:
-  - scripts/validate-lua "${TRAVIS_TAG%/*}"
-  - scripts/validate-xml "${TRAVIS_TAG%/*}"
+  - export TARGET="${TRAVIS_TAG%/*}"
+  - scripts/validate-lua ${TARGET:-classic retail}
+  - scripts/validate-xml ${TARGET:-classic retail}
 before_deploy:
   - scripts/archive "${TRAVIS_TAG}"
 deploy:
