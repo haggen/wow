@@ -3,10 +3,6 @@
 
 UIParentLoadAddOn("Blizzard_DebugTools");
 
-local function d(...)
-	print(string.format("[%d]", GetTime()), ...);
-end
-
 local power = {
 	type = "",
 	value = 0,
@@ -14,7 +10,7 @@ local power = {
 	delta = 0,
 };
 
-local function UpdatePower() 
+local function UpdatePower()
 	_, power.type = UnitPowerType("player");
 	local value = UnitPower("player");
 	power.max = UnitPowerMax("player");
@@ -34,7 +30,7 @@ local function UpdatePower()
 	end
 end
 
-function PowerhythmFrame_OnLoad(self)
+function PowerhythmFrame_OnLoad()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD");
 	self:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
 	self:RegisterEvent("UNIT_POWER_UPDATE");
@@ -47,16 +43,16 @@ function PowerhythmFrame_OnLoad(self)
 	PowerhythmFrameTexture.color = {0.0, 0.0, 0.0, 0.0};
 end
 
-function PowerhythmFrame_OnEvent(self, event, ...)
+function PowerhythmFrame_OnEvent(_, event)
 	if (event == "PLAYER_ENTERING_WORLD") then
 		UpdatePower();
 	elseif (event == "UPDATE_SHAPESHIFT_FORM") then
 		UpdatePower();
 	elseif (event == "UNIT_POWER_UPDATE") then
 		UpdatePower();
-	elseif (event == "UNIT_POWER_FREQUENT") then
-	elseif (event == "PLAYER_REGEN_ENABLED") then
-	elseif (event == "PLAYER_REGEN_DISABLED") then
+	-- elseif (event == "UNIT_POWER_FREQUENT") then
+	-- elseif (event == "PLAYER_REGEN_ENABLED") then
+	-- elseif (event == "PLAYER_REGEN_DISABLED") then
 	end
 end
 
@@ -70,9 +66,9 @@ function PowerhythmFrame_OnDragStop(self)
 	self:StopMovingOrSizing()
 end
 
-local step = 0.001;
+-- local step = 0.001;
 
-function PowerhythmFrame_OnUpdate(self, elapsed)
+function PowerhythmFrame_OnUpdate()
 	PowerhythmFrameTexture:SetColorTexture(unpack(PowerhythmFrameTexture.color));
 
 	local r, g, b, a = unpack(PowerhythmFrameTexture.color);

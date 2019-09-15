@@ -1,10 +1,10 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+<Ui xmlns="http://www.blizzard.com/wow/ui/" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 	<Script file="Powerhythm.lua"/>
 	<Frame name="PowerhythmFrame" parent="UIParent" enableMouse="true" movable="true" hidden="false">
 		<Size x="32" y="32"/>
 		<Anchors>
-		   <!-- <Anchor point="LEFT" relativeTo="PlayerFrame" relativePoint="RIGHT" x="-3"/> -->
-		   <Anchor point="CENTER"/> -->
+			<Anchor point="CENTER"/>
 		</Anchors>
 		<Layers>
 			<Layer level="ARTWORK">
