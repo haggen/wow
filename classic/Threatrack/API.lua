@@ -14,16 +14,20 @@ local function CallPlayerPresenceHandlers()
 	end
 end
 
-local function RefreshPlayerPresence(data)
-	data.lastSeen = GetTime();
+local function RefreshPlayerPresence(oldData, newData)
+	for key, value in pairs(newData) do
+		oldData[key] = newData[key];
+	end
 end
 
+-- TODO: This table only grows, and it's looped over every time
+-- player presence data is requested so we should fix it, eventually.
 local playerPresenceData = {};
 
 local function RegisterPlayerPresence(data)
 	for i = 1, #playerPresenceData do
 		if (data.name == playerPresenceData[i].name) then
-			RefreshPlayerPresence(playerPresenceData[i]);
+			RefreshPlayerPresence(playerPresenceData[i], data);
 			return;
 		end
 	end
