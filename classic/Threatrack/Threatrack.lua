@@ -52,7 +52,7 @@ function ThreatrackPortrait:OnLoad()
 end
 
 function ThreatrackPortrait:OnUpdate()
-    if (self:IsShown() and Threatrack_IsDetectionStale(self.data)) then
+    if (self:IsShown() and Threatrack_IsPlayerPresenceStale(self.data)) then
         Threatrack:Update();
     end
 end
@@ -65,24 +65,24 @@ local PORTRAIT_GUTTER = 8;
 
 Threatrack = {};
 
-local function SortDetectionData(a, b)
+local function SortPlayerPresenceData(a, b)
     return a.class < b.class;
 end
 
-function Threatrack:GetDetectionData()
-    local sortedDetectionData = Threatrack_GetDetectionData();
-    table.sort(sortedDetectionData, SortDetectionData);
-    return sortedDetectionData;
+function Threatrack:GetPlayerPresenceData()
+    local sortedPlayerPresenceData = Threatrack_GetPlayerPresenceData();
+    table.sort(sortedPlayerPresenceData, SortPlayerPresenceData);
+    return sortedPlayerPresenceData;
 end
 
 function Threatrack:Update()
-    local detectionData = self:GetDetectionData();
+    local playerPresenceData = self:GetPlayerPresenceData();
 
     self:SetWidth(0);
 
     for i = 1, #self.portraits do
         local portrait = self.portraits[i];
-        local data = detectionData[i];
+        local data = playerPresenceData[i];
 
         portrait:ClearAllPoints();
         portrait:Hide();
@@ -105,7 +105,7 @@ end
 function Threatrack:OnLoad()
     Threatrack = self;
 
-    Threatrack_HandleDetection(function()
+    Threatrack_HandlePlayerPresence(function()
         self:Update();
     end);
 end

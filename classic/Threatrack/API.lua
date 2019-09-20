@@ -2,46 +2,46 @@
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
-local detectionHandlers = {};
+local playerPresenceHandlers = {};
 
-local function HandleDetection(callback)
-	table.insert(detectionHandlers, callback);
+local function HandlePlayerPresence(callback)
+	table.insert(playerPresenceHandlers, callback);
 end
 
-local function CallHandlers()
-	for i = 1, #detectionHandlers do
-		detectionHandlers[i]();
+local function CallPlayerPresenceHandlers()
+	for i = 1, #playerPresenceHandlers do
+		playerPresenceHandlers[i]();
 	end
 end
 
-local function RefreshDetection(data)
+local function RefreshPlayerPresence(data)
 	data.lastSeen = GetTime();
 end
 
-local detectionData = {};
+local playerPresenceData = {};
 
-local function RegisterDetection(data)
-	for i = 1, #detectionData do
-		if (data.name == detectionData[i].name) then
-			RefreshDetection(detectionData[i]);
+local function RegisterPlayerPresence(data)
+	for i = 1, #playerPresenceData do
+		if (data.name == playerPresenceData[i].name) then
+			RefreshPlayerPresence(playerPresenceData[i]);
 			return;
 		end
 	end
-	table.insert(detectionData, data);
+	table.insert(playerPresenceData, data);
 end
 
-local function IsDetectionStale(data)
+local function IsPlayerPresenceStale(data)
 	return GetTime() - data.lastSeen > 10;
 end
 
-local function GetDetectionData()
-	local freshDetectionData = {};
-	for i = 1, #detectionData do
-		if (not IsDetectionStale(detectionData[i])) then
-			table.insert(freshDetectionData, detectionData[i]);
+local function GetPlayerPresenceData()
+	local freshPlayerPresenceData = {};
+	for i = 1, #playerPresenceData do
+		if (not IsPlayerPresenceStale(playerPresenceData[i])) then
+			table.insert(freshPlayerPresenceData, playerPresenceData[i]);
 		end
 	end
-	return freshDetectionData;
+	return freshPlayerPresenceData;
 end
 
 --
@@ -52,7 +52,7 @@ local frame = CreateFrame("FRAME");
 
 frame:RegisterEvent("UPDATE_MOUSEOVER_UNIT");
 
-local function CreateDetectionData(unit)
+local function CreatePlayerPresenceData(unit)
 	local data = {
 		lastSeen = GetTime(),
 		name = GetUnitName(unit),
@@ -66,9 +66,9 @@ end
 local function OnEvent(self, event, ...)
 	if (event == "UPDATE_MOUSEOVER_UNIT") then
 		if UnitIsPlayer("mouseover") then
-			local data = CreateDetectionData("mouseover");
-			RegisterDetection(data);
-			CallHandlers();
+			local data = CreatePlayerPresenceData("mouseover");
+			RegisterPlayerPresence(data);
+			CallPlayerPresenceHandlers();
 		end
 	end
 end
@@ -78,7 +78,7 @@ frame:SetScript("OnEvent", OnEvent);
 --
 --
 
-Threatrack_GetDetectionData = GetDetectionData;
-Threatrack_HandleDetection = HandleDetection;
-Threatrack_IsDetectionStale = IsDetectionStale;
+Threatrack_GetPlayerPresenceData = GetPlayerPresenceData;
+Threatrack_HandlePlayerPresence = HandlePlayerPresence;
+Threatrack_IsPlayerPresenceStale = IsPlayerPresenceStale;
 
