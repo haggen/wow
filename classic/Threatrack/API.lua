@@ -63,6 +63,8 @@ local function CreatePlayerPresenceData(unit)
 		class = select(2, UnitClass(unit)),
 		race = string.upper(select(2, UnitRace(unit))),
 		level = UnitLevel(unit),
+		sex = UnitSex(unit),
+		isEnemy = UnitIsEnemy(unit)
 	};
 	return data;
 end
