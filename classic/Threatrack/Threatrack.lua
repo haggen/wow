@@ -12,7 +12,7 @@ UIParentLoadAddOn("Blizzard_DebugTools");
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
-local RACE_TEXTURE_COORDS = {
+local textureCoordsForRace = {
     TAUREN = {0, 0.125, 0.25, 0.5},
     SCOURGE = {0.125, 0.25, 0.25, 0.5},
     TROLL = {0.25, 0.375, 0.25, 0.5},
@@ -23,7 +23,7 @@ local RACE_TEXTURE_COORDS = {
     NIGHTELF = {0.375, 0.5, 0, 0.25},
 };
 
-local CLASS_TEXTURE_COORDS = {
+local textureCoordsForClass = {
     WARRIOR = {0, 0.25, 0, 0.25},
     MAGE = {0.25, 0.5, 0, 0.25},
     ROGUE = {0.5, 0.75, 0, 0.25},
@@ -44,8 +44,8 @@ ThreatrackPortrait = {};
 function ThreatrackPortrait:Update(data)
     self.data = data;
     self.Level:SetText(data.level);
-    -- self.Race:SetTexCoord(unpack(RACE_TEXTURE_COORDS[data.race]));
-    self.Class:SetTexCoord(unpack(CLASS_TEXTURE_COORDS[data.class]));
+    -- self.Race:SetTexCoord(unpack(textureCoordsForRace[data.race]));
+    self.Class:SetTexCoord(unpack(textureCoordsForClass[data.class]));
 end
 
 function ThreatrackPortrait:OnLoad()
