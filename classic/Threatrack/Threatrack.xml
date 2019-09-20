@@ -7,26 +7,32 @@
         <Size x="64" y="64"/>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture parentKey="Class" file="Interface/TargetingFrame/UI-Classes-Circles">
+                <Texture parentKey="Class" file="Interface/TargetingFrame/UI-Classes-Circles" setAllPoints="true">
                     <TexCoords left="0" right="0.125" top="0" bottom="0.25"/>
                 </Texture>
             </Layer>
             <Layer level="BORDER">
-                <Texture parentKey="Race" file="Interface/Glues/CharacterCreate/UI-CharacterCreate-RacesRound" setAllPoints="true">
-                    <Size x="32" y="32"/>
-                    <Anchors>
-                        <Anchor point="TOPRIGHT" x="4"/>
-                    </Anchors>
-                    <TexCoords left="0" right="0.25" top="0" bottom="0.25"/>
-                </Texture>
-                <Texture file="Interface/UnitPowerBarAlt/Generic1Player_Circular_Fill" alphaMode="BLEND">
+                <!-- <Texture parentKey="Race" file="Interface/Glues/CharacterCreate/UI-CharacterCreate-RacesRound">
                     <Size x="24" y="24"/>
                     <Anchors>
-                        <Anchor point="BOTTOMRIGHT" x="0"/>
+                        <Anchor point="TOPRIGHT"/>
+                    </Anchors>
+                    <TexCoords left="0" right="0.25" top="0" bottom="0.25"/>
+                </Texture> -->
+                <Texture file="Interface/Common/Portrait-Ring-WithBg">
+                    <Size x="48" y="48"/>
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" x="12" y="-12"/>
+                    </Anchors>
+                </Texture>
+                <!-- <Texture file="Interface/UnitPowerBarAlt/Generic1Player_Circular_Fill" alphaMode="BLEND">
+                    <Size x="24" y="24"/>
+                    <Anchors>
+                        <Anchor point="CENTER" relativePoint="BOTTOMRIGHT"/>
                     </Anchors>
                     <Color r="0.0" g="0.0" b="0.0" a="0.75"/>
                     <TexCoords left="0.23" right="0.77" top="0.23" bottom="0.77"/>
-                </Texture>
+                </Texture> -->
             </Layer>
             <Layer level="ARTWORK">
                 <!-- <Texture file="Interface/UnitPowerBarAlt/Generic1Target_Circular_Frame">
@@ -38,13 +44,13 @@
                 <FontString parentKey="Level" inherits="GameNormalNumberFont" justifyH="CENTER" justifyV="CENTER">
                     <Size x="24" y="24"/>
                     <Anchors>
-                        <Anchor point="BOTTOMRIGHT" x="0"/>
+                        <Anchor point="BOTTOMRIGHT" />
                     </Anchors>
                 </FontString>
             </Layer>
             <Layer level="OVERLAY">
                 <Texture setAllPoints="true">
-                    <!-- <Color r="1.0" g="0.0" b="0.5" a="0.125"/> -->
+                    <!-- <Color r="1.0" g="0.0" b="1.0" a="0.125"/> -->
                 </Texture>
             </Layer>
         </Layers>
@@ -60,16 +66,16 @@
             <Anchor point="TOP" y="-25"/>
         </Anchors>
         <Frames>
-            <Frame parentArray="portraits" inherits="ThreatrackPortraitTemplate" />
-            <Frame parentArray="portraits" inherits="ThreatrackPortraitTemplate" />
-            <Frame parentArray="portraits" inherits="ThreatrackPortraitTemplate" />
-            <Frame parentArray="portraits" inherits="ThreatrackPortraitTemplate" />
-            <Frame parentArray="portraits" inherits="ThreatrackPortraitTemplate" />
-            <Frame parentArray="portraits" inherits="ThreatrackPortraitTemplate" />
-            <Frame parentArray="portraits" inherits="ThreatrackPortraitTemplate" />
-            <Frame parentArray="portraits" inherits="ThreatrackPortraitTemplate" />
-            <Frame parentArray="portraits" inherits="ThreatrackPortraitTemplate" />
-            <Frame parentArray="portraits" inherits="ThreatrackPortraitTemplate" />
+            <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
+            <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
+            <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
+            <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
+            <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
+            <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
+            <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
+            <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
+            <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
+            <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
         </Frames>
         <Scripts>
             <OnLoad method="OnLoad"/>

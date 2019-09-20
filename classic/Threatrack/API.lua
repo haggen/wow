@@ -18,30 +18,30 @@ local function RefreshDetection(data)
 	data.lastSeen = GetTime();
 end
 
-local detectedPlayers = {};
+local detectionData = {};
 
 local function RegisterDetection(data)
-	for i = 1, #detectedPlayers do
-		if (data.name == detectedPlayers[i]) then
-			RefreshDetection(detectedPlayers[i], data);
+	for i = 1, #detectionData do
+		if (data.name == detectionData[i].name) then
+			RefreshDetection(detectionData[i]);
 			return;
 		end
 	end
-	table.insert(detectedPlayers, data);
-	CallHandlers();
+	table.insert(detectionData, data);
 end
+
 local function IsDetectionStale(data)
 	return GetTime() - data.lastSeen > 10;
 end
 
-local function GetDetectedPlayers()
-	local recentlyDetectedPlayers = {};
-	for i = 1, #detectedPlayers do
-		if (not IsDetectionStale(detectedPlayers[i])) then
-			table.insert(recentlyDetectedPlayers, detectedPlayers[i]);
+local function GetDetectionData()
+	local freshDetectionData = {};
+	for i = 1, #detectionData do
+		if (not IsDetectionStale(detectionData[i])) then
+			table.insert(freshDetectionData, detectionData[i]);
 		end
 	end
-	return detectedPlayers;
+	return freshDetectionData;
 end
 
 --
@@ -52,7 +52,7 @@ local frame = CreateFrame("FRAME");
 
 frame:RegisterEvent("UPDATE_MOUSEOVER_UNIT");
 
-local function CreatePlayerData(unit)
+local function CreateDetectionData(unit)
 	local data = {
 		lastSeen = GetTime(),
 		name = GetUnitName(unit),
@@ -66,8 +66,9 @@ end
 local function OnEvent(self, event, ...)
 	if (event == "UPDATE_MOUSEOVER_UNIT") then
 		if UnitIsPlayer("mouseover") then
-			local data = CreatePlayerData("mouseover");
+			local data = CreateDetectionData("mouseover");
 			RegisterDetection(data);
+			CallHandlers();
 		end
 	end
 end
@@ -77,7 +78,7 @@ frame:SetScript("OnEvent", OnEvent);
 --
 --
 
-Threatrack_GetDetectedPlayers = GetDetectedPlayers;
+Threatrack_GetDetectionData = GetDetectionData;
 Threatrack_HandleDetection = HandleDetection;
 Threatrack_IsDetectionStale = IsDetectionStale;
 

@@ -42,8 +42,9 @@ local CLASS_TEXTURE_COORDS = {
 ThreatrackPortrait = {};
 
 function ThreatrackPortrait:Update(data)
+    self.data = data;
     self.Level:SetText(data.level);
-    self.Race:SetTexCoord(unpack(RACE_TEXTURE_COORDS[data.race]));
+    -- self.Race:SetTexCoord(unpack(RACE_TEXTURE_COORDS[data.race]));
     self.Class:SetTexCoord(unpack(CLASS_TEXTURE_COORDS[data.class]));
 end
 
@@ -51,6 +52,9 @@ function ThreatrackPortrait:OnLoad()
 end
 
 function ThreatrackPortrait:OnUpdate()
+    if (self:IsShown() and Threatrack_IsDetectionStale(self.data)) then
+        Threatrack:Update();
+    end
 end
 
 --
@@ -61,19 +65,31 @@ local PORTRAIT_GUTTER = 8;
 
 Threatrack = {};
 
+local function SortDetectionData(a, b)
+    return a.class < b.class;
+end
+
+function Threatrack:GetDetectionData()
+    local sortedDetectionData = Threatrack_GetDetectionData();
+    table.sort(sortedDetectionData, SortDetectionData);
+    return sortedDetectionData;
+end
+
 function Threatrack:Update()
-    local detectedPlayers = Threatrack_GetDetectedPlayers();
+    local detectionData = self:GetDetectionData();
 
     self:SetWidth(0);
 
     for i = 1, #self.portraits do
         local portrait = self.portraits[i];
-        local data = detectedPlayers[i];
+        local data = detectionData[i];
 
         portrait:ClearAllPoints();
+        portrait:Hide();
 
         if data then
             portrait:Update(data);
+            portrait:Show();
 
             if (i > 1) then
                 portrait:SetPoint("LEFT", self.portraits[i - 1], "RIGHT", PORTRAIT_GUTTER, 0);
