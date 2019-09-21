@@ -15,5 +15,5 @@ for argument in "$@"; do
         exit 1
     fi
 
-    luacheck --no-global --no-max-line-length "$1"
+    luacheck "$1"
 done
