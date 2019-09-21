@@ -12,28 +12,32 @@ UIParentLoadAddOn("Blizzard_DebugTools");
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
-local textureCoordsForRace = {
-    TAUREN = {0, 0.125, 0.25, 0.5},
-    SCOURGE = {0.125, 0.25, 0.25, 0.5},
-    TROLL = {0.25, 0.375, 0.25, 0.5},
-    ORC = {0.375, 0.5, 0.25, 0.5},
-    HUMAN = {0, 0.125, 0, 0.25},
-    DWARF = {0.125, 0.25, 0, 0.25},
-    GNOME = {0.25, 0.375, 0, 0.25},
-    NIGHTELF = {0.375, 0.5, 0, 0.25},
-};
+-- local textureCoordsForRace = {
+--     tauren = {0, 0.125, 0.25, 0.5},
+--     scourge = {0.125, 0.25, 0.25, 0.5},
+--     troll = {0.25, 0.375, 0.25, 0.5},
+--     orc = {0.375, 0.5, 0.25, 0.5},
+--     human = {0, 0.125, 0, 0.25},
+--     dwarf = {0.125, 0.25, 0, 0.25},
+--     gnome = {0.25, 0.375, 0, 0.25},
+--     nightelf = {0.375, 0.5, 0, 0.25},
+-- };
 
 local textureCoordsForClass = {
-    WARRIOR = {0, 0.25, 0, 0.25},
-    MAGE = {0.25, 0.5, 0, 0.25},
-    ROGUE = {0.5, 0.75, 0, 0.25},
-    DRUID = {0.75, 1, 0, 0.25},
-    HUNTER = {0, 0.25, 0.25, 0.5},
-    SHAMAN = {0.25, 0.5, 0.25, 0.5},
-    PRIEST = {0.5, 0.75, 0.25, 0.5},
-    WARLOCK = {0.75, 1, 0.25, 0.5},
-    PALADIN = {0, 0.25, 0.5, 0.75},
+    warrior = {0, 0.25, 0, 0.25},
+    mage = {0.25, 0.5, 0, 0.25},
+    rogue = {0.5, 0.75, 0, 0.25},
+    druid = {0.75, 1, 0, 0.25},
+    hunter = {0, 0.25, 0.25, 0.5},
+    shaman = {0.25, 0.5, 0.25, 0.5},
+    priest = {0.5, 0.75, 0.25, 0.5},
+    warlock = {0.75, 1, 0.25, 0.5},
+    paladin = {0, 0.25, 0.5, 0.75},
 };
+
+local textureClasses = "Interface/TargetingFrame/UI-Classes-Circles";
+local textureUnkown = "Interface/TutorialFrame/UI-Help-Portrait";
+-- local textureRaces = "Interface/Glues/CharacterCreate/UI-CharacterCreate-RacesRound";
 
 --
 --
@@ -43,12 +47,41 @@ ThreatrackPortrait = {};
 
 function ThreatrackPortrait:Update(data)
     self.data = data;
-    self.Level:SetText(data.level);
-    -- self.Race:SetTexCoord(unpack(textureCoordsForRace[data.race]));
-    self.Class:SetTexCoord(unpack(textureCoordsForClass[data.class]));
-end
 
-function ThreatrackPortrait:OnLoad()
+    if (data.level) then
+        if (data.level < 0) then
+            self.Level:Hide();
+            self.Skull:Show();
+        else
+            self.Skull:Hide();
+            self.Level:Show();
+            self.Level:SetText(data.level);
+        end
+    elseif (data.minLevel) then
+        self.Skull:Hide();
+        self.Level:Show();
+        self.Level:SetText(string.format("%d+", data.minLevel));
+    else
+        self.Skull:Hide();
+        self.Level:Show();
+        self.Level:SetText("?");
+    end
+
+    if (data.class) then
+        self.Class:SetTexture(textureClasses);
+        self.Class:SetTexCoord(unpack(textureCoordsForClass[data.class]));
+    else
+        self.Class:SetTexture(textureUnkown);
+        self.Class:SetTexCoord(0, 1, 0, 1);
+    end
+
+    -- if (data.race ~= "") then
+    --     self.Race:SetTexture(textureUnkown);
+    --     self.Race:SetTexCoord(0, 0, 0, 0);
+    -- else
+    --     self.Race:SetTexture(textureRaces);
+    --     self.Race:SetTexCoord(unpack(textureCoordsForRace[data.race]));
+    -- end
 end
 
 function ThreatrackPortrait:OnUpdate()
@@ -61,12 +94,17 @@ end
 --
 --
 
-local PORTRAIT_GUTTER = 8;
+local portraitGutter = 8;
 
 Threatrack = {};
 
 local function SortPlayerPresenceData(a, b)
-    return a.class < b.class;
+    if (a.class and b.class) then
+        return a.class < b.class;
+    elseif (a.class) then
+        return true;
+    end
+    return false;
 end
 
 function Threatrack:GetPlayerPresenceData()
@@ -92,8 +130,8 @@ function Threatrack:Update()
             portrait:Show();
 
             if (i > 1) then
-                portrait:SetPoint("LEFT", self.portraits[i - 1], "RIGHT", PORTRAIT_GUTTER, 0);
-                self:SetWidth(self:GetWidth() + PORTRAIT_GUTTER + portrait:GetWidth());
+                portrait:SetPoint("LEFT", self.portraits[i - 1], "RIGHT", portraitGutter, 0);
+                self:SetWidth(self:GetWidth() + portraitGutter + portrait:GetWidth());
             else
                 portrait:SetPoint("LEFT", self);
                 self:SetWidth(portrait:GetWidth());

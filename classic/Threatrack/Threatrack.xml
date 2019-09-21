@@ -1,5 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+    <Script file="Data.lua"/>
     <Script file="API.lua"/>
     <Script file="Threatrack.lua"/>
 
@@ -20,9 +21,9 @@
                     <TexCoords left="0" right="0.25" top="0" bottom="0.25"/>
                 </Texture> -->
                 <Texture file="Interface/Common/Portrait-Ring-WithBg">
-                    <Size x="48" y="48"/>
+                    <Size x="56" y="56"/>
                     <Anchors>
-                        <Anchor point="BOTTOMRIGHT" x="12" y="-12"/>
+                        <Anchor point="BOTTOMRIGHT" x="16" y="-16"/>
                     </Anchors>
                 </Texture>
                 <!-- <Texture file="Interface/UnitPowerBarAlt/Generic1Player_Circular_Fill" alphaMode="BLEND">
@@ -41,21 +42,26 @@
 						<Anchor point="BOTTOMRIGHT" x="8"/>
 					</Anchors>
 				</Texture> -->
-                <FontString parentKey="Level" inherits="GameNormalNumberFont" justifyH="CENTER" justifyV="CENTER">
+                <FontString parentKey="Level" inherits="GameNormalNumberFont" justifyH="CENTER" justifyV="MIDDLE">
                     <Size x="24" y="24"/>
                     <Anchors>
-                        <Anchor point="BOTTOMRIGHT" />
+                        <Anchor point="BOTTOMRIGHT"/>
                     </Anchors>
                 </FontString>
             </Layer>
             <Layer level="OVERLAY">
+                <Texture parentKey="Skull" file="Interface\TargetingFrame\UI-TargetingFrame-Skull">
+                    <Size x="16" y="16"/>
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" x="-4" y="4"/>
+                    </Anchors>
+                </Texture>
                 <Texture setAllPoints="true">
                     <!-- <Color r="1.0" g="0.0" b="1.0" a="0.125"/> -->
                 </Texture>
             </Layer>
         </Layers>
         <Scripts>
-            <OnLoad method="OnLoad"/>
             <OnUpdate method="OnUpdate"/>
         </Scripts>
     </Frame>
@@ -66,6 +72,8 @@
             <Anchor point="TOP" y="-25"/>
         </Anchors>
         <Frames>
+            <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
+            <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
             <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
             <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
             <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
