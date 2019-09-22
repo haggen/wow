@@ -60,11 +60,11 @@ function ThreatrackPortrait:Update(data)
     elseif (data.minLevel) then
         self.Skull:Hide();
         self.Level:Show();
-        self.Level:SetText(string.format("%d+", data.minLevel));
+        self.Level:SetText(string.format(" %d+", data.minLevel));
     else
         self.Skull:Hide();
         self.Level:Show();
-        self.Level:SetText("?");
+        self.Level:SetText("??");
     end
 
     if (data.class) then
@@ -85,7 +85,7 @@ function ThreatrackPortrait:Update(data)
 end
 
 function ThreatrackPortrait:OnUpdate()
-    if (self:IsShown() and Threatrack_IsPlayerPresenceStale(self.data)) then
+    if (self:IsShown() and Threatrack_IsPresenceStale(self.data)) then
         Threatrack:Update();
     end
 end
@@ -98,7 +98,7 @@ local portraitGutter = 8;
 
 Threatrack = {};
 
-local function SortPlayerPresenceData(a, b)
+local function SortPresenceData(a, b)
     if (a.class and b.class) then
         return a.class < b.class;
     elseif (a.class) then
@@ -107,14 +107,20 @@ local function SortPlayerPresenceData(a, b)
     return false;
 end
 
-function Threatrack:GetPlayerPresenceData()
-    local sortedPlayerPresenceData = Threatrack_GetPlayerPresenceData();
-    table.sort(sortedPlayerPresenceData, SortPlayerPresenceData);
-    return sortedPlayerPresenceData;
+function Threatrack:GetPresenceData()
+    local allPresenceData = Threatrack_GetPresenceData();
+    -- local hostilePresenceData = {};
+    -- for i = 1, #allPresenceData do
+    --     if (allPresenceData[i].reaction == "hostile") then
+    --         table.insert(hostilePresenceData, allPresenceData[i]);
+    --     end
+    -- end
+    table.sort(allPresenceData, SortPresenceData);
+    return allPresenceData;
 end
 
 function Threatrack:Update()
-    local playerPresenceData = self:GetPlayerPresenceData();
+    local playerPresenceData = self:GetPresenceData();
 
     self:SetWidth(0);
 
@@ -143,7 +149,7 @@ end
 function Threatrack:OnLoad()
     Threatrack = self;
 
-    Threatrack_HandlePlayerPresence(function()
+    Threatrack_HandlePresence(function()
         self:Update();
     end);
 end

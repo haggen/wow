@@ -6,21 +6,35 @@ local timeToStale = 20;
 
 local playerPresenceHandlers = {};
 
-local function HandlePlayerPresence(callback)
+local function HandlePresence(callback)
 	table.insert(playerPresenceHandlers, callback);
 end
 
-local function CallPlayerPresenceHandlers()
+local function CallPresenceHandlers()
 	for i = 1, #playerPresenceHandlers do
 		playerPresenceHandlers[i]();
 	end
 end
 
-local function RefreshPlayerPresence(oldData, newData)
+local function MergeDataValue(key, oldValue, newValue)
+	if (oldValue == nil) then
+		return newValue;
+	end
+
+	if (newValue == nil) then
+		return oldValue;
+	end
+
+	if (key == "minLevel") then
+		return math.max(newValue, oldValue);
+	end
+
+	return newValue;
+end
+
+local function RefreshPresence(oldData, newData)
 	for key, newValue in pairs(newData) do
-		if (newData[key] ~= nil) then
-			oldData[key] = newValue;
-		end
+		oldData[key] = MergeDataValue(key, oldData[key], newValue);
 	end
 end
 
@@ -28,28 +42,28 @@ end
 -- player presence data is requested so we should fix it, eventually.
 local playerPresenceData = {};
 
-local function RegisterPlayerPresence(data)
+local function RegisterPresence(data)
 	for i = 1, #playerPresenceData do
 		if (data.name == playerPresenceData[i].name) then
-			RefreshPlayerPresence(playerPresenceData[i], data);
+			RefreshPresence(playerPresenceData[i], data);
 			return;
 		end
 	end
 	table.insert(playerPresenceData, data);
 end
 
-local function IsPlayerPresenceStale(data)
+local function IsPresenceStale(data)
 	return GetTime() - data.lastSeen > timeToStale;
 end
 
-local function GetPlayerPresenceData()
-	local freshPlayerPresenceData = {};
+local function GetPresenceData()
+	local freshPresenceData = {};
 	for i = 1, #playerPresenceData do
-		if (not IsPlayerPresenceStale(playerPresenceData[i])) then
-			table.insert(freshPlayerPresenceData, playerPresenceData[i]);
+		if (not IsPresenceStale(playerPresenceData[i])) then
+			table.insert(freshPresenceData, playerPresenceData[i]);
 		end
 	end
-	return freshPlayerPresenceData;
+	return freshPresenceData;
 end
 
 --
@@ -134,14 +148,14 @@ local function OnEvent(_, event)
 	if (event == "PLAYER_TARGET_CHANGED") then
 		local data = CreateDataFromUnit("target");
 		if (data) then
-			RegisterPlayerPresence(data);
-			CallPlayerPresenceHandlers();
+			RegisterPresence(data);
+			CallPresenceHandlers();
 		end
 	elseif (event == "UPDATE_MOUSEOVER_UNIT") then
 		local data = CreateDataFromUnit("mouseover");
 		if (data) then
-			RegisterPlayerPresence(data);
-			CallPlayerPresenceHandlers();
+			RegisterPresence(data);
+			CallPresenceHandlers();
 		end
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
 		-- timestamp, event, hideCaster, sourceGuid, sourceName, sourceFlags, sourceRaidFlags,
@@ -150,16 +164,16 @@ local function OnEvent(_, event)
 
 		local sourceData = CreateDataFromCombatLog(info[5], info[6], info[13]);
 		if (sourceData) then
-			RegisterPlayerPresence(sourceData);
+			RegisterPresence(sourceData);
 		end
 
 		local targetData = CreateDataFromCombatLog(info[9], info[10], info[13]);
 		if (targetData) then
-			RegisterPlayerPresence(targetData);
+			RegisterPresence(targetData);
 		end
 
 		if (sourceData or targetData) then
-			CallPlayerPresenceHandlers();
+			CallPresenceHandlers();
 		end
 	end
 end
@@ -169,6 +183,6 @@ frame:SetScript("OnEvent", OnEvent);
 --
 --
 
-Threatrack_GetPlayerPresenceData = GetPlayerPresenceData;
-Threatrack_HandlePlayerPresence = HandlePlayerPresence;
-Threatrack_IsPlayerPresenceStale = IsPlayerPresenceStale;
+Threatrack_GetPresenceData = GetPresenceData;
+Threatrack_HandlePresence = HandlePresence;
+Threatrack_IsPresenceStale = IsPresenceStale;
