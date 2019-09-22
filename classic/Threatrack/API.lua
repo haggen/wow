@@ -2,65 +2,116 @@
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
-local timeToStale = 20;
+-- Constants.
+--
+local LAST_SEEN = "lastSeen";
+local NAME = "name";
+local RACE = "race";
+local CLASS = "class";
+local REACTION = "reaction";
+local LEVEL = "level";
+local ESTIMATED_LEVEL = "estimatedLevel";
 
-local playerPresenceHandlers = {};
+local UNKNOWN = "UNKNOWN";
+local HOSTILE = "HOSTILE";
+local FRIENDLY = "FRIENDLY";
 
-local function HandlePresence(callback)
-	table.insert(playerPresenceHandlers, callback);
+local FLAG_HOSTILE = COMBATLOG_OBJECT_REACTION_HOSTILE;
+local FLAG_FRIENDLY = COMBATLOG_OBJECT_REACTION_FRIENDLY;
+local FLAG_PLAYER = COMBATLOG_OBJECT_TYPE_PLAYER;
+
+-- Time in seconds after which the presence data becomes stale.
+--
+local FRESHNESS_THRESHOLD = 20;
+
+-- Registry of handler to new presence detections.
+--
+local newPresenceHandlers = {};
+
+-- Register new presence detection handler.
+--
+local function HandleNewPresence(handler)
+	table.insert(newPresenceHandlers, handler);
 end
 
-local function CallPresenceHandlers()
-	for i = 1, #playerPresenceHandlers do
-		playerPresenceHandlers[i]();
+-- Walk through the registry and fire new presence detection handlers.
+--
+local function CallNewPresenceHandlers()
+	for i = 1, #newPresenceHandlers do
+		newPresenceHandlers[i]();
 	end
 end
 
-local function MergeDataValue(key, oldValue, newValue)
-	if (oldValue == nil) then
-		return newValue;
-	end
+-- Create new presence data template.
+--
+local function CreatePresenceData()
+	return {
+		[LAST_SEEN]	= GetTime(),
+		[NAME] = "",
+		[RACE] = UNKNOWN,
+		[CLASS] = UNKNOWN,
+		[LEVEL] = 0,
+		[ESTIMATED_LEVEL] = 0,
+		[REACTION] = UNKNOWN,
+	};
+end
 
-	if (newValue == nil) then
-		return oldValue;
-	end
-
-	if (key == "minLevel") then
+-- Given old and new values, solve for which one should be honored.
+--
+local function MergePresenceDataValue(key, oldValue, newValue)
+	if (key == CLASS) or (key == RACE) or (key == REACTION) then
+		if (newValue == UNKNOWN) then
+			return oldValue;
+		else
+			return newValue;
+		end
+	elseif (key == LEVEL) or (key == ESTIMATED_LEVEL) then
 		return math.max(newValue, oldValue);
 	end
 
 	return newValue;
 end
 
-local function RefreshPresence(oldData, newData)
+-- Update existing presence data.
+--
+local function UpdatePresenceData(oldData, newData)
 	for key, newValue in pairs(newData) do
-		oldData[key] = MergeDataValue(key, oldData[key], newValue);
+		oldData[key] = MergePresenceDataValue(key, oldData[key], newValue);
 	end
 end
 
+-- Database of player presence detected data during the current session.
+--
 -- TODO: This table only grows, and it's looped over every time
 -- player presence data is requested so we should fix it, eventually.
-local playerPresenceData = {};
+--
+local allPresenceData = {};
 
-local function RegisterPresence(data)
-	for i = 1, #playerPresenceData do
-		if (data.name == playerPresenceData[i].name) then
-			RefreshPresence(playerPresenceData[i], data);
-			return;
+-- Register new presence data into the database.
+--
+local function RegisterNewPresence(newData)
+	for i = 1, #allPresenceData do
+		if (newData.name == allPresenceData[i].name) then
+			UpdatePresenceData(allPresenceData[i], newData);
+			return nil;
 		end
 	end
-	table.insert(playerPresenceData, data);
+	table.insert(allPresenceData, newData);
 end
 
+-- Tell whether given presence data is no longer fresh, i.e. past the freshness threshold.
+--
 local function IsPresenceStale(data)
-	return GetTime() - data.lastSeen > timeToStale;
+	return GetTime() - data[LAST_SEEN] > FRESHNESS_THRESHOLD;
 end
 
-local function GetPresenceData()
+-- Return fresh player presence data, i.e. sans stale.
+--
+local function GetFreshPresenceData()
 	local freshPresenceData = {};
-	for i = 1, #playerPresenceData do
-		if (not IsPresenceStale(playerPresenceData[i])) then
-			table.insert(freshPresenceData, playerPresenceData[i]);
+	for i = 1, #allPresenceData do
+		if (not IsPresenceStale(allPresenceData[i])) then
+			table.insert(freshPresenceData, allPresenceData[i]);
 		end
 	end
 	return freshPresenceData;
@@ -70,110 +121,115 @@ end
 --
 --
 
+-- Frame used as event hub.
+--
 local frame = CreateFrame("FRAME");
 
+-- Listen to game events to try and derive player presence.
+--
 frame:RegisterEvent("UPDATE_MOUSEOVER_UNIT");
 frame:RegisterEvent("PLAYER_TARGET_CHANGED");
 frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 
+-- Given a unit return if its reaction towards you is friendly, hostile or unknown.
+--
 local function GetUnitReaction(unit)
 	if UnitIsEnemy("player", unit) then
-		return "hostile";
+		return HOSTILE;
 	elseif UnitIsFriend("player", unit) then
-		return "friendly";
+		return FRIENDLY;
 	end
-	return "unknown";
+	return UNKNOWN;
 end
 
-local function CreateDataFromUnit(unit)
+-- Derive player presence data from given unit.
+--
+local function CreatePresenceDataFromUnit(unit)
 	if (not UnitIsPlayer(unit)) then
 		return nil;
 	end
 
-	local data = {
-		lastSeen = GetTime(),
-		name = GetUnitName(unit),
-		class = string.lower(select(2, UnitClass(unit))),
-		race = string.lower(select(2, UnitRace(unit))),
-		level = UnitLevel(unit),
-		sex = UnitSex(unit),
-		reaction = GetUnitReaction(unit),
-	};
+	local data = CreatePresenceData();
+	data[NAME] = GetUnitName(unit);
+	data[RACE] = string.upper(select(2, UnitRace(unit)));
+	data[CLASS] = select(2, UnitClass(unit));
+	data[LEVEL] = UnitLevel(unit);
+	data[REACTION] = GetUnitReaction(unit);
+
 	return data;
 end
 
-local combatLogFlagHostile = COMBATLOG_OBJECT_REACTION_HOSTILE;
-local combatLogFlagFriendly = COMBATLOG_OBJECT_REACTION_FRIENDLY;
-local combatLogFlagTypePlayer = COMBATLOG_OBJECT_TYPE_PLAYER;
-
-local function GetCombatLogFlagsReaction(flags)
-	if (bit.band(flags, combatLogFlagHostile) == combatLogFlagHostile) then
-		return "hostile";
-	elseif (bit.band(flags, combatLogFlagFriendly) == combatLogFlagFriendly) then
-		return "friendly";
+-- Tell whether a combat log event source or target has a
+-- friendly, hostile or unknown reaction towards the player.
+--
+local function ReadCombatLogFlagsReaction(flags)
+	if (bit.band(flags, FLAG_HOSTILE) == FLAG_HOSTILE) then
+		return HOSTILE;
+	elseif (bit.band(flags, FLAG_FRIENDLY) == FLAG_FRIENDLY) then
+		return FRIENDLY;
 	end
-	return "unknown";
+	return UNKNOWN;
 end
 
+-- Tell whether a combat log event source or target is a player.
+--
 local function IsCombatLogFlagsTypePlayer(flags)
-	return bit.band(flags, combatLogFlagTypePlayer) == combatLogFlagTypePlayer;
+	return bit.band(flags, FLAG_PLAYER) == FLAG_PLAYER;
 end
 
-local function CreateDataFromCombatLog(name, flags, spell)
-	if not IsCombatLogFlagsTypePlayer(flags) then
+-- Derive player presence data from a combat log event.
+--
+local function CreatePresenceDataFromCombatLog(name, flags, spell)
+	if (not IsCombatLogFlagsTypePlayer(flags)) then
 		return nil;
 	end
 
-	local data = {
-		lastSeen = GetTime(),
-		name = name,
-		class = nil,
-		race = nil,
-		level = nil,
-		sex = nil,
-		reaction = GetCombatLogFlagsReaction(flags),
-	};
+	local data = CreatePresenceData();
+	data[NAME] = name;
+	data[REACTION] = ReadCombatLogFlagsReaction(flags);
 
-	local estimate = Threatrack_Spells[spell];
+	local estimate = THREATRACK_SPELL_DATA[spell];
 	if (estimate) then
-		data.class = estimate[2];
-		data.race = estimate[1];
-		data.minLevel = estimate[3];
+		data[RACE] = estimate[1];
+		data[CLASS] = estimate[2];
+		data[ESTIMATED_LEVEL] = estimate[3];
 	end
 
 	return data;
 end
 
+-- Event handler.
+--
 local function OnEvent(_, event)
 	if (event == "PLAYER_TARGET_CHANGED") then
-		local data = CreateDataFromUnit("target");
+		local data = CreatePresenceDataFromUnit("target");
 		if (data) then
-			RegisterPresence(data);
-			CallPresenceHandlers();
+			RegisterNewPresence(data);
+			CallNewPresenceHandlers();
 		end
 	elseif (event == "UPDATE_MOUSEOVER_UNIT") then
-		local data = CreateDataFromUnit("mouseover");
+		local data = CreatePresenceDataFromUnit("mouseover");
 		if (data) then
-			RegisterPresence(data);
-			CallPresenceHandlers();
+			RegisterNewPresence(data);
+			CallNewPresenceHandlers();
 		end
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
 		-- timestamp, event, hideCaster, sourceGuid, sourceName, sourceFlags, sourceRaidFlags,
 		-- targetGuid, targetName, targetFlags, targetRaidFlags, a, b, c, d, e, f
 		local info = { CombatLogGetCurrentEventInfo() };
 
-		local sourceData = CreateDataFromCombatLog(info[5], info[6], info[13]);
+		local sourceData = CreatePresenceDataFromCombatLog(info[5], info[6], info[13]);
 		if (sourceData) then
-			RegisterPresence(sourceData);
+			RegisterNewPresence(sourceData);
 		end
 
-		local targetData = CreateDataFromCombatLog(info[9], info[10], info[13]);
+		local targetData = CreatePresenceDataFromCombatLog(info[9], info[10], info[13]);
 		if (targetData) then
-			RegisterPresence(targetData);
+			RegisterNewPresence(targetData);
 		end
 
 		if (sourceData or targetData) then
-			CallPresenceHandlers();
+			CallNewPresenceHandlers();
 		end
 	end
 end
@@ -183,6 +239,6 @@ frame:SetScript("OnEvent", OnEvent);
 --
 --
 
-Threatrack_GetPresenceData = GetPresenceData;
-Threatrack_HandlePresence = HandlePresence;
+Threatrack_GetFreshPresenceData = GetFreshPresenceData;
+Threatrack_HandleNewPresence = HandleNewPresence;
 Threatrack_IsPresenceStale = IsPresenceStale;
