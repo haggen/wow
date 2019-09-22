@@ -12,19 +12,16 @@ Add-ons compatible with WoW Classic (1.13).
 - [Focused](/classic/Focused)
 - [Developer](/classic/Developer)
 
-## Retail
-
-Add-ons compatible with retail version of WoW.
-
-- [Fastbind](/retail/Fastbind)
-- [Focused](/retail/Focused)
-
 ## Development
 
-This is a monorepo, meaning there are multiple projects being tracked in the same repository. As such here are some guidelines to follow:
+This is a monorepo, meaning there are multiple add-ons in the same repository. As such avoid commiting changes in separated add-ons at the same time and always specify which project a release tags must is refering to. Also remember to run linters before commiting.
 
-- Avoid commiting multiple projects at the same time.
-- Release tags must specify which project they're refering to.
+```shell
+scripts/validate-lua <path>
+scripts/validate-xml <path>
+```
+
+These scripts will recursively walk the directory looking for files to validate and exit non-zero if the they don't pass.
 
 ## Legal
 
