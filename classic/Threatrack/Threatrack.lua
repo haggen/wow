@@ -33,23 +33,24 @@ local GUTTER = 8;
 -- Coordinates for cropping race/class texture maps.
 --
 local PORTRAIT_TEXTURE_COORDS = {
-    [TAUREN] = {0, 0.125, 0.25, 0.5},
-    [SCOURGE] = {0.125, 0.25, 0.25, 0.5},
-    [TROLL] = {0.25, 0.375, 0.25, 0.5},
-    [ORC] = {0.375, 0.5, 0.25, 0.5},
-    [HUMAN] = {0, 0.125, 0, 0.25},
-    [DWARF] = {0.125, 0.25, 0, 0.25},
-    [GNOME] = {0.25, 0.375, 0, 0.25},
-    [NIGHTELF] = {0.375, 0.5, 0, 0.25},
-    [WARRIOR] = {0, 0.25, 0, 0.25},
-    [MAGE] = {0.25, 0.5, 0, 0.25},
-    [ROGUE] = {0.5, 0.75, 0, 0.25},
-    [DRUID] = {0.75, 1, 0, 0.25},
-    [HUNTER] = {0, 0.25, 0.25, 0.5},
-    [SHAMAN] = {0.25, 0.5, 0.25, 0.5},
-    [PRIEST] = {0.5, 0.75, 0.25, 0.5},
-    [WARLOCK] = {0.75, 1, 0.25, 0.5},
-    [PALADIN] = {0, 0.25, 0.5, 0.75},
+    [HUMAN] = {0.005859375, 0.119140625, 0.01171875, 0.23828125},
+    [DWARF] = {0.130859375, 0.244140625, 0.01171875, 0.23828125},
+    [GNOME] = {0.255859375, 0.369140625, 0.01171875, 0.23828125},
+    [NIGHTELF] = {0.380859375, 0.494140625, 0.01171875, 0.23828125},
+    [TAUREN] = {0.005859375, 0.119140625, 0.26171875, 0.48828125},
+    [SCOURGE] = {0.130859375, 0.244140625, 0.26171875, 0.48828125},
+    [TROLL] = {0.255859375, 0.369140625, 0.26171875, 0.48828125},
+    [ORC] = {0.380859375, 0.494140625, 0.26171875, 0.48828125},
+
+    [WARRIOR] = {0.01171875, 0.23828125, 0.01171875, 0.23828125},
+    [MAGE] = {0.2578125, 0.484375, 0.01171875, 0.23828125},
+    [ROGUE] = {0.50390625, 0.73046875, 0.01171875, 0.23828125},
+    [DRUID] = {0.75, 0.9765625, 0.01171875, 0.23828125},
+    [HUNTER] = {0.01171875, 0.23828125, 0.26171875, 0.48828125},
+    [SHAMAN] = {0.2578125, 0.484375, 0.26171875, 0.48828125},
+    [PRIEST] = {0.50390625, 0.73046875, 0.26171875, 0.48828125},
+    [WARLOCK] = {0.75390625, 0.98046875, 0.26171875, 0.48828125},
+    [PALADIN] = {0.01171875, 0.23828125, 0.51171875, 0.73828125},
 };
 
 -- Textues for portrait race/class.
@@ -80,23 +81,23 @@ function ThreatrackPortrait:Update(data)
         self.Level:SetText(data.level);
     elseif (data.estimatedLevel > 0) then
         self.Level:Show();
-        self.Level:SetText(string.format("%d+", data.estimatedLevel));
+        self.Level:SetText(string.format(" %d+", data.estimatedLevel));
     else
         self.Level:Show();
         self.Level:SetText("??");
     end
 
-    if (data.class ~= UNKNOWN) then
+    if (data.class == UNKNOWN) then
+        self.Class:SetTexture(UNKNOWN_TEXTURE);
+        self.Class:SetTexCoord(0, 0.921875, 0, 0.921875);
+    else
         self.Class:SetTexture(PORTRAIT_CLASSES_TEXTURE);
         self.Class:SetTexCoord(unpack(PORTRAIT_TEXTURE_COORDS[data.class]));
-    else
-        self.Class:SetTexture(UNKNOWN_TEXTURE);
-        self.Class:SetTexCoord(0, 1, 0, 1);
     end
 
-    -- if (data.race ~= UNKNOWN) then
+    -- if (data.race == UNKNOWN) then
     --     self.Race:SetTexture(UNKNOWN_TEXTURE);
-    --     self.Race:SetTexCoord(0, 0, 0, 0);
+    --     self.Race:SetTexCoord(0, 0.921875, 0, 0.921875);
     -- else
     --     self.Race:SetTexture(PORTRAIT_RACES_TEXTURE);
     --     self.Race:SetTexCoord(unpack(PORTRAIT_TEXTURE_COORDS[data.race]));
@@ -155,9 +156,8 @@ local function StackPresenceData(data)
     local stackedData = {};
     for i = 1, #data do
         local playerClass = data[i].class;
-        if (stackedData[playerClass]) then
-            table.insert(stackedData[playerClass].stack, data[i]);
-        else
+
+        if (stackedData[playerClass] == nil) then
             stackedData[playerClass] = {
                 class = playerClass,
                 stack = {data[i]},
@@ -167,6 +167,8 @@ local function StackPresenceData(data)
             -- we also insert in a numbered position to be able to more
             -- easily sort and manipulate it later on.
             table.insert(stackedData, stackedData[playerClass]);
+        else
+            table.insert(stackedData[playerClass].stack, data[i]);
         end
     end
     return stackedData;
@@ -223,3 +225,4 @@ function Threatrack:OnLoad()
         self:Update();
     end);
 end
+
