@@ -523,5 +523,50 @@ THREATRACK_SPELL_DATA = {
 	["Sweeping Strikes"] = {nil, WARRIOR, 30},
 	["Bloodthirst"] = {nil, WARRIOR, 40},
 	["Mortal Strike"] = {nil, WARRIOR, 40},
-	["Shield Slam"] = {nil, WARRIOR, 40},
+	["Shield Slam"] = {nil, WARRIOR, 40}
+};
+
+THREATRACK_PET_SPELL_DATA = {
+	-- Warlocks' Imp
+	["Firebolt"] = {nil, WARLOCK, 1},
+	["Blood Pact"] = {nil, WARLOCK, 4},
+	["Phase Shift"] = {nil, WARLOCK, 12},
+	["Fire Shield"] = {nil, WARLOCK, 14},
+	-- Warlocks' Voidwalker
+	["Torment"] = {nil, WARLOCK, 10},
+	["Sacrifice"] = {nil, WARLOCK, 16},
+	["Consume Shadows"] = {nil, WARLOCK, 18},
+	["Suffering"] = {nil, WARLOCK, 24},
+	-- Warlocks' Succubus
+	["Lash of Pain"] = {nil, WARLOCK, 20},
+	["Soothing Kiss"] = {nil, WARLOCK, 22},
+	["Seduction"] = {nil, WARLOCK, 26},
+	["Lesser Invisibility"] = {nil, WARLOCK, 32},
+	-- Warlocks' Felhunter
+	["Devour Magic"] = {nil, WARLOCK, 30},
+	["Tainted Blood"] = {nil, WARLOCK, 32},
+	["Spell Lock"] = {nil, WARLOCK, 36},
+	["Paranoia"] = {nil, WARLOCK, 42},
+	-- Hunter's Pets
+	["Growl"] = {nil, HUNTER, 1},
+	["Great Stamina"] = {nil, HUNTER, 1},
+	["Natural Armor"] = {nil, HUNTER, 1},
+	["Claw"] = {nil, HUNTER, 1},
+	["Charge"] = {nil, HUNTER, 1},
+	["Bite"] = {nil, HUNTER, 1},
+	["Lightning Breath"] = {nil, HUNTER, 1},
+	["Cower"] = {nil, HUNTER, 5},
+	["Scorpid Poison"] = {nil, HUNTER, 8},
+	["Cobra Reflexes"] = {nil, HUNTER, 10},
+	["Furious Howl"] = {nil, HUNTER, 10},
+	["Shell Shield"] = {nil, HUNTER, 20},
+	["Shadow Resistance"] = {nil, HUNTER, 20},
+	["Fire Resistance"] = {nil, HUNTER, 20},
+	["Frost Resistance"] = {nil, HUNTER, 20},
+	["Arcane Resistance"] = {nil, HUNTER, 20},
+	["Nature Resistance"] = {nil, HUNTER, 20},
+	["Dash"] = {nil, HUNTER, 30},
+	["Prowl"] = {nil, HUNTER, 30},
+	["Dive"] = {nil, HUNTER, 30},
+	["Thunderstomp"] = {nil, HUNTER, 30}
 };
