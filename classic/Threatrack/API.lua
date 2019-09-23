@@ -19,6 +19,7 @@ local FRIENDLY = "FRIENDLY";
 local FLAG_HOSTILE = COMBATLOG_OBJECT_REACTION_HOSTILE;
 local FLAG_FRIENDLY = COMBATLOG_OBJECT_REACTION_FRIENDLY;
 local FLAG_PLAYER = COMBATLOG_OBJECT_TYPE_PLAYER;
+local FLAG_PET = COMBATLOG_OBJECT_TYPE_PET;
 
 -- Time in seconds after which the presence data becomes stale.
 --
@@ -177,6 +178,12 @@ local function IsCombatLogFlagsTypePlayer(flags)
 	return bit.band(flags, FLAG_PLAYER) == FLAG_PLAYER;
 end
 
+-- Tell whether a combat log event source or target is a pet.
+--
+local function IsCombatLogFlagsTypePet(flags)
+	return bit.band(flags, FLAG_PET) == FLAG_PET;
+end
+
 -- Collect presence data from combat log event source or target player.
 --
 local function CreatePresenceDataFromCombatLogEventPlayer(name, flags, spell)
@@ -197,11 +204,32 @@ local function CreatePresenceDataFromCombatLogEventPlayer(name, flags, spell)
 	return data;
 end
 
+--
+--
+local function CreatePresenceDataFromCombatLogEventPet(name, flags, spell)
+	local data = CreatePresenceData();
+
+	data[REACTION] = ReadCombatLogFlagsReaction(flags);
+
+	if (spell) then
+		local estimateData = THREATRACK_PET_SPELL_DATA[spell];
+		if (estimateData) then
+			data[RACE] = estimateData[1] or UNKNOWN;
+			data[CLASS] = estimateData[2] or UNKNOWN;
+			data[ESTIMATED_LEVEL] = estimateData[3];
+		end
+	end
+
+	return data;
+end
+
 -- Derive player presence data from a combat log event.
 --
 local function CreatePresenceDataFromCombatLogEvent(name, flags, spell)
 	if IsCombatLogFlagsTypePlayer(flags) then
 		return CreatePresenceDataFromCombatLogEventPlayer(name, flags, spell);
+	elseif IsCombatLogFlagsTypePet(flags) then
+		return CreatePresenceDataFromCombatLogEventPet(name, flags, spell);
 	end
 
 	return nil;
