@@ -56,7 +56,7 @@ local function CreatePresenceData()
 	};
 end
 
--- Given old and new values, solve for which one should be honored.
+-- Given old and new values of a presence data, solve for which one should be honored.
 --
 local function MergePresenceDataValue(key, oldValue, newValue)
 	if (key == CLASS) or (key == RACE) or (key == REACTION) then
@@ -177,25 +177,34 @@ local function IsCombatLogFlagsTypePlayer(flags)
 	return bit.band(flags, FLAG_PLAYER) == FLAG_PLAYER;
 end
 
--- Derive player presence data from a combat log event.
+-- Collect presence data from combat log event source or target player.
 --
-local function CreatePresenceDataFromCombatLog(name, flags, spell)
-	if (not IsCombatLogFlagsTypePlayer(flags)) then
-		return nil;
-	end
-
+local function CreatePresenceDataFromCombatLogEventPlayer(name, flags, spell)
 	local data = CreatePresenceData();
-	data[NAME] = name;
+
+	data[NAME] = name or "";
 	data[REACTION] = ReadCombatLogFlagsReaction(flags);
 
-	local estimate = THREATRACK_SPELL_DATA[spell];
-	if (estimate) then
-		data[RACE] = estimate[1];
-		data[CLASS] = estimate[2];
-		data[ESTIMATED_LEVEL] = estimate[3];
+	if (spell) then
+		local estimateData = THREATRACK_SPELL_DATA[spell];
+		if (estimateData) then
+			data[RACE] = estimateData[1] or UNKNOWN;
+			data[CLASS] = estimateData[2] or UNKNOWN;
+			data[ESTIMATED_LEVEL] = estimateData[3];
+		end
 	end
 
 	return data;
+end
+
+-- Derive player presence data from a combat log event.
+--
+local function CreatePresenceDataFromCombatLogEvent(name, flags, spell)
+	if IsCombatLogFlagsTypePlayer(flags) then
+		return CreatePresenceDataFromCombatLogEventPlayer(name, flags, spell);
+	end
+
+	return nil;
 end
 
 -- Event handler.
@@ -214,16 +223,17 @@ local function OnEvent(_, event)
 			CallNewPresenceHandlers();
 		end
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
-		-- timestamp, event, hideCaster, sourceGuid, sourceName, sourceFlags, sourceRaidFlags,
-		-- targetGuid, targetName, targetFlags, targetRaidFlags, a, b, c, d, e, f
-		local info = { CombatLogGetCurrentEventInfo() };
+		local combatLogEvent = {CombatLogGetCurrentEventInfo()};
 
-		local sourceData = CreatePresenceDataFromCombatLog(info[5], info[6], info[13]);
+		local timestamp, event, hideCaster, sourceGuid, sourceName, sourceFlags, sourceRaidFlags,
+			targetGuid, targetName, targetFlags, targetRaidFlags, _, spellName, _, _, _, _, _, _, _ = unpack(combatLogEvent);
+
+		local sourceData = CreatePresenceDataFromCombatLogEvent(sourceName, sourceFlags, spellName);
 		if (sourceData) then
 			RegisterNewPresence(sourceData);
 		end
 
-		local targetData = CreatePresenceDataFromCombatLog(info[9], info[10], info[13]);
+		local targetData = CreatePresenceDataFromCombatLogEvent(targetName, targetFlags);
 		if (targetData) then
 			RegisterNewPresence(targetData);
 		end
