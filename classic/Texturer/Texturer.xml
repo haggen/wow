@@ -3,6 +3,23 @@
 	<Script file="Data/Textures.lua"/>
 	<Script file="Texturer.lua"/>
 
+	<EditBox name="AccessibleEditBox" virtual="true" autoFocus="false">
+		<Size x="100" y="20"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture setAllPoints="true">
+					<Color r="0.5" g="0.5" b="0.5" a="0.5"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<FontString inherits="ChatFontNormal"/>
+		<Scripts>
+			<OnEscapePressed>
+				self:ClearFocus();
+			</OnEscapePressed>
+		</Scripts>
+	</EditBox>
+
 	<Button name="TexturerButtonTemplate" registerForClicks="LeftButtonDown" virtual="true" mixin="TexturerButtonMixin">
 		<Size x="535" y="20"/>
 		<Layers>
@@ -22,6 +39,91 @@
 		</Scripts>
 		<HighlightTexture file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar" alphaMode="ADD" setAllPoints="true"/>
 	</Button>
+
+	<Frame name="TextureCoordinator" toplevel="true" parent="UIParent" enableMouse="true" movable="true">
+		<Size x="650" y="80"/>
+		<Anchors>
+			<Anchor point="TOP"/>
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture setAllPoints="true">
+					<Color r="0.0" g="0.0" b="0.0" a="0.5"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<EditBox parentKey="targetTexture" inherits="AccessibleEditBox">
+				<Anchors>
+					<Anchor point="LEFT" x="20"/>
+				</Anchors>
+			</EditBox>
+			<EditBox parentKey="leftCoord" inherits="AccessibleEditBox">
+				<Anchors>
+					<Anchor point="LEFT" x="130"/>
+				</Anchors>
+			</EditBox>
+			<EditBox parentKey="rightCoord" inherits="AccessibleEditBox">
+				<Anchors>
+					<Anchor point="LEFT" x="240"/>
+				</Anchors>
+			</EditBox>
+			<EditBox parentKey="topCoord" inherits="AccessibleEditBox">
+				<Anchors>
+					<Anchor point="LEFT" x="350"/>
+				</Anchors>
+			</EditBox>
+			<EditBox parentKey="bottomCoord" inherits="AccessibleEditBox">
+				<Anchors>
+					<Anchor point="LEFT" x="460"/>
+				</Anchors>
+			</EditBox>
+			<Button>
+				<Size x="50" y="20"/>
+				<Anchors>
+					<Anchor point="LEFT" x="570"/>
+				</Anchors>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture setAllPoints="true">
+							<Color r="0.5" g="0.5" b="0.5" a="0.5"/>
+						</Texture>
+					</Layer>
+					<Layer level="ARTWORK">
+						<FontString inherits="ChatFontNormal" text="Set">
+							<Anchors>
+								<Anchor point="CENTER"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnClick>
+						local parent = self:GetParent();
+						local getTargetTexture, _ = loadstring("return " .. parent.targetTexture:GetText());
+						local getLeftCoord, _ = loadstring("return " .. parent.leftCoord:GetText());
+						local getRightCoord, _ = loadstring("return " .. parent.rightCoord:GetText());
+						local getTopCoord, _ = loadstring("return " .. parent.topCoord:GetText());
+						local getBottomCoord, _ = loadstring("return " .. parent.bottomCoord:GetText());
+						getTargetTexture():SetTexCoord(getLeftCoord(), getRightCoord(), getTopCoord(), getBottomCoord());
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForDrag("LeftButton");
+			</OnLoad>
+			<OnDragStart>
+				if (not self.isLocked) then
+					self:StartMoving();
+				end
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing();
+			</OnDragStop>
+		</Scripts>
+	</Frame>
 
 	<Frame name="Texturer" toplevel="true" parent="UIParent" mixin="TexturerMixin">
 		<Size x="590" y="510"/>
