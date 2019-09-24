@@ -12,13 +12,12 @@ if ! git rev-parse "$1" >/dev/null 2>&1; then
     exit 1
 fi
 
-tag="$1"
-platform="$(echo "$tag" | cut -f1 -d/)"
-name="$(echo "$tag" | cut -f2 -d/)"
-version="$(echo "$tag" | cut -f3 -d/)"
+platform="$(echo "$1" | cut -f1 -d/)"
+name="$(echo "$1" | cut -f2 -d/)"
+version="$(echo "$1" | cut -f3 -d/)"
 archive="$name-$version-$platform.zip"
 
-export RELEASE="$name $version-$platform"
+export RELEASE="$name $version ($platform)"
 
 mkdir -p dist
-git archive --format=zip -o "dist/$archive" --prefix="$name/" "$tag":"$platform/$name/"
+git archive --format=zip -o "dist/$archive" --prefix="$name/" "$1:$platform/$name/"

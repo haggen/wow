@@ -2,30 +2,101 @@
 
 set -euo pipefail
 
+help() {
+	cat <<-EOF >&2
+		Usage: $0 [-h|-p|-m|-M] <path>
+	EOF
+}
+
+last-tag() {
+	git rev-list --tags --no-walk -n 1 -- "$1" 2>/dev/null
+}
+
+commits-since-last-tag() {
+	git log --oneline "$(last-tag "$1")..HEAD" -- "$1" 2>/dev/null
+}
+
+bump
+
+options=$(getopt -n "$0" -o hpmM -l help,patch,minor,major -- "$@")
+
+if test $? -ne 0; then
+	exit 1
+fi
+
+set -- $options
+
+while :; do
+	case "$1" in
+		-p|--patch)
+			mode="patch"
+			shift
+			;;
+		-m|--minor)
+			mode="minor"
+			shift
+			;;
+		-M|--major)
+			mode="major"
+			shift
+			;;
+		-h|--help)
+			help
+			exit
+			;;
+		--)
+			shift
+			break
+			;;
+	esac
+done
+
 if test -z "$*"; then
-    echo "Missing argument, e.g. $0 classic/Fastbind" >&2
-    exit 1
+	echo "$0: missing argument, try --help for more information" >&2
+	exit 1
 fi
 
 if ! test -d "$1"; then
-    echo "$1 is not a directory" >&2
-    exit 1
+	echo "$0: '$1' is not a directory" >&2
+	exit 1
 fi
 
 platform="$(dirname "$1")"
 name="$(basename "$1")"
-toc="$platform/$name/$name.toc"
-version="$(grep -Po "Version: \K.+" "$toc")"
+manifest="$platform/$name/$name.toc"
 
-if ! test -f "$toc"; then
-    echo "$toc is not a file" >&2
-    exit 1
+if ! test -f "$manifest"; then
+	echo "$0: '$manifest' is not a file" >&2
+	exit 1
 fi
 
-tag="$platform/$name/$version"
+old_version="$(grep -Po "Version: \K.+" "$manifest")"
 
-if git tag "$tag" > /dev/null 2>&1; then
-    git push --tags
-else
-    echo "Tag $tag already exists." >&2
-fi
+major="$(echo "$old_version" | cut -f1 -d.)"
+minor="$(echo "$old_version" | cut -f2 -d.)"
+patch="$(echo "$old_version" | cut -f3 -d.)"
+
+case "${mode=patch}" in
+	patch)
+		patch=$(commits-since-last-tag "$platform/$name" | wc -l)
+		;;
+	minor)
+		patch=0
+		minor=$((minor + 1))
+		;;
+	minor)
+		patch=0
+		minor=0
+		major=$((major + 1))
+		;;
+esac
+
+new_version="$major.$minor.$patch"
+
+sed -i "s/Version: $old_version/Version: $new_version/" "$manifest"
+
+git commit -m "Bump $platform/$name to $new_version" "$manifest"
+
+git tag "$platform/$name/$new_version"
+
+git push --follow-tags

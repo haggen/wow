@@ -3,7 +3,7 @@
 set -euo pipefail
 
 if test -z "$*"; then
-    echo "Missing argument. e.g. $0 classic/Fastbind" >&2
+    echo "Missing argument. e.g. $0 <directory>" >&2
     exit 1
 fi
 
@@ -15,5 +15,5 @@ for argument in "$@"; do
         exit 1
     fi
 
-    xmllint --schema UI.xsd $(find "$1" -name '*.xml') --noout
+    xmllint --schema UI.xsd $(find "$1" -name "*.xml") --noout
 done

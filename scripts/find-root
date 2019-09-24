@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if test -z "$*"; then
+	echo "$0: missing argument, e.g. $0 <path>" >&2
+	exit 1
+fi
+
+if test -f "$1"; then
+	path="$(dirname "$1")"
+else
+	path="${1%/}"
+fi
+
+while test "$path" != "."; do
+	file="$path/$(basename "$path").toc"
+	if test -f "$file"; then
+		echo "$path"
+		break
+	fi
+	path="$(dirname "$path")"
+done
