@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Sam Lantinga (Blizzard Entertainment) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/" xmlns:ui="http://www.blizzard.com/wow/ui/" targetNamespace="http://www.blizzard.com/wow/ui/" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:simpleType name="FRAMEPOINT">
 		<xs:restriction base="xs:NMTOKEN">
@@ -222,11 +223,10 @@
 	</xs:simpleType>
 
 	<xs:complexType name="ColorType">
-		<xs:attribute name="r" type="ColorFloat" default="0.0"/>
-		<xs:attribute name="g" type="ColorFloat" default="0.0"/>
-		<xs:attribute name="b" type="ColorFloat" default="0.0"/>
+		<xs:attribute name="r" type="ColorFloat" use="required"/>
+		<xs:attribute name="g" type="ColorFloat" use="required"/>
+		<xs:attribute name="b" type="ColorFloat" use="required"/>
 		<xs:attribute name="a" type="ColorFloat" default="1.0"/>
-		<xs:attribute name="color" type="xs:string"/>
 	</xs:complexType>
 
 	<xs:complexType name="ShadowType">
@@ -312,7 +312,6 @@
 				<xs:element name="OnMinMaxChanged" type="ScriptType"/>
 				<xs:element name="OnUpdateModel" type="ScriptType"/>
 				<xs:element name="OnModelLoaded" type="ScriptType"/>
-				<xs:element name="OnAnimStarted" type="ScriptType"/>
 				<xs:element name="OnAnimFinished" type="ScriptType"/>
 				<xs:element name="OnEnterPressed" type="ScriptType"/>
 				<xs:element name="OnEscapePressed" type="ScriptType"/>
@@ -899,7 +898,6 @@
 				<xs:attribute name="font" type="xs:string"/>
 				<xs:attribute name="file" type="xs:string"/>
 				<xs:attribute name="hyperlinkFormat" type="xs:string" default="|H%s|h%s|h"/>
-				<xs:attribute name="resizeToFitContents" type="xs:boolean" default="false"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -1065,16 +1063,6 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:element name="Cooldown" type="CooldownType" substitutionGroup="ui:Frame"/>
-
-	<xs:complexType name="QuestPOIFrameType">
-		<xs:complexContent>
-			<xs:extension base="FrameType">
-				<xs:attribute name="filltexture" type="xs:string"/>
-				<xs:attribute name="bordertexture" type="xs:string"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:element name="QuestPOIFrame" type="QuestPOIFrameType" substitutionGroup="ui:Frame"/>
 
 	<xs:complexType name="ArchaeologyDigSiteFrameType">
 		<xs:complexContent>
