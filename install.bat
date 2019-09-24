@@ -15,7 +15,7 @@ if not exist "%target%" (
     goto invalid
 )
 
-echo Installing add-ons from %source% to %target%
+echo Linking directories in %source% to %target%...
 
 for /f %%f in ('dir /b "%source%"') do (
     mklink /D "%target%\%%f" "%source%\%%f"
@@ -24,9 +24,9 @@ for /f %%f in ('dir /b "%source%"') do (
 goto :eof
 
 :missing
-echo Missing argument. e.g. %0 classic "D:\World of Warcraft"
+echo %0: missing argument, e.g. %0 classic "C:\World of Warcraft"
 exit /B 1
 
 :invalid
-echo Invalid argument: %invalid%
+echo %0: invalid argument "%invalid%"
 exit /B 1
