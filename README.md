@@ -14,14 +14,34 @@ Add-ons compatible with WoW Classic (1.13).
 
 ## Development
 
-This is a monorepo, meaning there are multiple add-ons in the same repository. As such avoid commiting changes in separated add-ons at the same time and always specify which project a release tags must is refering to. Also remember to run linters before commiting.
+This is a monorepo, meaning it contains multiple add-ons in the same repository. As such there are some guidelines we should follow:
+
+- Avoid commiting changes in more than one add-on at a time.
+- Tags must use the format `platform/name/version`.
+- Scripts should be able handle each project individually.
+
+## Linters
+
+There are scripts to validate both Lua and XML files:
 
 ```shell
-scripts/validate-lua <path>
-scripts/validate-xml <path>
+scripts/validate-lua <directory>
+scripts/validate-xml <directory>
 ```
 
-These scripts will recursively walk the directory looking for files to validate and exit non-zero if the they don't pass.
+These scripts will recursively walk the given directory looking for files to validate and exit non-zero status when they fail.
+
+They're also automatically ran for every push thanks to [Travis](https://travis-ci.org).
+
+## Release
+
+Releases loosely follow the [semantic versioning](https://semver.org/) system. Always have the bump of a version in its own commit and always tag it. Actually, there's a script for that.
+
+```shell
+scripts/release [-h|-p|-m|-M] <path>
+```
+
+`scripts/release` will bump the version for given add-on, commit it, tag it and push the change to the remote respository. Use the options `-p`, `-m`, or `-M` for patch, minor, or major releases respectively. Minor and major are increments of one. Patch releases count the commits since last version. The tag is annotated with a generated changelog.
 
 ## Legal
 
