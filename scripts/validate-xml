@@ -3,17 +3,17 @@
 set -euo pipefail
 
 if test -z "$*"; then
-    echo "Missing argument. e.g. $0 <directory>" >&2
+    echo "$0: missing argument. e.g. $0 <directory>..." >&2
     exit 1
 fi
 
-for argument in "$@"; do
-    subject="$(realpath $argument)"
+for arg in "$@"; do
+    directory="$(realpath $arg)"
 
-    if ! test -d "$subject"; then
-        echo "$subject is not a directory." >&2
+    if ! test -d "$directory"; then
+        echo "$directory is not a directory." >&2
         exit 1
     fi
 
-    xmllint --schema UI.xsd $(find "$1" -name "*.xml") --noout
+    find "$directory" -name "*.xml" -exec xmllint --noout --schema UI.xsd {} +
 done
