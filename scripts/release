@@ -8,16 +8,10 @@ help() {
 	EOF
 }
 
-last-tagged-commit() {
-	git rev-list --tags --no-walk -- "$1" | head -1 2>/dev/null
-}
-
-commits-since-last-tagged-commit() {
-	git rev-list "$(last-tagged-commit "$1")..HEAD" -- "$1" 2>/dev/null
-}
-
-changelog() {
-	git log --oneline "$(last-tagged-commit "$1")..HEAD" -- "$1" | grep "#[0-9]+" 2>/dev/null
+count-patch() {
+	local range
+	range="$(git describe --tags --abbrev=0 --match "$1/*" 2>/dev/null)..HEAD"
+	git rev-list --count "${range#..}" -- "$1" 2>/dev/null
 }
 
 options=$(getopt -n "$0" -o hpmM -l help,patch,minor,major -- "$@")
@@ -80,7 +74,7 @@ patch="$(echo "$old_version" | cut -f3 -d.)"
 
 case "${mode=patch}" in
 	patch)
-		patch=$(commits-since-last-tagged-commit "$platform/$name" | wc -l)
+		patch=$(count-patch "$platform/$name")
 		;;
 	minor)
 		patch=0
@@ -103,11 +97,5 @@ fi
 sed -i "s/Version: $old_version/Version: $new_version/" "$manifest"
 
 git commit -m "Bump $platform/$name to $new_version" "$manifest"
-
-cat <<-EOF | git tag -F - "$platform/$name/$new_version"
-	$name $new_version ($platform)
-
-	$(changelog "$(dirname "$manifest")")
-EOF
-
+git tag -m "Release $name $new_version ($platform)" "$platform/$name/$new_version"
 git push --follow-tags
