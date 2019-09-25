@@ -143,13 +143,8 @@ local SORTING_RANK = {
     [UNKNOWN] = 10,
 };
 
-local function SortPresenceData(a, b)
-    if (a.class and b.class) then
-        return SORTING_RANK[a.class] < SORTING_RANK[b.class];
-    elseif (a.class) then
-        return true;
-    end
-    return false;
+local function SortStackedPresenceData(a, b)
+    return #a.stack > #b.stack;
 end
 
 local function StackPresenceData(data)
@@ -174,6 +169,15 @@ local function StackPresenceData(data)
     return stackedData;
 end
 
+local function SortFlatPresenceData(a, b)
+    if (a.class and b.class) then
+        return SORTING_RANK[a.class] < SORTING_RANK[b.class];
+    elseif (a.class) then
+        return true;
+    end
+    return false;
+end
+
 function Threatrack:GetPresenceData()
     local data = Threatrack_GetFreshPresenceData();
     -- local hostilePresenceData = {};
@@ -183,11 +187,13 @@ function Threatrack:GetPresenceData()
     --     end
     -- end
 
-    if (#data > #self.portraits) then
+    if (#data > 1) then
         data = StackPresenceData(data);
+        table.sort(data, SortStackedPresenceData);
+    else
+        table.sort(data, SortFlatPresenceData);
     end
 
-    table.sort(data, SortPresenceData);
     return data;
 end
 
