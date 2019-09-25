@@ -7,15 +7,15 @@
     <Frame name="ThreatrackPortraitTemplate" enableMouse="true" virtual="true" mixin="ThreatrackPortrait">
         <Size x="64" y="64"/>
         <Layers>
-            <Layer level="BACKGROUND">
-                <!-- <Texture file="Interface/Common/Portrait-Ring-WithBg">
+            <!-- <Layer level="BACKGROUND">
+                <Texture file="Interface/Common/Portrait-Ring-WithBg">
                     <Size x="92" y="92"/>
                     <Anchors>
                         <Anchor point="CENTER"/>
                     </Anchors>
                     <TexCoords left="0.1875" right="0.8125" top="0.1875" bottom="0.8125"/>
-                </Texture> -->
-            </Layer>
+                </Texture>
+            </Layer> -->
             <Layer level="BORDER">
                 <!-- <Texture parentKey="Race" file="Interface/Glues/CharacterCreate/UI-CharacterCreate-RacesRound" setAllPoints="true"/> -->
                 <Texture parentKey="Class" file="Interface/TargetingFrame/UI-Classes-Circles" setAllPoints="true"/>
@@ -46,12 +46,12 @@
                     <!-- <Color r="1.0" g="0.0" b="1.0" a="0.2"/> -->
                 </Texture>
             </Layer>
-            <Layer level="HIGHLIGHT">
-                <!-- <Texture file="Interface/Common/Portrait-Ring-WithBg-Highlight" setAllPoints="true">
+            <!-- <Layer level="HIGHLIGHT">
+                <Texture file="Interface/Common/Portrait-Ring-WithBg-Highlight" setAllPoints="true">
                     <TexCoords left="0.2890625" right="0.6953125" top="0.296875" bottom="0.6953125"/>
                     <Color r="1.0" g="1.0" b="1.0" a="0.5"/>
-                </Texture> -->
-            </Layer>
+                </Texture>
+            </Layer> -->
         </Layers>
         <Scripts>
             <OnUpdate method="OnUpdate"/>

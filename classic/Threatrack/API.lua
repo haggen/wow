@@ -225,15 +225,15 @@ local function OnEvent(_, event)
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
 		local combatLogEvent = {CombatLogGetCurrentEventInfo()};
 
-		local timestamp, event, hideCaster, sourceGuid, sourceName, sourceFlags, sourceRaidFlags,
-			targetGuid, targetName, targetFlags, targetRaidFlags, _, spellName, _, _, _, _, _, _, _ = unpack(combatLogEvent);
+		-- local timestamp, event, hideCaster, sourceGuid, sourceName, sourceFlags, sourceRaidFlags,
+		-- 	targetGuid, targetName, targetFlags, targetRaidFlags, _, spellName, _, _, _, _, _, _, _ = unpack(combatLogEvent);
 
-		local sourceData = CreatePresenceDataFromCombatLogEvent(sourceName, sourceFlags, spellName);
+		local sourceData = CreatePresenceDataFromCombatLogEvent(combatLogEvent[5], combatLogEvent[6], combatLogEvent[13]);
 		if (sourceData) then
 			RegisterNewPresence(sourceData);
 		end
 
-		local targetData = CreatePresenceDataFromCombatLogEvent(targetName, targetFlags);
+		local targetData = CreatePresenceDataFromCombatLogEvent(combatLogEvent[9], combatLogEvent[10]);
 		if (targetData) then
 			RegisterNewPresence(targetData);
 		end

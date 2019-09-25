@@ -6,7 +6,7 @@
 --
 local UNKNOWN = "UNKNOWN";
 local HOSTILE = "HOSTILE";
-local FRIENDLY = "FRIENDLY";
+-- local FRIENDLY = "FRIENDLY";
 
 local DWARF = "DWARF";
 local GNOME = "GNOME";
@@ -57,7 +57,7 @@ local PORTRAIT_TEXTURE_COORDS = {
 --
 local UNKNOWN_TEXTURE = "Interface/TutorialFrame/UI-Help-Portrait";
 local PORTRAIT_CLASSES_TEXTURE = "Interface/TargetingFrame/UI-Classes-Circles";
-local PORTRAIT_RACES_TEXTURE = "Interface/Glues/CharacterCreate/UI-CharacterCreate-RacesRound";
+-- local PORTRAIT_RACES_TEXTURE = "Interface/Glues/CharacterCreate/UI-CharacterCreate-RacesRound";
 
 --
 --
