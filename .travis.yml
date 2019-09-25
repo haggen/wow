@@ -20,4 +20,5 @@ deploy:
   name: "${RELEASE}"
   release_notes_file: "${CHANGELOG}"
   on:
+    branch: stable
     tags: true
