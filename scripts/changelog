@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+help() {
+	cat <<-EOF >&2
+		Usage: $0 [-h|-f <format>] <tag>
+	EOF
+}
+
+options=$(getopt -n "$0" -o hf: -l help,format -- "$@")
+
+if test $? -ne 0; then
+	exit 1
+fi
+
+eval set -- "$options"
+
+while :; do
+	case "$1" in
+		-h|--help)
+			help
+			exit
+			;;
+		-f|--format)
+			format="$2"
+			shift 2
+			;;
+		--)
+			shift
+			break
+			;;
+	esac
+done
+
+if test -z "$*"; then
+	echo "$0: missing argument, try --help for more information" >&2
+	exit 1
+fi
+
+if ! git rev-parse "${1}" >/dev/null 2>&1; then
+    echo "$0: '$1' is not a valid tag" >&2
+    exit 1
+fi
+
+prefix="${1%/*}"
+range="$(git describe --tags --abbrev=0 --match "$prefix/*" "$1^" 2>/dev/null || echo)..$1^"
+
+git rev-list --format="${format=oneline}" "${range#..}" -- "$prefix"
