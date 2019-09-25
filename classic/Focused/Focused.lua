@@ -2,6 +2,41 @@
 -- MIT License © 2018 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
+-- Constants.
+--
+local FRAME_INITIAL_POSITION = {
+	[PlayerFrame] = "RIGHT",
+	[TargetFrame] = "LEFT"
+};
+
+-- Global object.
+--
+Focused = {};
+
+-- Reset frame's position to the center of the screen.
+--
+local function SetInitialPosition(frame)
+	frame:SetUserPlaced(true);
+	frame:ClearAllPoints();
+	frame:SetPoint(FRAME_INITIAL_POSITION[frame], UIParent, "CENTER");
+end
+
+-- Initialization.
+--
+function Focused:OnLoad()
+	Focused = self;
+
+	if (not PlayerFrame:IsUserPlaced()) then
+		SetInitialPosition(PlayerFrame);
+	end
+
+	if (not TargetFrame:IsUserPlaced()) then
+		SetInitialPosition(TargetFrame);
+	end
+end
+
+-- Given two frames, mirror their offset along the X axis.
+--
 local function SetMirroredPosition(a, b)
 	local _, _, _, offsetX, offsetY = b:GetPoint(1);
 	local mirroredOffsetX = GetScreenWidth() - offsetX - a:GetWidth();
@@ -9,16 +44,19 @@ local function SetMirroredPosition(a, b)
 	a:SetPoint("TOPLEFT", nil, "TOPLEFT", mirroredOffsetX, offsetY);
 end
 
-local initialPositionPoint = {
-	[PlayerFrame] = "RIGHT",
-	[TargetFrame] = "LEFT"
-};
-
-local function SetInitialPosition(frame)
-	frame:SetUserPlaced(true);
-	frame:ClearAllPoints();
-	frame:SetPoint(initialPositionPoint[frame], UIParent, "CENTER");
+-- Update the other frame position when one is moving.
+--
+function Focused:OnUpdate()
+	if (PlayerFrame:IsDragging()) then
+		SetMirroredPosition(TargetFrame, PlayerFrame);
+	elseif (TargetFrame:IsDragging()) then
+		SetMirroredPosition(PlayerFrame, TargetFrame);
+	end
 end
+
+--
+--
+--
 
 -- FrameXML/TargetFrame.lua:1146
 hooksecurefunc("TargetFrame_ResetUserPlacedPosition", function()
@@ -37,36 +75,3 @@ hooksecurefunc("PlayerFrame_ResetUserPlacedPosition", function()
 		SetInitialPosition(TargetFrame);
 	end
 end);
-
-if (not PlayerFrame:IsUserPlaced()) then
-	SetInitialPosition(PlayerFrame);
-end
-
-if (not TargetFrame:IsUserPlaced()) then
-	SetInitialPosition(TargetFrame);
-end
-
-function FocusedFrame_OnUpdate()
-	if (PlayerFrame:IsDragging()) then
-		SetMirroredPosition(TargetFrame, PlayerFrame);
-	elseif (TargetFrame:IsDragging()) then
-		SetMirroredPosition(PlayerFrame, TargetFrame);
-	end
-end
-
---
---
---
-
--- Bring back text label over target's health bar.
--- Though only the percentage can be shown since the
--- game's API doesn't provide the actual health values.
---
--- Also, it's not really a feature of this add-on but
--- I've got no where else to put it.
---
-TargetFrame.healthbar.Text = TargetFrameTextureFrame:CreateFontString("TargetFrameHealthBarText", "BACKGROUND", "TextStatusBarText");
-TargetFrame.healthbar.Text:SetPoint("CENTER", -50, 3);
-TargetFrame.healthbar.showPercentage = true;
-TargetFrame.healthbar.showNumeric = false;
-SetTextStatusBarText(TargetFrame.healthbar, TargetFrame.healthbar.Text);
