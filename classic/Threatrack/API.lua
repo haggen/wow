@@ -66,7 +66,11 @@ local function MergePresenceDataValue(key, oldValue, newValue)
 			return newValue;
 		end
 	elseif (key == LEVEL) or (key == ESTIMATED_LEVEL) then
-		return math.max(newValue, oldValue);
+		if (newValue == -1) then
+			return newValue;
+		else
+			return math.max(newValue, oldValue);
+		end
 	end
 
 	return newValue;
