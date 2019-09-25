@@ -124,6 +124,26 @@ function ThreatrackPortrait:OnUpdate()
     end
 end
 
+function ThreatrackPortrait:OnEnter()
+    GameTooltip:ClearAllPoints();
+    GameTooltip:SetOwner(self, "ANCHOR_BOTTOM");
+
+    if (self.data.stack) then
+        GameTooltip:SetText("Players:")
+        for i = 1, #self.data.stack do
+            GameTooltip:AddLine(self.data.stack[i].name);
+        end
+    else
+        GameTooltip:SetText(self.data.name);
+    end
+
+    GameTooltip:Show();
+end
+
+function ThreatrackPortrait:OnLeave()
+    GameTooltip:Hide();
+end
+
 --
 --
 --

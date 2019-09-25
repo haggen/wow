@@ -55,6 +55,8 @@
         </Layers>
         <Scripts>
             <OnUpdate method="OnUpdate"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
         </Scripts>
     </Frame>
 
