@@ -51,4 +51,4 @@ export CHANGELOG="$file.md"
 mkdir -p dist
 
 git archive --format=zip -o "$ARCHIVE" --prefix="$name/" "$1:$platform/$name/"
-scripts/changelog "$1" > "$CHANGELOG"
+scripts/changelog "$1" | grep "#[0-9]\+" > "$CHANGELOG"
