@@ -180,14 +180,18 @@ end
 
 function Threatrack:GetPresenceData()
     local data = Threatrack_GetFreshPresenceData();
-    -- local hostilePresenceData = {};
-    -- for i = 1, #data do
-    --     if (data[i].reaction == "hostile") then
-    --         table.insert(hostilePresenceData, data[i]);
-    --     end
-    -- end
 
-    if (#data > 1) then
+    if (ThreatrackSavedVars.options.ignoreFriendlyPresence) then
+        local hostilePresenceData = {};
+        for i = 1, #data do
+            if (data[i].reaction == HOSTILE) then
+                table.insert(hostilePresenceData, data[i]);
+            end
+        end
+        data = hostilePresenceData;
+    end
+
+    if (#data > #self.portraits) then
         data = StackPresenceData(data);
         table.sort(data, SortStackedPresenceData);
     else
@@ -232,3 +236,12 @@ function Threatrack:OnLoad()
     end);
 end
 
+--
+--
+--
+
+ThreatrackSavedVars = {
+    options = {
+        ignoreFriendlyPresence = true
+    }
+};

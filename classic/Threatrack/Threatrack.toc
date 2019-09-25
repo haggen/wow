@@ -3,5 +3,6 @@
 ## Title: Threatrack
 ## Notes: ...
 ## DefaultState: enabled
+## SavedVariablesPerCharacter: ThreatrackSavedVars
 
 Threatrack.xml
