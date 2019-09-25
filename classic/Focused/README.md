@@ -1,14 +1,12 @@
 # Focused
 
-> Tether your character's and your target's portraits together.
+> Bring yours and your target's health bar to the center of attention.
 
 ## About
 
-![Video showing off the add-on in action](https://i.imgur.com/WHc1hCv.gifv)
+![Video showing off the add-on in action](https://i.imgur.com/WHc1hCv.gif)
 
-1. Changes the default position of your character's and target's portraits, so if you right-click them and select Move Frame > Reset Position they go to the center of the screen.
-2. Tether the portraits together so when you drag one around, the other follows, mirroring the movement across the vertical axis.
-3. When status bar text is enabled in Interface Options displays the target's health percentage over its health bar.
+**Focused** changes the default position of both yours and your target's portraits to the center of the screen. It then rubber-band the portraits together so that when you drag one around the other follows but in a symmetric fashion, mirroring your motion across the vertical axis.
 
 ## Installation
 
@@ -22,7 +20,7 @@ Upon logging in after the add-on's been installed the default position of your c
 
 Simply delete the `Focused` folder in your add-ons directory.
 
-Please note that uninstalling the add-on won't restore your character's and target's portrait position. For that you'll need to reset their position via the right-click menu.
+Please note that uninstalling the add-on won't restore your character's and target's portrait position. For that you'll need to reset their position right-clicking each of them and selectin Move Frame > Reset Position.
 
 ## License
 

@@ -1,6 +1,6 @@
 ## Interface: 11302
 ## Version: 1.0.1
 ## Title: Focused
-## Notes: Tether your character's and your target's portraits together.
+## Notes: Bring yours and your target's health bar to the center of attention.
 ## DefaultState: enabled
 Focused.xml
