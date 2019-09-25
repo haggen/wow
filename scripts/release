@@ -8,7 +8,7 @@ help() {
 	EOF
 }
 
-count-patch() {
+count-commits-since-last-tag() {
 	local range
 	range="$(git describe --tags --abbrev=0 --match "$1/*" 2>/dev/null)..HEAD"
 	git rev-list --count "${range#..}" -- "$1" 2>/dev/null
@@ -74,7 +74,8 @@ patch="$(echo "$old_version" | cut -f3 -d.)"
 
 case "${mode=patch}" in
 	patch)
-		patch=$(count-patch "$platform/$name")
+		count=$(count-commits-since-last-tag "$platform/$name")
+		patch=$((patch + count))
 		;;
 	minor)
 		patch=0
