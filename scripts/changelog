@@ -46,4 +46,4 @@ fi
 prefix="${1%/*}"
 range="$(git describe --tags --abbrev=0 --match "$prefix/*" "$1^" 2>/dev/null || echo)..$1^"
 
-git rev-list --format="${format=oneline}" "${range#..}" -- "$prefix"
+git log --format="${format=- %h %s}" "${range#..}" -- "$prefix"
