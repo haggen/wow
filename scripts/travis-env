@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+export TARGET="${TRAVIS_TAG%/*}"
+
+if test -n "$TARGET"; then
+	platform="${TARGET%/*}"
+	name="${TARGET#*/}"
+	version="${TRAVIS_TAG#$TARGET/}"
+
+	export RELEASE="$name $version ($platform)"
+	export ARCHIVE="$name-$version-$platform"
+fi
