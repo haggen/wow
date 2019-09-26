@@ -4,7 +4,7 @@
 
 -- Constants.
 --
-local FRAME_INITIAL_POSITION = {
+local FRAME_POINT = {
 	[PlayerFrame] = "RIGHT",
 	[TargetFrame] = "LEFT"
 };
@@ -13,12 +13,37 @@ local FRAME_INITIAL_POSITION = {
 --
 Focused = {};
 
+local framePositionChangedInCombat = false;
+local framePositionResetInCombat = false;
+
 -- Reset frame's position to the center of the screen.
 --
 local function SetInitialPosition(frame)
-	frame:SetUserPlaced(true);
-	frame:ClearAllPoints();
-	frame:SetPoint(FRAME_INITIAL_POSITION[frame], UIParent, "CENTER");
+	if InCombatLockdown() then
+		framePositionResetInCombat = true;
+	else
+		frame:SetUserPlaced(true);
+		frame:ClearAllPoints();
+		frame:SetPoint(FRAME_POINT[frame], UIParent, "CENTER");
+	end
+end
+
+local function ResetUserPlacedPosition()
+	SetInitialPosition(TargetFrame);
+	SetInitialPosition(PlayerFrame);
+end
+
+-- Given a user placed frames, update its offsetX to a mirrored value of the given anchor.
+--
+function SetMirroredPosition(frame, anchor)
+	if InCombatLockdown() then
+		framePositionChangedInCombat = {frame, anchor};
+	else
+		local point, _, _, offsetX, offsetY = unpack(anchor);
+		local mirroredOffsetX = GetScreenWidth() - offsetX - frame:GetWidth();
+		frame:ClearAllPoints();
+		frame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", mirroredOffsetX, offsetY);
+	end
 end
 
 -- Initialization.
@@ -26,31 +51,33 @@ end
 function Focused:OnLoad()
 	Focused = self;
 
-	if (not PlayerFrame:IsUserPlaced()) then
-		SetInitialPosition(PlayerFrame);
-	end
+	self:RegisterEvent("PLAYER_REGEN_ENABLED");
 
-	if (not TargetFrame:IsUserPlaced()) then
-		SetInitialPosition(TargetFrame);
+	if (not PlayerFrame:IsUserPlaced()) or (not TargetFrame:IsUserPlaced()) then
+		ResetUserPlacedPosition();
 	end
-end
-
--- Given two frames, mirror their offset along the X axis.
---
-local function SetMirroredPosition(a, b)
-	local _, _, _, offsetX, offsetY = b:GetPoint(1);
-	local mirroredOffsetX = GetScreenWidth() - offsetX - a:GetWidth();
-	a:ClearAllPoints();
-	a:SetPoint("TOPLEFT", nil, "TOPLEFT", mirroredOffsetX, offsetY);
 end
 
 -- Update the other frame position when one is moving.
 --
 function Focused:OnUpdate()
 	if (PlayerFrame:IsDragging()) then
-		SetMirroredPosition(TargetFrame, PlayerFrame);
+		SetMirroredPosition(TargetFrame, {PlayerFrame:GetPoint(1)});
 	elseif (TargetFrame:IsDragging()) then
-		SetMirroredPosition(PlayerFrame, TargetFrame);
+		SetMirroredPosition(PlayerFrame, {TargetFrame:GetPoint(1)});
+	end
+end
+
+function Focused:OnEvent(event)
+	if (event == "PLAYER_REGEN_ENABLED") then
+		if (framePositionResetInCombat) then
+			ResetUserPlacedPosition();
+		elseif (framePositionChangedInCombat) then
+			SetMirroredPosition(unpack(framePositionChangedInCombat));
+		end
+
+		framePositionResetInCombat = false;
+		framePositionChangedInCombat = false;
 	end
 end
 
@@ -59,19 +86,15 @@ end
 --
 
 -- FrameXML/TargetFrame.lua:1146
-hooksecurefunc("TargetFrame_ResetUserPlacedPosition", function()
-	SetInitialPosition(TargetFrame);
-
-	if (PlayerFrame:IsUserPlaced()) then
-		SetInitialPosition(PlayerFrame);
-	end
-end);
+function TargetFrame_ResetUserPlacedPosition()
+-- hooksecurefunc("TargetFrame_ResetUserPlacedPosition", function()
+	ResetUserPlacedPosition();
+-- end);
+end
 
 -- FrameXML/PlayerFrame.lua:821
-hooksecurefunc("PlayerFrame_ResetUserPlacedPosition", function()
-	SetInitialPosition(PlayerFrame);
-
-	if (TargetFrame:IsUserPlaced()) then
-		SetInitialPosition(TargetFrame);
-	end
-end);
+function PlayerFrame_ResetUserPlacedPosition()
+-- hooksecurefunc("PlayerFrame_ResetUserPlacedPosition", function()
+	ResetUserPlacedPosition();
+-- end);
+end
