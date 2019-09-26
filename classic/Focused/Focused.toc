@@ -1,5 +1,5 @@
 ## Interface: 11302
-## Version: 1.0.1
+## Version: 1.0.16
 ## Title: Focused
 ## Notes: Bring yours and your target's health bar to the center of attention.
 ## DefaultState: enabled
