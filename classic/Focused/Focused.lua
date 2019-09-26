@@ -41,7 +41,7 @@ function SetMirroredPosition(frame, anchor)
 	if InCombatLockdown() then
 		framePositionChangedInCombat = {frame, anchor};
 	else
-		local point, _, _, offsetX, offsetY = unpack(anchor);
+		local _, _, _, offsetX, offsetY = unpack(anchor);
 		local mirroredOffsetX = GetScreenWidth() - offsetX - frame:GetWidth();
 		frame:ClearAllPoints();
 		frame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", mirroredOffsetX, offsetY);
