@@ -29,8 +29,10 @@ local function SetInitialPosition(frame)
 end
 
 local function ResetUserPlacedPosition()
-	SetInitialPosition(TargetFrame);
 	SetInitialPosition(PlayerFrame);
+	PlayerFrame_SetLocked(false);
+	SetInitialPosition(TargetFrame);
+	TargetFrame_SetLocked(false);
 end
 
 -- Given a user placed frames, update its offsetX to a mirrored value of the given anchor.
