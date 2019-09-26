@@ -21,4 +21,5 @@ deploy:
   file: "$ARCHIVE.zip"
   name: "$RELEASE"
   release_notes_file: "$ARCHIVE.md"
-  on.tags: yes
+  on:
+    tags: yes
