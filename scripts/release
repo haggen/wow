@@ -57,6 +57,9 @@ if ! test -d "$1"; then
 	exit 1
 fi
 
+scripts/validate-lua "$1"
+scripts/validate-xml "$1"
+
 platform="$(dirname "$1")"
 name="$(basename "$1")"
 manifest="$platform/$name/$name.toc"
