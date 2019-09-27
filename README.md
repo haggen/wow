@@ -1,4 +1,4 @@
-<p align="center"><img src="wow.jpg" width="400"></p>
+<p align="center"><img src="wow.png" width="640"></p>
 <p align="center">My add-ons for World of Warcraft®. <a href="https://travis-ci.org/haggen/wow"><img src="https://travis-ci.org/haggen/wow.svg?branch=master" valign="middle"></a></p>
 
 ---
@@ -7,10 +7,10 @@
 
 Add-ons compatible with WoW Classic (1.13).
 
-- [Threatrack](/classic/Threatrack) `*NEW*`
-- [Fastbind](/classic/Fastbind)
-- [Focused](/classic/Focused)
-- [Developer](/classic/Developer)
+- **[Threatrack](/classic/Threatrack) `*NEW*`**
+- **[Fastbind](/classic/Fastbind)**
+- **[Focused](/classic/Focused)**
+- **[Developer](/classic/Developer)**
 
 ## Development
 
