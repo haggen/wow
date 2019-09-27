@@ -270,6 +270,11 @@ end
 function Threatrack:OnLoad()
     Threatrack = self;
 
+    -- BreathBar default position overlaps with the portraits.
+    -- FrameXML/MirrorTimer.xml:80
+    MirrorTimer1:ClearAllPoints();
+    MirrorTimer1:SetPoint("TOP", 0, -104);
+
     Threatrack_HandlePlayerPresence(function()
         self:Update();
     end);

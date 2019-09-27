@@ -63,7 +63,7 @@
     <Frame mixin="Threatrack" toplevel="true" parent="UIParent">
         <Size y="64"/>
         <Anchors>
-            <Anchor point="TOP" y="-32"/>
+            <Anchor point="TOP" y="-16"/>
         </Anchors>
         <Frames>
             <Frame parentArray="portraits" hidden="true" inherits="ThreatrackPortraitTemplate"/>
