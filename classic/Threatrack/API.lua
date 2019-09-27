@@ -43,6 +43,7 @@ local function CreatePlayerData()
 	return {
 		firstDetectionTime = GetTime(),
 		lastDetectionTime = GetTime(),
+		guid = "",
 		name = "",
 		sex = UNKNOWN,
 		race = UNKNOWN,
@@ -102,7 +103,7 @@ local allPlayerData = {};
 --
 local function RegisterPlayerPresence(playerData)
 	for i = 1, #allPlayerData do
-		if (playerData.name == allPlayerData[i].name) then
+		if (playerData.guid == allPlayerData[i].guid) then
 			UpdatePlayerData(allPlayerData[i], playerData);
 			return nil;
 		end
@@ -151,6 +152,7 @@ local function CreatePlayerDataFromUnit(unit)
 
 	local data = CreatePlayerData();
 
+	data.guid = UnitGUID(unit);
 	data.name = GetUnitName(unit);
 	data.race = string.upper(select(2, UnitRace(unit)));
 	data.class = select(2, UnitClass(unit));
@@ -192,21 +194,32 @@ end
 
 -- Collect player data from combat log event source or target player.
 --
-local function CreatePlayerDataFromCombatLogEvent(name, flags, spell)
+local function CreatePlayerDataFromCombatLogEvent(guid, flags, spell)
 	if (not IsCombatLogFlagsTypePlayer(flags)) then
 		return nil;
 	end
 
+	local _, class, _, race, sex, name = GetPlayerInfoByGUID(guid);
+
 	local data = CreatePlayerData();
 
-	data.name = name or "";
+	data.guid = guid;
+	data.name = name;
+	data.race = string.upper(race);
+	data.class = class;
 	data.reaction = ReadCombatLogFlagsReaction(flags);
+
+	if (sex == 2) then
+		data.sex = MALE;
+	elseif (sex == 3) then
+		data.sex = FEMALE;
+	end
 
 	if (spell) then
 		local estimateData = THREATRACK_SPELL_DATA[spell];
 		if (estimateData) then
-			data.race = estimateData[1] or UNKNOWN;
-			data.class = estimateData[2] or UNKNOWN;
+			-- data.race = estimateData[1] or UNKNOWN;
+			-- data.class = estimateData[2] or UNKNOWN;
 			data.estimatedLevel = estimateData[3];
 		end
 	end
@@ -233,14 +246,14 @@ local function OnEvent(_, event)
 		local combatLogEvent = {CombatLogGetCurrentEventInfo()};
 
 		-- local timestamp, event, hideCaster, sourceGuid, sourceName, sourceFlags, sourceRaidFlags,
-		-- 	targetGuid, targetName, targetFlags, targetRaidFlags, _, spellName, _, _, _, _, _, _, _ = unpack(combatLogEvent);
+		-- 	targetGuid, targetName, targetFlags, targetRaidFlags, _, spellName, _, _, _, _, _, _, _, _ = unpack(combatLogEvent);
 
-		local sourceData = CreatePlayerDataFromCombatLogEvent(combatLogEvent[5], combatLogEvent[6], combatLogEvent[13]);
+		local sourceData = CreatePlayerDataFromCombatLogEvent(combatLogEvent[4], combatLogEvent[6], combatLogEvent[13]);
 		if (sourceData) then
 			RegisterPlayerPresence(sourceData);
 		end
 
-		local targetData = CreatePlayerDataFromCombatLogEvent(combatLogEvent[9], combatLogEvent[10]);
+		local targetData = CreatePlayerDataFromCombatLogEvent(combatLogEvent[8], combatLogEvent[10]);
 		if (targetData) then
 			RegisterPlayerPresence(targetData);
 		end
