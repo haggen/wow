@@ -26,6 +26,26 @@ local SHAMAN = "SHAMAN";
 local WARLOCK = "WARLOCK";
 local WARRIOR = "WARRIOR";
 
+local PRETTY_NAMES = {
+    [DWARF] = "Dwarf";
+    [GNOME] = "Gnome";
+    [HUMAN] = "Human";
+    [NIGHTELF] = "Night Elf";
+    [ORC] = "Orc";
+    [SCOURGE] = "Undead";
+    [TAUREN] = "Tauren";
+    [TROLL] = "Troll";
+    [DRUID] = "Druid";
+    [HUNTER] = "Hunter";
+    [MAGE] = "Mage";
+    [PALADIN] = "Paladin";
+    [PRIEST] = "Priest";
+    [ROGUE] = "Rogue";
+    [SHAMAN] = "Shaman";
+    [WARLOCK] = "Warlock";
+    [WARRIOR] = "Warrior";
+}
+
 -- Gap between portraits.
 --
 local GUTTER = 8;
@@ -126,15 +146,32 @@ end
 
 function ThreatrackPortrait:OnEnter()
     GameTooltip:ClearAllPoints();
-    GameTooltip:SetOwner(self, "ANCHOR_BOTTOM");
-
+    GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, -8);
     if (self.data.stack) then
-        GameTooltip:SetText("Players:")
+        GameTooltip:SetText(PRETTY_NAMES[self.data.class]);
         for i = 1, #self.data.stack do
-            GameTooltip:AddLine(self.data.stack[i].name);
+            local data = self.data.stack;
+            local level = data[i].effectiveLevel;
+            if (level < 1) then
+                if (data[i].estimatedLevel > 0) then
+                    level = string.format("%d+", data[i].estimatedLevel);
+                else
+                    level = "??";
+                end
+            end
+            GameTooltip:AddDoubleLine(data[i].name, string.format("Level %s %s", level, PRETTY_NAMES[data[i].race]), 1, 1, 1, 1, 1, 1);
         end
     else
+        local level = self.data.effectiveLevel;
+        if (level < 1) then
+            if (self.data.estimatedLevel > 0) then
+                level = string.format("%d+", self.data.estimatedLevel);
+            else
+                level = "??";
+            end
+        end
         GameTooltip:SetText(self.data.name);
+        GameTooltip:AddLine(string.format("Level %s %s %s", level, PRETTY_NAMES[self.data.race], PRETTY_NAMES[self.data.class]), 1, 1, 1);
     end
 
     GameTooltip:Show();
