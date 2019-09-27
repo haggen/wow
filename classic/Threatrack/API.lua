@@ -17,7 +17,7 @@ local FLAG_PLAYER = COMBATLOG_OBJECT_TYPE_PLAYER;
 
 -- Time in seconds after which the player data becomes stale.
 --
-local FRESHNESS_THRESHOLD = 20;
+local FRESHNESS_THRESHOLD = 30;
 
 -- Registry of handlers to player presence detection.
 --
