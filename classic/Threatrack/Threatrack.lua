@@ -150,19 +150,6 @@ end
 
 Threatrack = {};
 
-local SORTING_RANK = {
-    [WARRIOR] = 1,
-    [PALADIN] = 2,
-    [ROGUE] = 3,
-    [HUNTER] = 4,
-    [PRIEST] = 5,
-    [MAGE] = 6,
-    [WARLOCK] = 7,
-    [SHAMAN] = 8,
-    [DRUID] = 9,
-    [UNKNOWN] = 10,
-};
-
 local function SortStackedPresenceData(a, b)
     return #a.stack > #b.stack;
 end
@@ -190,12 +177,7 @@ local function StackPresenceData(data)
 end
 
 local function SortFlatPresenceData(a, b)
-    if (a.class and b.class) then
-        return SORTING_RANK[a.class] < SORTING_RANK[b.class];
-    elseif (a.class) then
-        return true;
-    end
-    return false;
+    return a.lastDetectionTime < b.lastDetectionTime;
 end
 
 function Threatrack:GetPresenceData()
