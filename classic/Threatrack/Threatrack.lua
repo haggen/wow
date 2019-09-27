@@ -74,11 +74,11 @@ function ThreatrackPortrait:Update(data)
     if (data.stack) then
         self.Level:Show();
         self.Level:SetText(string.format("×%d", #data.stack));
-    elseif (data.level < 0) then
+    elseif (data.effectiveLevel < 0) then
         self.Skull:Show();
-    elseif (data.level > 0) then
+    elseif (data.effectiveLevel > 0) then
         self.Level:Show();
-        self.Level:SetText(data.level);
+        self.Level:SetText(data.effectiveLevel);
     elseif (data.estimatedLevel > 0) then
         self.Level:Show();
         self.Level:SetText(string.format(" %d+", data.estimatedLevel));
@@ -199,7 +199,7 @@ local function SortFlatPresenceData(a, b)
 end
 
 function Threatrack:GetPresenceData()
-    local data = Threatrack_GetFreshPresenceData();
+    local data = Threatrack_GetFreshPlayerData();
 
     if (ThreatrackSavedVars.options.ignoreFriendlyPresence) then
         local hostilePresenceData = {};
@@ -251,7 +251,7 @@ end
 function Threatrack:OnLoad()
     Threatrack = self;
 
-    Threatrack_HandleNewPresence(function()
+    Threatrack_HandlePlayerPresence(function()
         self:Update();
     end);
 end
