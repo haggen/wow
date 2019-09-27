@@ -49,4 +49,4 @@ export RELEASE="$name $version ($platform)"
 mkdir -p dist
 
 git archive --format=zip -o "dist/$filename.zip" --prefix="$name/" "$1:$platform/$name/"
-scripts/changelog "$1" | grep "#[0-9]\+" > "dist/RELEASE.md"
+scripts/changelog "$1" | grep "#[0-9]\+" > "dist/$filename.md"
