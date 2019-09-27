@@ -9,6 +9,7 @@ local HOSTILE = "HOSTILE";
 local FRIENDLY = "FRIENDLY";
 local FEMALE = "FEMALE";
 local MALE = "MALE";
+local SKULL = -1;
 
 local FLAG_FRIENDLY = COMBATLOG_OBJECT_REACTION_FRIENDLY;
 local FLAG_HOSTILE = COMBATLOG_OBJECT_REACTION_HOSTILE;
@@ -70,7 +71,11 @@ local function MergePlayerDataValue(key, oldValue, newValue)
 			return newValue;
 		end
 	elseif (key == "effectiveLevel") then
-		return math.max(oldValue, newValue);
+		if (newValue == SKULL) then
+			return newValue;
+		else
+			return math.max(oldValue, newValue);
+		end
 	elseif (key == "estimatedLevel") then
 		return math.max(oldValue, newValue);
 	end

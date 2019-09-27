@@ -39,7 +39,7 @@
                 <Texture parentKey="Skull" file="Interface\TargetingFrame\UI-TargetingFrame-Skull">
                     <Size x="16" y="16"/>
                     <Anchors>
-                        <Anchor point="BOTTOMRIGHT" x="-4" y="4"/>
+                        <Anchor point="BOTTOMRIGHT" x="-3" y="4"/>
                     </Anchors>
                 </Texture>
                 <Texture setAllPoints="true">
