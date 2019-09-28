@@ -1,7 +1,7 @@
 ## Interface: 11302
 ## Version: 0.0.23
 ## Title: Threatrack
-## Notes: ...
+## Notes: Watch out for possible threats nearby.
 ## DefaultState: enabled
 ## SavedVariablesPerCharacter: ThreatrackSavedVars
 

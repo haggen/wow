@@ -1,10 +1,10 @@
 # Threatrack
 
-> ...
+> Watch out for possible threats nearby.
 
 ## About
 
-...
+**Threatrack** scans for hostile player activity around you and let you know who and how many are there so you can take an appropriate course of action. Looking all the while snazzy as hell.
 
 ## Installation
 
