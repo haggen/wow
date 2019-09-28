@@ -41,7 +41,7 @@ end
 --
 local function CreatePlayerData()
 	return {
-		firstDetectionTime = GetTime(),
+		lastEncounterTime = GetTime(),
 		lastDetectionTime = GetTime(),
 		guid = "",
 		name = UNKNOWN,
@@ -54,41 +54,51 @@ local function CreatePlayerData()
 	};
 end
 
+-- Tell whether given player data is stale, i.e. past the freshness threshold.
+--
+local function IsPresenceStale(data)
+	return GetTime() - data.lastDetectionTime > FRESHNESS_THRESHOLD;
+end
+
 -- Given old and new values, solve for which one should be honored.
 --
-local function MergePlayerDataValue(key, oldValue, newValue)
-	if (key == "lastDetectionTime") then
-		return newValue;
+local function MergePlayerDataKey(key, oldData, newData)
+	if (key == "lastEncounterTime") then
+		if IsPresenceStale(oldData) then
+			return newData[key];
+		end
+	elseif (key == "lastDetectionTime") then
+		return newData[key];
 	elseif (key == "name") then
-		if (newValue == UNKNOWN) then
-			return oldValue;
+		if (newData[key] == UNKNOWN) then
+			return oldData[key];
 		else
-			return newValue;
+			return newData[key];
 		end
 	elseif (key == "sex") or (key == "race") or (key == "class") or (key == "reaction") then
-		if (newValue == UNKNOWN) then
-			return oldValue;
+		if (newData[key] == UNKNOWN) then
+			return oldData[key];
 		else
-			return newValue;
+			return newData[key];
 		end
 	elseif (key == "effectiveLevel") then
-		if (newValue == SKULL) then
-			return newValue;
+		if (newData[key] == SKULL) then
+			return newData[key];
 		else
-			return math.max(oldValue, newValue);
+			return math.max(oldData[key], newData[key]);
 		end
 	elseif (key == "estimatedLevel") then
-		return math.max(oldValue, newValue);
+		return math.max(oldData[key], newData[key]);
 	end
 
-	return oldValue;
+	return oldData[key];
 end
 
 -- Update existing player data.
 --
 local function UpdatePlayerData(oldData, newData)
 	for key, newValue in pairs(newData) do
-		oldData[key] = MergePlayerDataValue(key, oldData[key], newValue);
+		oldData[key] = MergePlayerDataKey(key, oldData, newData);
 	end
 end
 
@@ -109,12 +119,6 @@ local function RegisterPlayerPresence(playerData)
 		end
 	end
 	table.insert(allPlayerData, playerData);
-end
-
--- Tell whether given player data is stale, i.e. past the freshness threshold.
---
-local function IsPresenceStale(data)
-	return GetTime() - data.lastDetectionTime > FRESHNESS_THRESHOLD;
 end
 
 -- Return fresh player presence data.

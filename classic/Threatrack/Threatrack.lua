@@ -283,7 +283,7 @@ local function StackPresenceData(data)
 end
 
 local function SortFlatPresenceData(a, b)
-    return a.lastDetectionTime < b.lastDetectionTime;
+    return a.lastEncounterTime < b.lastEncounterTime;
 end
 
 function Threatrack:GetPresenceData()
