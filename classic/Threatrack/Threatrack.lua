@@ -47,6 +47,7 @@ local PRETTY_NAMES = {
     [SHAMAN] = "Shaman";
     [WARLOCK] = "Warlock";
     [WARRIOR] = "Warrior";
+    [UNKNOWN] = "Unkown";
 }
 
 -- Gap between portraits.
@@ -55,7 +56,7 @@ local GUTTER = 8;
 
 -- Coordinates for cropping race/class texture maps.
 --
-local PORTRAIT_TEXTURE_COORDS = {
+local TEXTURE_COORDS = {
     -- Races.
     [HUMAN]    = {0.005859375, 0.119140625, 0.01171875, 0.23828125},
     [DWARF]    = {0.130859375, 0.244140625, 0.01171875, 0.23828125},
@@ -65,7 +66,6 @@ local PORTRAIT_TEXTURE_COORDS = {
     [SCOURGE]  = {0.130859375, 0.244140625, 0.26171875, 0.48828125},
     [TROLL]    = {0.255859375, 0.369140625, 0.26171875, 0.48828125},
     [ORC]      = {0.380859375, 0.494140625, 0.26171875, 0.48828125},
-    [UNKNOWN]  = {0.000000000, 0.921875000, 0.00000000, 0.92187500},
     -- Classes.
     [WARRIOR]  = {0.011718750, 0.238281250, 0.01171875, 0.23828125},
     [MAGE]     = {0.257812500, 0.484375000, 0.01171875, 0.23828125},
@@ -76,14 +76,15 @@ local PORTRAIT_TEXTURE_COORDS = {
     [PRIEST]   = {0.503906250, 0.730468750, 0.26171875, 0.48828125},
     [WARLOCK]  = {0.753906250, 0.980468750, 0.26171875, 0.48828125},
     [PALADIN]  = {0.011718750, 0.238281250, 0.51171875, 0.73828125},
+    -- Unknown.
     [UNKNOWN]  = {0.000000000, 0.921875000, 0.00000000, 0.92187500},
 };
 
 -- Textues for portrait race/class.
 --
 local UNKNOWN_TEXTURE = "Interface/TutorialFrame/UI-Help-Portrait";
-local PORTRAIT_CLASSES_TEXTURE = "Interface/TargetingFrame/UI-Classes-Circles";
--- local PORTRAIT_RACES_TEXTURE = "Interface/Glues/CharacterCreate/UI-CharacterCreate-RacesRound";
+local CLASSES_TEXTURE = "Interface/TargetingFrame/UI-Classes-Circles";
+-- local RACES_TEXTURE = "Interface/Glues/CharacterCreate/UI-CharacterCreate-RacesRound";
 
 --
 --
@@ -99,9 +100,9 @@ local function UpdatePortraitClassTexture(portrait, data)
     if (data.class == UNKNOWN) then
         portrait.Class:SetTexture(UNKNOWN_TEXTURE);
     else
-        portrait.Class:SetTexture(PORTRAIT_CLASSES_TEXTURE);
+        portrait.Class:SetTexture(CLASSES_TEXTURE);
     end
-    portrait.Class:SetTexCoord(unpack(PORTRAIT_TEXTURE_COORDS[data.class]));
+    portrait.Class:SetTexCoord(unpack(TEXTURE_COORDS[data.class]));
 end
 
 -- Update portrait Race icon.
@@ -110,9 +111,9 @@ end
 --     if (data.race == UNKNOWN) then
 --         portrait.Race:SetTexture(UNKNOWN_TEXTURE);
 --     else
---         portrait.Race:SetTexture(PORTRAIT_RACES_TEXTURE);
+--         portrait.Race:SetTexture(RACES_TEXTURE);
 --     end
---     portrait.Race:SetTexCoord(unpack(PORTRAIT_TEXTURE_COORDS[data.race]));
+--     portrait.Race:SetTexCoord(unpack(TEXTURE_COORDS[data.race]));
 -- end
 
 -- Tell whether the Skull icon should be displayed given a player's level information.

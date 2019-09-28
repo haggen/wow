@@ -194,20 +194,29 @@ end
 
 -- Collect player data from combat log event source or target player.
 --
-local function CreatePlayerDataFromCombatLogEvent(guid, flags, spell)
+local function CreatePlayerDataFromCombatLogEvent(guid, flags, castedSpell)
 	if (not IsCombatLogFlagsTypePlayer(flags)) then
 		return nil;
 	end
 
-	local _, class, _, race, sex, name = GetPlayerInfoByGUID(guid);
-
 	local data = CreatePlayerData();
 
 	data.guid = guid;
-	data.name = name;
-	data.race = string.upper(race);
-	data.class = class;
 	data.reaction = ReadCombatLogFlagsReaction(flags);
+
+	local _, class, _, race, sex, name = GetPlayerInfoByGUID(guid);
+
+	if (name) then
+		data.name = name;
+	end
+
+	if (race) then
+		data.race = string.upper(race);
+	end
+
+	if (class) then
+		data.class = class;
+	end
 
 	if (sex == 2) then
 		data.sex = MALE;
@@ -215,11 +224,15 @@ local function CreatePlayerDataFromCombatLogEvent(guid, flags, spell)
 		data.sex = FEMALE;
 	end
 
-	if (spell) then
-		local estimateData = THREATRACK_SPELL_DATA[spell];
+	if (castedSpell) then
+		local estimateData = THREATRACK_SPELL_DATA[castedSpell];
 		if (estimateData) then
-			-- data.race = estimateData[1] or UNKNOWN;
-			-- data.class = estimateData[2] or UNKNOWN;
+			if (data.race == UNKNOWN) then
+				data.race = estimateData[1] or UNKNOWN;
+			end
+			if (data.class == UNKNOWN) then
+				data.class = estimateData[2] or UNKNOWN;
+			end
 			data.estimatedLevel = estimateData[3] or 0;
 		end
 	end
