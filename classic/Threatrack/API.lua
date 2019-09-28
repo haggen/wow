@@ -97,7 +97,7 @@ end
 -- Update existing player data.
 --
 local function UpdatePlayerData(oldData, newData)
-	for key, newValue in pairs(newData) do
+	for key, _ in pairs(newData) do
 		oldData[key] = MergePlayerDataKey(key, oldData, newData);
 	end
 end
