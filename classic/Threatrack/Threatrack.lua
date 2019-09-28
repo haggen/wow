@@ -27,6 +27,21 @@ local SHAMAN = "SHAMAN";
 local WARLOCK = "WARLOCK";
 local WARRIOR = "WARRIOR";
 
+-- ...
+--
+local SORTING_RANK = {
+    [WARRIOR] =  1,
+    [PALADIN] =  2,
+    [ROGUE]   =  3,
+    [HUNTER]  =  4,
+    [DRUID]   =  5,
+    [SHAMAN]  =  6,
+    [PRIEST]  =  7,
+    [MAGE]    =  8,
+    [WARLOCK] =  9,
+    [UNKNOWN] = 10,
+};
+
 -- Used for display.
 -- TODO: In the future this should be translatable.
 local PRETTY_NAMES = {
@@ -263,7 +278,7 @@ end
 Threatrack = {};
 
 local function SortStackedPresenceData(a, b)
-    return #a.stack > #b.stack;
+    return SORTING_RANK[a.class] < SORTING_RANK[b.class];
 end
 
 local function StackPresenceData(data)
