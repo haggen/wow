@@ -203,12 +203,21 @@ end
 
 -- ...
 --
+local function GetDisplayName(data)
+    if (data.name == UNKNOWN) then
+        return "??";
+    end
+    return data.name;
+end
+
+-- ...
+--
 local function SetStackedPortraitTooltip(data)
     GameTooltip:SetText(PRETTY_NAMES[data.class]);
 
     for i = 1, #data.stack do
         local details = string.format("Level %s %s", GetDisplayLevel(data.stack[i]), PRETTY_NAMES[data.stack[i].race]);
-        GameTooltip:AddDoubleLine(data.stack[i].name, details, 1, 1, 1, 1, 1, 1);
+        GameTooltip:AddDoubleLine(GetDisplayName(data.stack[i]), details, 1, 1, 1, 1, 1, 1);
     end
 end
 
@@ -216,7 +225,7 @@ end
 --
 local function SetFlatPortraitTooltip(data)
     local details = string.format("Level %s %s %s", GetDisplayLevel(data), PRETTY_NAMES[data.race], PRETTY_NAMES[data.class]);
-    GameTooltip:SetText(data.name);
+    GameTooltip:SetText(GetDisplayName(data));
     GameTooltip:AddLine(details, 1, 1, 1);
 end
 

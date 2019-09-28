@@ -44,7 +44,7 @@ local function CreatePlayerData()
 		firstDetectionTime = GetTime(),
 		lastDetectionTime = GetTime(),
 		guid = "",
-		name = "",
+		name = UNKNOWN,
 		sex = UNKNOWN,
 		race = UNKNOWN,
 		class = UNKNOWN,
@@ -60,7 +60,7 @@ local function MergePlayerDataValue(key, oldValue, newValue)
 	if (key == "lastDetectionTime") then
 		return newValue;
 	elseif (key == "name") then
-		if (newValue == "") then
+		if (newValue == UNKNOWN) then
 			return oldValue;
 		else
 			return newValue;
