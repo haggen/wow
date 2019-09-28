@@ -5,6 +5,7 @@
 -- Constants.
 --
 local UNKNOWN = "UNKNOWN";
+local NEUTRAL = "NEUTRAL";
 local HOSTILE = "HOSTILE";
 local FRIENDLY = "FRIENDLY";
 local FEMALE = "FEMALE";
@@ -187,7 +188,7 @@ local function ReadCombatLogFlagsReaction(flags)
 	elseif (bit.band(flags, FLAG_FRIENDLY) == FLAG_FRIENDLY) then
 		return FRIENDLY;
 	end
-	return UNKNOWN;
+	return NEUTRAL;
 end
 
 -- Tell whether a combat log event source or target is a player.
