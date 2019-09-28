@@ -220,7 +220,7 @@ local function CreatePlayerDataFromCombatLogEvent(guid, flags, spell)
 		if (estimateData) then
 			-- data.race = estimateData[1] or UNKNOWN;
 			-- data.class = estimateData[2] or UNKNOWN;
-			data.estimatedLevel = estimateData[3];
+			data.estimatedLevel = estimateData[3] or 0;
 		end
 	end
 
