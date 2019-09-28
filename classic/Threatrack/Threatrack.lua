@@ -159,6 +159,11 @@ local function UpdateFlatPortrait(portrait, data)
             displayLevel = " "..displayLevel;
         end
         portrait.Level:SetText(displayLevel);
+
+        if (displayLevel ~= "??") then
+            local color = GetCreatureDifficultyColor(string.match(displayLevel, "%d+"));
+            portrait.Level:SetVertexColor(color.r, color.g, color.b);
+        end
     end
 
     UpdatePortraitClassTexture(portrait, data);
@@ -171,6 +176,7 @@ function ThreatrackPortrait:Update(data)
 
     self.Skull:Hide();
     self.Level:Hide();
+    self.Level:SetVertexColor(NORMAL_FONT_COLOR:GetRGB());
 
     if (data.stack) then
         UpdateStackedPortrait(self, data);
