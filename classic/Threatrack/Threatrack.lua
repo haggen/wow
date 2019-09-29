@@ -8,6 +8,7 @@ local UNKNOWN = "UNKNOWN";
 local HOSTILE = "HOSTILE";
 -- local FRIENDLY = "FRIENDLY";
 local SKULL = -1;
+local MAX_LEVEL = 60;
 
 local DWARF = "DWARF";
 local GNOME = "GNOME";
@@ -154,7 +155,11 @@ local function GetDisplayLevel(data)
 	end
 	if (data.estimatedLevel > 0) then
 		if (data.effectiveLevel ~= SKULL or data.estimatedLevel > EstimatedLevelThreshold()) then
-			return string.format("%d+", data.estimatedLevel);
+			if (data.estimatedLevel == MAX_LEVEL) then
+				return MAX_LEVEL;
+			else
+				return string.format("%d+", data.estimatedLevel);
+			end
 		end
 	end
 	return "??";
