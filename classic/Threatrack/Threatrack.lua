@@ -131,11 +131,17 @@ end
 -- 	portrait.Race:SetTexCoord(unpack(TEXTURE_COORDS[data.race]));
 -- end
 
+-- ...
+--
+local function EstimatedLevelThreshold()
+	return UnitLevel("player") + 10;
+end
+
 -- Tell whether the Skull icon should be displayed given a player's level information.
 --
 local function ShouldDisplaySkullLevel(data)
 	if (data.effectiveLevel == SKULL) then
-		return data.estimatedLevel < UnitLevel("player") + 10;
+		return data.estimatedLevel < EstimatedLevelThreshold();
 	end
 	return false;
 end
@@ -147,7 +153,9 @@ local function GetDisplayLevel(data)
 		return tostring(data.effectiveLevel);
 	end
 	if (data.estimatedLevel > 0) then
-		return string.format("%d+", data.estimatedLevel);
+		if (data.effectiveLevel ~= SKULL or data.estimatedLevel > EstimatedLevelThreshold()) then
+			return string.format("%d+", data.estimatedLevel);
+		end
 	end
 	return "??";
 end

@@ -84,8 +84,8 @@ local function MergePlayerDataKey(key, oldData, newData)
 		end
 	elseif (key == "effectiveLevel") then
 		if (newData[key] == SKULL) then
-			return newData[key];
-		else
+			return SKULL;
+		elseif (newData[key] > 0) then
 			return math.max(oldData[key], newData[key]);
 		end
 	elseif (key == "estimatedLevel") then
