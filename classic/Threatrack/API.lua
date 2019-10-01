@@ -2,19 +2,20 @@
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
--- Constants.
+-- Unknown values.
 --
 local UNKNOWN = "UNKNOWN";
-local NEUTRAL = "NEUTRAL";
-local HOSTILE = "HOSTILE";
-local FRIENDLY = "FRIENDLY";
-local FEMALE = "FEMALE";
-local MALE = "MALE";
-local SKULL = -1;
 
-local FLAG_FRIENDLY = COMBATLOG_OBJECT_REACTION_FRIENDLY;
-local FLAG_HOSTILE = COMBATLOG_OBJECT_REACTION_HOSTILE;
-local FLAG_PLAYER = COMBATLOG_OBJECT_TYPE_PLAYER;
+-- Flag bits for unit reaction and type.
+--
+local HOSTILE = 0x00000040;
+local FRIENDLY = 0x00000010;
+local PLAYER = 0x00000400;
+
+-- Sex values.
+--
+local MALE = 3;
+local FEMALE = 2;
 
 -- Time in seconds after which the player data becomes stale.
 --
@@ -44,14 +45,14 @@ local function CreatePlayerData()
 	return {
 		lastEncounterTime = GetTime(),
 		lastDetectionTime = GetTime(),
-		guid = "",
-		name = UNKNOWN,
-		sex = UNKNOWN,
-		race = UNKNOWN,
-		class = UNKNOWN,
+		guid = nil,
+		name = nil,
+		sex = nil,
+		race = nil,
+		class = nil,
+		reaction = nil,
 		effectiveLevel = 0,
 		estimatedLevel = 0,
-		reaction = UNKNOWN,
 	};
 end
 
@@ -67,29 +68,17 @@ local function MergePlayerDataKey(key, oldData, newData)
 	if (key == "lastEncounterTime") then
 		if IsPresenceStale(oldData) then
 			return newData[key];
+		else
+			return oldData[key];
 		end
 	elseif (key == "lastDetectionTime") then
 		return newData[key];
-	elseif (key == "name") then
-		if (newData[key] == UNKNOWN) then
-			return oldData[key];
-		else
-			return newData[key];
-		end
-	elseif (key == "sex") or (key == "race") or (key == "class") or (key == "reaction") then
-		if (newData[key] == UNKNOWN) then
-			return oldData[key];
-		else
-			return newData[key];
-		end
-	elseif (key == "effectiveLevel") then
-		if (newData[key] == SKULL) then
-			return SKULL;
-		elseif (newData[key] > 0) then
-			return math.max(oldData[key], newData[key]);
-		end
 	elseif (key == "estimatedLevel") then
 		return math.max(oldData[key], newData[key]);
+	end
+
+	if (newData[key]) then
+		return newData[key];
 	end
 
 	return oldData[key];
@@ -159,7 +148,8 @@ local function CreatePlayerDataFromUnit(unit)
 
 	data.guid = UnitGUID(unit);
 	data.name = GetUnitName(unit);
-	data.race = string.upper(select(2, UnitRace(unit)));
+	data.sex = UnitSex(unit);
+	data.race = select(2, UnitRace(unit));
 	data.class = select(2, UnitClass(unit));
 	data.effectiveLevel = UnitLevel(unit);
 
@@ -169,13 +159,6 @@ local function CreatePlayerDataFromUnit(unit)
 		data.reaction = FRIENDLY;
 	end
 
-	local sex = UnitSex(unit);
-	if (sex == 2) then
-		data.sex = MALE;
-	elseif (sex == 3) then
-		data.sex = FEMALE;
-	end
-
 	return data;
 end
 
@@ -183,23 +166,23 @@ end
 -- friendly, hostile or unknown reaction towards the player.
 --
 local function ReadCombatLogFlagsReaction(flags)
-	if (bit.band(flags, FLAG_HOSTILE) == FLAG_HOSTILE) then
+	if (HOSTILE == bit.band(flags, HOSTILE)) then
 		return HOSTILE;
-	elseif (bit.band(flags, FLAG_FRIENDLY) == FLAG_FRIENDLY) then
+	elseif (FRIENDLY == bit.band(flags, FRIENDLY)) then
 		return FRIENDLY;
 	end
-	return NEUTRAL;
+	return nil;
 end
 
 -- Tell whether a combat log event source or target is a player.
 --
 local function IsCombatLogFlagsTypePlayer(flags)
-	return bit.band(flags, FLAG_PLAYER) == FLAG_PLAYER;
+	return PLAYER == bit.band(flags, PLAYER);
 end
 
 -- Collect player data from combat log event source or target player.
 --
-local function CreatePlayerDataFromCombatLogEvent(guid, flags, castedSpell)
+local function CreatePlayerDataFromCombatLogEvent(guid, flags, spellName)
 	if (not IsCombatLogFlagsTypePlayer(flags)) then
 		return nil;
 	end
@@ -209,36 +192,12 @@ local function CreatePlayerDataFromCombatLogEvent(guid, flags, castedSpell)
 	data.guid = guid;
 	data.reaction = ReadCombatLogFlagsReaction(flags);
 
-	local _, class, _, race, sex, name = GetPlayerInfoByGUID(guid);
+	_, data.class, _, data.race, data.sex, data.name = GetPlayerInfoByGUID(guid);
 
-	if (name) then
-		data.name = name;
-	end
-
-	if (race) then
-		data.race = string.upper(race);
-	end
-
-	if (class) then
-		data.class = class;
-	end
-
-	if (sex == 2) then
-		data.sex = MALE;
-	elseif (sex == 3) then
-		data.sex = FEMALE;
-	end
-
-	if (castedSpell) then
-		local estimateData = THREATRACK_SPELL_DATA[castedSpell];
-		if (estimateData) then
-			if (data.race == UNKNOWN) then
-				data.race = estimateData[1] or UNKNOWN;
-			end
-			if (data.class == UNKNOWN) then
-				data.class = estimateData[2] or UNKNOWN;
-			end
-			data.estimatedLevel = estimateData[3] or 0;
+	if (spellName) then
+		local spellData = THREATRACK_SPELL_DATA[spellName];
+		if (spellData) then
+			data.estimatedLevel = spellData[3];
 		end
 	end
 

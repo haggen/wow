@@ -2,22 +2,42 @@
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
--- Constants.
+-- Unknown values.
 --
 local UNKNOWN = "UNKNOWN";
-local HOSTILE = "HOSTILE";
--- local FRIENDLY = "FRIENDLY";
-local SKULL = -1;
+
+-- Flag bits for unit reaction and type.
+--
+local HOSTILE = 0x00000040;
+local FRIENDLY = 0x00000010;
+local PLAYER = 0x00000400;
+
+-- Sex values.
+--
+local MALE = 3;
+local FEMALE = 2;
+
+-- Hostile players 10+ levels higher than you are reported as -1.
+--
+local SKULL_LEVEL = -1;
+
+-- Better than a random number 60 floating around in the code.
+--
 local MAX_LEVEL = 60;
 
-local DWARF = "DWARF";
-local GNOME = "GNOME";
-local HUMAN = "HUMAN";
-local NIGHTELF = "NIGHTELF";
-local ORC = "ORC";
-local SCOURGE = "SCOURGE";
-local TAUREN = "TAUREN";
-local TROLL = "TROLL";
+-- Race enum.
+--
+local DWARF = "Dwarf";
+local GNOME = "Gnome";
+local HUMAN = "Human";
+local NIGHTELF = "NightElf";
+local ORC = "Orc";
+local SCOURGE = "Scourge";
+local TAUREN = "Tauren";
+local TROLL = "Troll";
+
+-- Class enum.
+--
 local DRUID = "DRUID";
 local HUNTER = "HUNTER";
 local MAGE = "MAGE";
@@ -113,10 +133,10 @@ ThreatrackPortrait = {};
 -- Update portrait Class icon.
 --
 local function UpdatePortraitClassTexture(portrait, data)
-	if (data.class == UNKNOWN) then
-		portrait.Class:SetTexture(UNKNOWN_TEXTURE);
-	else
+	if (data.class) then
 		portrait.Class:SetTexture(CLASSES_TEXTURE);
+	else
+		portrait.Class:SetTexture(UNKNOWN_TEXTURE);
 	end
 	portrait.Class:SetTexCoord(unpack(TEXTURE_COORDS[data.class]));
 end
@@ -124,10 +144,10 @@ end
 -- Update portrait Race icon.
 --
 -- local function UpdatePortraitRaceTexture(portrait, data)
--- 	if (data.race == UNKNOWN) then
--- 		portrait.Race:SetTexture(UNKNOWN_TEXTURE);
--- 	else
+-- 	if (data.race) then
 -- 		portrait.Race:SetTexture(RACES_TEXTURE);
+-- 	else
+-- 		portrait.Race:SetTexture(UNKNOWN_TEXTURE);
 -- 	end
 -- 	portrait.Race:SetTexCoord(unpack(TEXTURE_COORDS[data.race]));
 -- end
@@ -141,7 +161,7 @@ end
 -- Tell whether the Skull icon should be displayed given a player's level information.
 --
 local function ShouldDisplaySkullLevel(data)
-	if (data.effectiveLevel == SKULL) then
+	if (data.effectiveLevel == SKULL_LEVEL) then
 		return data.estimatedLevel < EstimatedLevelThreshold();
 	end
 	return false;
@@ -154,7 +174,7 @@ local function GetDisplayLevel(data)
 		return tostring(data.effectiveLevel);
 	end
 	if (data.estimatedLevel > 0) then
-		if (data.effectiveLevel ~= SKULL or data.estimatedLevel > EstimatedLevelThreshold()) then
+		if (data.effectiveLevel ~= SKULL_LEVEL or data.estimatedLevel > EstimatedLevelThreshold()) then
 			if (data.estimatedLevel == MAX_LEVEL) then
 				return MAX_LEVEL;
 			else
@@ -238,10 +258,10 @@ end
 -- ...
 --
 local function GetDisplayName(data)
-	if (data.name == UNKNOWN) then
-		return "??";
+	if (data.name) then
+		return data.name;
 	end
-	return data.name;
+	return "??";
 end
 
 -- ...

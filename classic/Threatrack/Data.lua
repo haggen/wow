@@ -1,16 +1,19 @@
 -- Stolen from Spy add-on by Immolation.
 -- https://www.curseforge.com/wow/addons/spy
 
--- Constants.
+-- Race enum.
 --
-local DWARF = "DWARF";
-local GNOME = "GNOME";
-local HUMAN = "HUMAN";
-local NIGHTELF = "NIGHTELF";
-local ORC = "ORC";
-local SCOURGE = "SCOURGE";
-local TAUREN = "TAUREN";
-local TROLL = "TROLL";
+local DWARF = "Dwarf";
+local GNOME = "Gnome";
+local HUMAN = "Human";
+local NIGHTELF = "NightElf";
+local ORC = "Orc";
+local SCOURGE = "Scourge";
+local TAUREN = "Tauren";
+local TROLL = "Troll";
+
+-- Class enum.
+--
 local DRUID = "DRUID";
 local HUNTER = "HUNTER";
 local MAGE = "MAGE";
