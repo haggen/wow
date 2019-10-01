@@ -63,27 +63,26 @@ local SORTING_RANK = {
 	[UNKNOWN] = 10,
 };
 
--- Used for display. TODO: In the future this should be translatable.
+-- Used for getting localized names.
 --
-local PRETTY_NAMES = {
-	[DWARF] = "Dwarf";
-	[GNOME] = "Gnome";
-	[HUMAN] = "Human";
-	[NIGHTELF] = "Night Elf";
-	[ORC] = "Orc";
-	[SCOURGE] = "Undead";
-	[TAUREN] = "Tauren";
-	[TROLL] = "Troll";
-	[DRUID] = "Druid";
-	[HUNTER] = "Hunter";
-	[MAGE] = "Mage";
-	[PALADIN] = "Paladin";
-	[PRIEST] = "Priest";
-	[ROGUE] = "Rogue";
-	[SHAMAN] = "Shaman";
-	[WARLOCK] = "Warlock";
-	[WARRIOR] = "Warrior";
-	[UNKNOWN] = "Unkown";
+local CLASS_RACE_IDS = {
+	[DWARF] = 3;
+	[GNOME] = 7;
+	[HUMAN] = 1;
+	[NIGHTELF] = 4;
+	[ORC] = 2;
+	[SCOURGE] = 5;
+	[TAUREN] = 6;
+	[TROLL] = 8;
+	[DRUID] = 11;
+	[HUNTER] = 3;
+	[MAGE] = 8;
+	[PALADIN] = 2;
+	[PRIEST] = 5;
+	[ROGUE] = 4;
+	[SHAMAN] = 7;
+	[WARLOCK] = 9;
+	[WARRIOR] = 1;
 }
 
 -- Gap between portraits.
@@ -93,16 +92,14 @@ local GUTTER = 8;
 -- Coordinates for cropping race/class texture maps.
 --
 local TEXTURE_COORDS = {
-	-- Races.
-	[HUMAN] = {0.005859375, 0.119140625, 0.01171875, 0.23828125},
-	[DWARF] = {0.130859375, 0.244140625, 0.01171875, 0.23828125},
-	[GNOME] = {0.255859375, 0.369140625, 0.01171875, 0.23828125},
-	[NIGHTELF] = {0.380859375, 0.494140625, 0.01171875, 0.23828125},
-	[TAUREN] = {0.005859375, 0.119140625, 0.26171875, 0.48828125},
-	[SCOURGE] = {0.130859375, 0.244140625, 0.26171875, 0.48828125},
-	[TROLL] = {0.255859375, 0.369140625, 0.26171875, 0.48828125},
-	[ORC] = {0.380859375, 0.494140625, 0.26171875, 0.48828125},
-	-- Classes.
+	-- [HUMAN] = {0.005859375, 0.119140625, 0.01171875, 0.23828125},
+	-- [DWARF] = {0.130859375, 0.244140625, 0.01171875, 0.23828125},
+	-- [GNOME] = {0.255859375, 0.369140625, 0.01171875, 0.23828125},
+	-- [NIGHTELF] = {0.380859375, 0.494140625, 0.01171875, 0.23828125},
+	-- [TAUREN] = {0.005859375, 0.119140625, 0.26171875, 0.48828125},
+	-- [SCOURGE] = {0.130859375, 0.244140625, 0.26171875, 0.48828125},
+	-- [TROLL] = {0.255859375, 0.369140625, 0.26171875, 0.48828125},
+	-- [ORC] = {0.380859375, 0.494140625, 0.26171875, 0.48828125},
 	[WARRIOR] = {0.011718750, 0.238281250, 0.01171875, 0.23828125},
 	[MAGE] = {0.257812500, 0.484375000, 0.01171875, 0.23828125},
 	[ROGUE] = {0.503906250, 0.730468750, 0.01171875, 0.23828125},
@@ -112,7 +109,6 @@ local TEXTURE_COORDS = {
 	[PRIEST] = {0.503906250, 0.730468750, 0.26171875, 0.48828125},
 	[WARLOCK] = {0.753906250, 0.980468750, 0.26171875, 0.48828125},
 	[PALADIN] = {0.011718750, 0.238281250, 0.51171875, 0.73828125},
-	-- Unknown.
 	[UNKNOWN] = {0.000000000, 0.921875000, 0.00000000, 0.92187500},
 };
 
@@ -257,29 +253,32 @@ end
 
 -- ...
 --
-local function GetDisplayName(data)
-	if (data.name) then
-		return data.name;
-	end
-	return "??";
+local function GetLocalizedRaceName(race)
+	return C_CreatureInfo.GetRaceInfo(CLASS_RACE_IDS[race]).raceName;
+end
+
+-- ...
+--
+local function GetLocalizedClassName(class)
+	return C_CreatureInfo.GetClassInfo(CLASS_RACE_IDS[class]).className;
 end
 
 -- ...
 --
 local function SetStackedPortraitTooltip(data)
-	GameTooltip:SetText(PRETTY_NAMES[data.class]);
+	GameTooltip:SetText(GetLocalizedClassName(data.class));
 
 	for i = 1, #data.stack do
-		local details = string.format("Level %s %s", GetDisplayLevel(data.stack[i]), PRETTY_NAMES[data.stack[i].race]);
-		GameTooltip:AddDoubleLine(GetDisplayName(data.stack[i]), details, 1, 1, 1, 1, 1, 1);
+		local details = string.format("Level %s %s", GetDisplayLevel(data.stack[i]), GetLocalizedRaceName(data.stack[i].race));
+		GameTooltip:AddDoubleLine(data.stack[i].name or "??", details, 1, 1, 1, 1, 1, 1);
 	end
 end
 
 -- ...
 --
 local function SetFlatPortraitTooltip(data)
-	local details = string.format("Level %s %s %s", GetDisplayLevel(data), PRETTY_NAMES[data.race], PRETTY_NAMES[data.class]);
-	GameTooltip:SetText(GetDisplayName(data));
+	local details = string.format("Level %s %s %s", GetDisplayLevel(data), GetLocalizedRaceName(data.race), GetLocalizedClassName(data.class));
+	GameTooltip:SetText(data.name or "??");
 	GameTooltip:AddLine(details, 1, 1, 1);
 end
 
