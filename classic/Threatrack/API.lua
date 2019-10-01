@@ -73,6 +73,10 @@ local function MergePlayerDataKey(key, oldData, newData)
 		end
 	elseif (key == "lastDetectionTime") then
 		return newData[key];
+	elseif (key == "effectiveLevel") then
+		if (newData[key] == 0) then
+			return oldData[key];
+		end
 	elseif (key == "estimatedLevel") then
 		return math.max(oldData[key], newData[key]);
 	end
@@ -92,35 +96,31 @@ local function UpdatePlayerData(oldData, newData)
 	end
 end
 
--- Database of player presence detected data during the current session.
+-- Table of detected player data.
 --
--- TODO: This table only grows, and it's looped over every time
--- player player data is requested so we should fix it, eventually.
---
-local allPlayerData = {};
+local detectedPlayers = {};
 
--- Register new player data into the database.
+-- Register player presence into the table.
 --
-local function RegisterPlayerPresence(playerData)
-	for i = 1, #allPlayerData do
-		if (playerData.guid == allPlayerData[i].guid) then
-			UpdatePlayerData(allPlayerData[i], playerData);
-			return nil;
-		end
+local function RegisterPlayerData(newData)
+	local oldData = detectedPlayers[newData.guid];
+	if (oldData) then
+		UpdatePlayerData(oldData, newData);
+	else
+		detectedPlayers[newData.guid] = newData;
 	end
-	table.insert(allPlayerData, playerData);
 end
 
 -- Return fresh player presence data.
 --
 local function GetFreshPlayerData()
-	local freshPlayerData = {};
-	for i = 1, #allPlayerData do
-		if (not IsPresenceStale(allPlayerData[i])) then
-			table.insert(freshPlayerData, allPlayerData[i]);
+	local freshlyDetectedPlayers = {};
+	for _, data in pairs(detectedPlayers) do
+		if (not IsPresenceStale(data)) then
+			table.insert(freshlyDetectedPlayers, data);
 		end
 	end
-	return freshPlayerData;
+	return freshlyDetectedPlayers;
 end
 
 --
@@ -210,29 +210,27 @@ local function OnEvent(_, event)
 	if (event == "PLAYER_TARGET_CHANGED") then
 		local data = CreatePlayerDataFromUnit("target");
 		if (data) then
-			RegisterPlayerPresence(data);
+			RegisterPlayerData(data);
 			CallPlayerPresenceHandlers();
 		end
 	elseif (event == "UPDATE_MOUSEOVER_UNIT") then
 		local data = CreatePlayerDataFromUnit("mouseover");
 		if (data) then
-			RegisterPlayerPresence(data);
+			RegisterPlayerData(data);
 			CallPlayerPresenceHandlers();
 		end
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
-		local combatLogEvent = {CombatLogGetCurrentEventInfo()};
+		local _, _, _, sourceGuid, _, sourceFlags, _, targetGuid, _, targetFlags,
+			_, _, spellName, _, _, _, _, _, _, _, _ = CombatLogGetCurrentEventInfo();
 
-		-- local timestamp, event, hideCaster, sourceGuid, sourceName, sourceFlags, sourceRaidFlags,
-		-- 	targetGuid, targetName, targetFlags, targetRaidFlags, _, spellName, _, _, _, _, _, _, _, _ = unpack(combatLogEvent);
-
-		local sourceData = CreatePlayerDataFromCombatLogEvent(combatLogEvent[4], combatLogEvent[6], combatLogEvent[13]);
+		local sourceData = CreatePlayerDataFromCombatLogEvent(sourceGuid, sourceFlags, spellName);
 		if (sourceData) then
-			RegisterPlayerPresence(sourceData);
+			RegisterPlayerData(sourceData);
 		end
 
-		local targetData = CreatePlayerDataFromCombatLogEvent(combatLogEvent[8], combatLogEvent[10]);
+		local targetData = CreatePlayerDataFromCombatLogEvent(targetGuid, targetFlags);
 		if (targetData) then
-			RegisterPlayerPresence(targetData);
+			RegisterPlayerData(targetData);
 		end
 
 		if (sourceData or targetData) then
