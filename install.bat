@@ -1,7 +1,7 @@
 @echo off
 
 set platform=%~1
-set source=%~dp0..\%~1
+set source=%~dp0%~1
 set target=%~f2\_%~1_\Interface\AddOns
 
 if "%platform%" == "" goto missing
