@@ -270,7 +270,12 @@ local function SetStackedPortraitTooltip(data)
 
 	for i = 1, #data.stack do
 		local details = string.format("Level %s %s", GetDisplayLevel(data.stack[i]), GetLocalizedRaceName(data.stack[i].race));
-		GameTooltip:AddDoubleLine(data.stack[i].name or "??", details, 1, 1, 1, 1, 1, 1);
+		GameTooltip:AddLine(data.stack[i].name or "??");
+		GameTooltip:AddLine(details, 1, 1, 1);
+
+		local text = _G["GameTooltipTextLeft"..(i * 2)];
+		text:SetHeight(18);
+		text:SetJustifyV("BOTTOM");
 	end
 end
 
