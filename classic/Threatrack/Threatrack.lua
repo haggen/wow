@@ -2,28 +2,17 @@
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
--- Unknown values.
+-- High level hostile players.
 --
-local UNKNOWN = "UNKNOWN";
+local SKULL = -1;
 
--- Flag bits for unit reaction and type.
+-- Flag/value for combat log event hostile reaction.
 --
 local HOSTILE = 0x00000040;
-local FRIENDLY = 0x00000010;
-local PLAYER = 0x00000400;
 
--- Sex values.
+-- Max player level.
 --
-local MALE = 3;
-local FEMALE = 2;
-
--- Hostile players 10+ levels higher than you are reported as -1.
---
-local SKULL_LEVEL = -1;
-
--- Better than a random number 60 floating around in the code.
---
-local MAX_LEVEL = 60;
+local MAXED = 60;
 
 -- Race enum.
 --
@@ -60,7 +49,6 @@ local SORTING_RANK = {
 	[PRIEST] = 7,
 	[MAGE] = 8,
 	[WARLOCK] = 9,
-	[UNKNOWN] = 10,
 };
 
 -- Used for getting localized names.
@@ -92,14 +80,6 @@ local GUTTER = 8;
 -- Coordinates for cropping race/class texture maps.
 --
 local TEXTURE_COORDS = {
-	-- [HUMAN] = {0.005859375, 0.119140625, 0.01171875, 0.23828125},
-	-- [DWARF] = {0.130859375, 0.244140625, 0.01171875, 0.23828125},
-	-- [GNOME] = {0.255859375, 0.369140625, 0.01171875, 0.23828125},
-	-- [NIGHTELF] = {0.380859375, 0.494140625, 0.01171875, 0.23828125},
-	-- [TAUREN] = {0.005859375, 0.119140625, 0.26171875, 0.48828125},
-	-- [SCOURGE] = {0.130859375, 0.244140625, 0.26171875, 0.48828125},
-	-- [TROLL] = {0.255859375, 0.369140625, 0.26171875, 0.48828125},
-	-- [ORC] = {0.380859375, 0.494140625, 0.26171875, 0.48828125},
 	[WARRIOR] = {0.011718750, 0.238281250, 0.01171875, 0.23828125},
 	[MAGE] = {0.257812500, 0.484375000, 0.01171875, 0.23828125},
 	[ROGUE] = {0.503906250, 0.730468750, 0.01171875, 0.23828125},
@@ -109,44 +89,17 @@ local TEXTURE_COORDS = {
 	[PRIEST] = {0.503906250, 0.730468750, 0.26171875, 0.48828125},
 	[WARLOCK] = {0.753906250, 0.980468750, 0.26171875, 0.48828125},
 	[PALADIN] = {0.011718750, 0.238281250, 0.51171875, 0.73828125},
-	[UNKNOWN] = {0.000000000, 0.921875000, 0.00000000, 0.92187500},
 };
 
--- Textues for portrait race/class.
---
-local UNKNOWN_TEXTURE = "Interface/TutorialFrame/UI-Help-Portrait";
-local CLASSES_TEXTURE = "Interface/TargetingFrame/UI-Classes-Circles";
--- local RACES_TEXTURE = "Interface/Glues/CharacterCreate/UI-CharacterCreate-RacesRound";
-
 --
 --
 --
-
--- Portrait mixin.
---
-ThreatrackPortrait = {};
 
 -- Update portrait Class icon.
 --
 local function UpdatePortraitClassTexture(portrait, data)
-	if (data.class) then
-		portrait.Class:SetTexture(CLASSES_TEXTURE);
-	else
-		portrait.Class:SetTexture(UNKNOWN_TEXTURE);
-	end
 	portrait.Class:SetTexCoord(unpack(TEXTURE_COORDS[data.class]));
 end
-
--- Update portrait Race icon.
---
--- local function UpdatePortraitRaceTexture(portrait, data)
--- 	if (data.race) then
--- 		portrait.Race:SetTexture(RACES_TEXTURE);
--- 	else
--- 		portrait.Race:SetTexture(UNKNOWN_TEXTURE);
--- 	end
--- 	portrait.Race:SetTexCoord(unpack(TEXTURE_COORDS[data.race]));
--- end
 
 -- ...
 --
@@ -157,7 +110,7 @@ end
 -- Tell whether the Skull icon should be displayed given a player's level information.
 --
 local function ShouldDisplaySkullLevel(data)
-	if (data.effectiveLevel == SKULL_LEVEL) then
+	if (data.effectiveLevel == SKULL) then
 		return data.estimatedLevel < EstimatedLevelThreshold();
 	end
 	return false;
@@ -170,9 +123,9 @@ local function GetDisplayLevel(data)
 		return tostring(data.effectiveLevel);
 	end
 	if (data.estimatedLevel > 0) then
-		if (data.effectiveLevel ~= SKULL_LEVEL or data.estimatedLevel > EstimatedLevelThreshold()) then
-			if (data.estimatedLevel == MAX_LEVEL) then
-				return MAX_LEVEL;
+		if (data.effectiveLevel ~= SKULL or data.estimatedLevel > EstimatedLevelThreshold()) then
+			if (data.estimatedLevel == MAXED) then
+				return MAXED;
 			else
 				return string.format("%d+", data.estimatedLevel);
 			end
@@ -213,6 +166,50 @@ local function UpdateFlatPortrait(portrait, data)
 	UpdatePortraitClassTexture(portrait, data);
 end
 
+-- ...
+--
+local function GetLocalizedRaceName(race)
+	return C_CreatureInfo.GetRaceInfo(CLASS_RACE_IDS[race]).raceName;
+end
+
+-- ...
+--
+local function GetLocalizedClassName(class)
+	return C_CreatureInfo.GetClassInfo(CLASS_RACE_IDS[class]).className;
+end
+
+-- ...
+--
+local function SetStackedPortraitTooltip(data)
+	GameTooltip:SetText(GetLocalizedClassName(data.class));
+
+	for i = 1, #data.stack do
+		local details = string.format("Level %s %s", GetDisplayLevel(data.stack[i]), GetLocalizedRaceName(data.stack[i].race));
+		GameTooltip:AddLine(data.stack[i].name or "??");
+		GameTooltip:AddLine(details, 1, 1, 1);
+
+		local text = _G["GameTooltipTextLeft"..(i * 2)];
+		text:SetHeight(18);
+		text:SetJustifyV("BOTTOM");
+	end
+end
+
+-- ...
+--
+local function SetFlatPortraitTooltip(data)
+	local details = string.format("Level %s %s %s", GetDisplayLevel(data), GetLocalizedRaceName(data.race), GetLocalizedClassName(data.class));
+	GameTooltip:SetText(data.name or "??");
+	GameTooltip:AddLine(details, 1, 1, 1);
+end
+
+--
+--
+--
+
+-- Portrait mixin.
+--
+ThreatrackPortrait = {};
+
 -- Update portrait.
 --
 function ThreatrackPortrait:Update(data)
@@ -251,42 +248,6 @@ function ThreatrackPortrait:OnUpdate()
 	end
 end
 
--- ...
---
-local function GetLocalizedRaceName(race)
-	return C_CreatureInfo.GetRaceInfo(CLASS_RACE_IDS[race]).raceName;
-end
-
--- ...
---
-local function GetLocalizedClassName(class)
-	return C_CreatureInfo.GetClassInfo(CLASS_RACE_IDS[class]).className;
-end
-
--- ...
---
-local function SetStackedPortraitTooltip(data)
-	GameTooltip:SetText(GetLocalizedClassName(data.class));
-
-	for i = 1, #data.stack do
-		local details = string.format("Level %s %s", GetDisplayLevel(data.stack[i]), GetLocalizedRaceName(data.stack[i].race));
-		GameTooltip:AddLine(data.stack[i].name or "??");
-		GameTooltip:AddLine(details, 1, 1, 1);
-
-		local text = _G["GameTooltipTextLeft"..(i * 2)];
-		text:SetHeight(18);
-		text:SetJustifyV("BOTTOM");
-	end
-end
-
--- ...
---
-local function SetFlatPortraitTooltip(data)
-	local details = string.format("Level %s %s %s", GetDisplayLevel(data), GetLocalizedRaceName(data.race), GetLocalizedClassName(data.class));
-	GameTooltip:SetText(data.name or "??");
-	GameTooltip:AddLine(details, 1, 1, 1);
-end
-
 -- Portrait OnEnter handler. Used to display tooltip.
 --
 function ThreatrackPortrait:OnEnter()
@@ -311,10 +272,6 @@ end
 --
 --
 --
-
--- Frame and mixin.
---
-Threatrack = {};
 
 -- ...
 --
@@ -351,6 +308,47 @@ end
 local function SortFlatPresenceData(a, b)
 	return a.lastEncounterTime < b.lastEncounterTime;
 end
+
+-- Enforce saved variables schema by deleting unrecognized keys from
+-- from current saved vars and setting the default value for new .
+--
+local function Migrate(default, current)
+	for key, defaultValue in pairs(default) do
+		if (current[key] == nil) then
+			current[key] = defaultValue;
+		end
+	end
+
+	for key, currentValue in pairs(current) do
+		if (default[key] == nil) then
+			current[key] = nil;
+		end
+
+		if (type(currentValue) == "table") then
+			Migrate(default[key], currentValue);
+		end
+	end
+end
+
+-- ...
+--
+local defaultSavedVars = {
+	options = {
+		showOnlyHostile = true
+	},
+};
+
+-- ...
+--
+ThreatrackSavedVars = {};
+
+--
+--
+--
+
+-- Frame and mixin.
+--
+Threatrack = {};
 
 -- ...
 --
@@ -422,39 +420,6 @@ function Threatrack:OnLoad()
 
 	self:RegisterEvent("ADDON_LOADED");
 end
-
--- ...
---
-local defaultSavedVars = {
-	options = {
-		showOnlyHostile = true
-	},
-};
-
--- Enforce saved variables schema by deleting unrecognized keys from
--- from current saved vars and setting the default value for new .
---
-local function Migrate(default, current)
-	for key, defaultValue in pairs(default) do
-		if (current[key] == nil) then
-			current[key] = defaultValue;
-		end
-	end
-
-	for key, currentValue in pairs(current) do
-		if (default[key] == nil) then
-			current[key] = nil;
-		end
-
-		if (type(currentValue) == "table") then
-			Migrate(default[key], currentValue);
-		end
-	end
-end
-
--- ...
---
-ThreatrackSavedVars = {};
 
 -- ...
 --

@@ -2,20 +2,11 @@
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
--- Unknown values.
---
-local UNKNOWN = "UNKNOWN";
-
 -- Flag bits for unit reaction and type.
 --
 local HOSTILE = 0x00000040;
 local FRIENDLY = 0x00000010;
 local PLAYER = 0x00000400;
-
--- Sex values.
---
-local MALE = 3;
-local FEMALE = 2;
 
 -- Time in seconds after which the player data becomes stale.
 --
