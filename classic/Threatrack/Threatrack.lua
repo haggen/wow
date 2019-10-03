@@ -39,7 +39,7 @@ local WARRIOR = "WARRIOR";
 
 -- ...
 --
-local SORTING_RANK = {
+local SORT_RANKING = {
 	[WARRIOR] = 1,
 	[PALADIN] = 2,
 	[ROGUE] = 3,
@@ -54,24 +54,24 @@ local SORTING_RANK = {
 -- Used for getting localized names.
 --
 local CLASS_RACE_IDS = {
-	[DWARF] = 3;
-	[GNOME] = 7;
-	[HUMAN] = 1;
-	[NIGHTELF] = 4;
-	[ORC] = 2;
-	[SCOURGE] = 5;
-	[TAUREN] = 6;
-	[TROLL] = 8;
-	[DRUID] = 11;
-	[HUNTER] = 3;
-	[MAGE] = 8;
-	[PALADIN] = 2;
-	[PRIEST] = 5;
-	[ROGUE] = 4;
-	[SHAMAN] = 7;
-	[WARLOCK] = 9;
-	[WARRIOR] = 1;
-}
+	[DWARF] = 3,
+	[GNOME] = 7,
+	[HUMAN] = 1,
+	[NIGHTELF] = 4,
+	[ORC] = 2,
+	[SCOURGE] = 5,
+	[TAUREN] = 6,
+	[TROLL] = 8,
+	[DRUID] = 11,
+	[HUNTER] = 3,
+	[MAGE] = 8,
+	[PALADIN] = 2,
+	[PRIEST] = 5,
+	[ROGUE] = 4,
+	[SHAMAN] = 7,
+	[WARLOCK] = 9,
+	[WARRIOR] = 1,
+};
 
 -- Gap between portraits.
 --
@@ -276,7 +276,7 @@ end
 -- ...
 --
 local function SortStackedPresenceData(a, b)
-	return SORTING_RANK[a.class] < SORTING_RANK[b.class];
+	return SORT_RANKING[a.class] < SORT_RANKING[b.class];
 end
 
 -- ...

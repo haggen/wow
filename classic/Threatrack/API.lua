@@ -2,10 +2,10 @@
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
--- Flag bits for unit reaction and type.
+-- Flags for combat log event reaction and type.
 --
-local HOSTILE = 0x00000040;
 local FRIENDLY = 0x00000010;
+local HOSTILE = 0x00000040;
 local PLAYER = 0x00000400;
 
 -- Time in seconds after which the player data becomes stale.
