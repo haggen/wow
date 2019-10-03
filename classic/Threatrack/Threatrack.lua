@@ -95,12 +95,6 @@ local TEXTURE_COORDS = {
 --
 --
 
--- Update portrait Class icon.
---
-local function UpdatePortraitClassTexture(portrait, data)
-	portrait.Class:SetTexCoord(unpack(TEXTURE_COORDS[data.class]));
-end
-
 -- ...
 --
 local function EstimatedLevelThreshold()
@@ -140,7 +134,7 @@ local function UpdateStackedPortrait(portrait, data)
 	portrait.Level:Show();
 	portrait.Level:SetText(string.format("×%d", #data.stack));
 
-	UpdatePortraitClassTexture(portrait, data);
+	portrait.Class:SetTexCoord(unpack(TEXTURE_COORDS[data.class]));
 end
 
 -- Update portrait frame given flat data, i.e. non-stacked.
@@ -163,7 +157,7 @@ local function UpdateFlatPortrait(portrait, data)
 		end
 	end
 
-	UpdatePortraitClassTexture(portrait, data);
+	portrait.Class:SetTexCoord(unpack(TEXTURE_COORDS[data.class]));
 end
 
 -- ...
