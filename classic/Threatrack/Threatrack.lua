@@ -423,8 +423,11 @@ end
 
 -- ...
 --
-function Threatrack:OnEvent(event)
+function Threatrack:OnEvent(event, ...)
 	if (event == "ADDON_LOADED") then
-		Migrate(defaultSavedVars, ThreatrackSavedVars);
+		local name = ...;
+		if (name == "Threatrack") then
+			Migrate(defaultSavedVars, ThreatrackSavedVars);
+		end
 	end
 end
