@@ -182,9 +182,9 @@ local function SetStackedPortraitTooltip(data)
 		GameTooltip:AddLine(data.stack[i].name or "??");
 		GameTooltip:AddLine(details, 1, 1, 1);
 
-		local text = _G["GameTooltipTextLeft"..(i * 2)];
-		text:SetHeight(18);
-		text:SetJustifyV("BOTTOM");
+		local frame = _G["GameTooltipTextLeft"..(i * 2)];
+		frame:SetHeight(18);
+		frame:SetJustifyV("BOTTOM");
 	end
 end
 
@@ -194,6 +194,19 @@ local function SetFlatPortraitTooltip(data)
 	local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayLevel(data), GetLocalizedRaceName(data.race), GetLocalizedClassName(data.class));
 	GameTooltip:SetText(data.name or "??");
 	GameTooltip:AddLine(details, 1, 1, 1);
+end
+
+-- ..
+--
+local function RestoreTooltipTextHeight()
+	local frame = GameTooltipTextLeft1;
+	local index = 1;
+
+	while (frame ~= nil) do
+		index = index + 1
+		frame:SetHeight(0);
+		frame = _G["GameTooltipTextLeft"..index];
+	end
 end
 
 --
@@ -261,6 +274,7 @@ end
 --
 function ThreatrackPortrait:OnLeave()
 	GameTooltip:Hide();
+	RestoreTooltipTextHeight();
 end
 
 --
