@@ -178,7 +178,7 @@ local function SetStackedPortraitTooltip(data)
 	GameTooltip:SetText(GetLocalizedClassName(data.class));
 
 	for i = 1, #data.stack do
-		local details = string.format("Level %s %s", GetDisplayLevel(data.stack[i]), GetLocalizedRaceName(data.stack[i].race));
+		local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayLevel(data.stack[i]), GetLocalizedRaceName(data.stack[i].race), "");
 		GameTooltip:AddLine(data.stack[i].name or "??");
 		GameTooltip:AddLine(details, 1, 1, 1);
 
@@ -191,7 +191,7 @@ end
 -- ...
 --
 local function SetFlatPortraitTooltip(data)
-	local details = string.format("Level %s %s %s", GetDisplayLevel(data), GetLocalizedRaceName(data.race), GetLocalizedClassName(data.class));
+	local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayLevel(data), GetLocalizedRaceName(data.race), GetLocalizedClassName(data.class));
 	GameTooltip:SetText(data.name or "??");
 	GameTooltip:AddLine(details, 1, 1, 1);
 end
