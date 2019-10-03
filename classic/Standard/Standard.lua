@@ -14,3 +14,12 @@ TargetFrame.healthbar.Text:SetPoint("CENTER", -50, 3);
 TargetFrame.healthbar.showPercentage = true;
 TargetFrame.healthbar.showNumeric = false;
 SetTextStatusBarText(TargetFrame.healthbar, TargetFrame.healthbar.Text);
+
+--
+--
+--
+hooksecurefunc("MultiActionBar_Update", function()
+    local point, _, _, x, y = VerticalMultiBarsContainer:GetPoint(1);
+    VerticalMultiBarsContainer:ClearAllPoints();
+    VerticalMultiBarsContainer:SetPoint(point, x - 8, y);
+end);
