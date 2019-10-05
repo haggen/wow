@@ -124,6 +124,9 @@ local frame = CreateFrame("FRAME");
 
 -- Listen to game events to try and derive player presence.
 --
+frame:RegisterEvent("CHAT_MSG_SAY");
+frame:RegisterEvent("CHAT_MSG_YELL");
+frame:RegisterEvent("CHAT_MSG_EMOTE");
 frame:RegisterEvent("UPDATE_MOUSEOVER_UNIT");
 frame:RegisterEvent("PLAYER_TARGET_CHANGED");
 frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
@@ -171,6 +174,27 @@ local function IsCombatLogFlagsTypePlayer(flags)
 	return PLAYER == bit.band(flags, PLAYER);
 end
 
+-- ...
+--
+local function CreatePlayerDataFromPlayerGUID(guid)
+	local data = CreatePlayerData();
+	data.guid = guid;
+	_, data.class, _, data.race, data.sex, data.name = GetPlayerInfoByGUID(guid);
+	return data;
+end
+
+-- ...
+--
+local function CreatePlayerDataFromChatEvent(guid, language)
+	local data = CreatePlayerDataFromPlayerGUID(guid);
+	if (language == GetDefaultLanguage("player")) then
+		data.reaction = FRIENDLY;
+	else
+		data.reaction = HOSTILE;
+	end
+	return data;
+end
+
 -- Collect player data from combat log event source or target player.
 --
 local function CreatePlayerDataFromCombatLogEvent(guid, flags, spellName)
@@ -178,12 +202,8 @@ local function CreatePlayerDataFromCombatLogEvent(guid, flags, spellName)
 		return nil;
 	end
 
-	local data = CreatePlayerData();
-
-	data.guid = guid;
+	local data = CreatePlayerDataFromPlayerGUID(guid);
 	data.reaction = ReadCombatLogFlagsReaction(flags);
-
-	_, data.class, _, data.race, data.sex, data.name = GetPlayerInfoByGUID(guid);
 
 	if (spellName) then
 		data.estimatedLevel = ThreatrackData:GetSpellReqLevel(data.class, spellName);
@@ -194,7 +214,7 @@ end
 
 -- Event handler.
 --
-local function OnEvent(_, event)
+local function OnEvent(_, event, ...)
 	if (event == "PLAYER_TARGET_CHANGED") then
 		local data = CreatePlayerDataFromUnit("target");
 		if (data) then
@@ -208,7 +228,7 @@ local function OnEvent(_, event)
 			CallPlayerPresenceHandlers();
 		end
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
-		local _, action, _, sourceGuid, _, sourceFlags, _, targetGuid, _, targetFlags,
+		local _, _, _, sourceGuid, _, sourceFlags, _, targetGuid, _, targetFlags,
 			_, _, spellName, _, _, _, _, _, _, _, _ = CombatLogGetCurrentEventInfo();
 
 		local sourceData = CreatePlayerDataFromCombatLogEvent(sourceGuid, sourceFlags, spellName);
@@ -222,6 +242,13 @@ local function OnEvent(_, event)
 		end
 
 		if (sourceData or targetData) then
+			CallPlayerPresenceHandlers();
+		end
+	elseif (string.sub(event, 0, 8) == "CHAT_MSG") then
+		local _, _, language, _, _, _, _, _, _, _, _, guid = ...;
+		local data = CreatePlayerDataFromChatEvent(guid, language);
+		if (data) then
+			RegisterPlayerData(data);
 			CallPlayerPresenceHandlers();
 		end
 	end
