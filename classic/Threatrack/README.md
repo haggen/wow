@@ -1,10 +1,14 @@
-# Threatrack
+<p align="center"><img src="threatrack.png" width="256"></p>
 
-> Watch out for possible threats nearby.
+<h1 align="center">Threatrack</h1>
+
+<p align="center">Watch out for possible threats nearby.</p>
+
+---
 
 ## About
 
-**Threatrack** continually scans for hostile player activity around you, informing whenever it can, know who and how many are there.
+**Threatrack** continually scans for hostile player activity around you, informing whenever it can, who they are and how many.
 
 ## Installation
 
@@ -12,9 +16,9 @@ Download the latest version from the [Releases page](https://github.com/haggen/w
 
 ## Usage
 
-You don't need to do anything. **Threatrack** just sits on the top part of your screen, ever watchful. Whenever an enemy player presence is detected, a picture of their Class will appear, along with their level, if the information is either available or can be guessed. If you move your cursor over the picture a tooltip will appear with further information, such as the player's name and Race.
+You don't need to do anything. **Threatrack** just sits on the top part of your screen, ever watchful. Whenever an enemy player presence is detected, a picture of their Class will appear, along with their level, if it's either available or can be guessed. If you hover your cursor over the picture a tooltip with more information will appear, such as the player's name and Race.
 
-When there're too many players, it'll collapse into a stacked mode where it'll only show one picture for each Class detected, and the tooltip will now display a list of players.
+When there's too many players, it'll collapse into stacked mode, where it'll only show one picture for each Class detected, and the tooltip will now display a list of players.
 
 After a while with no further activity, their presence is considered stale and the corresponding pictures are removed from the screen.
 
