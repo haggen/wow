@@ -326,7 +326,7 @@ end
 
 -- ...
 --
-function ThreatrackPortraitTemplateMixin:OnMouseUp(button)
+function ThreatrackPortraitTemplateMixin:OnMouseUp()
 	StopMoving(ThreatrackFrame);
 end
 
