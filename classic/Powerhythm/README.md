@@ -12,7 +12,7 @@ Download the latest version from the [Releases page](https://github.com/haggen/w
 
 ## Uninstall
 
-Simply delete the `Powerhythm` folder in your add-ons directory.
+Simply delete the `Powerhythm` folder from your add-ons directory.
 
 ## License
 

@@ -14,7 +14,7 @@ Upon logging in after the add-on's been installed the default position of your c
 
 ## Uninstall
 
-Simply delete the `Focused` folder in your add-ons directory.
+Simply delete the `Focused` folder from your add-ons directory.
 
 Please note that uninstalling the add-on won't restore your character's and target's portrait position. For that you'll need to reset their position via the right-click menu.
 

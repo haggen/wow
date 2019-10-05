@@ -19,7 +19,7 @@ Download the latest version from the [Releases page](https://github.com/haggen/w
 
 ## Uninstall
 
-Simply delete the `Fastbind` folder in your add-ons directory.
+Simply delete the `Fastbind` folder from your add-ons directory.
 
 Please note that uninstalling the add-on won't restore your keybindings.
 
