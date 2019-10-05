@@ -186,10 +186,7 @@ local function CreatePlayerDataFromCombatLogEvent(guid, flags, spellName)
 	_, data.class, _, data.race, data.sex, data.name = GetPlayerInfoByGUID(guid);
 
 	if (spellName) then
-		local spellData = THREATRACK_SPELL_DATA[spellName];
-		if (spellData) then
-			data.estimatedLevel = spellData[3];
-		end
+		data.estimatedLevel = ThreatrackData:GetSpellReqLevel(data.class, spellName);
 	end
 
 	return data;
@@ -211,7 +208,7 @@ local function OnEvent(_, event)
 			CallPlayerPresenceHandlers();
 		end
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
-		local _, _, _, sourceGuid, _, sourceFlags, _, targetGuid, _, targetFlags,
+		local _, action, _, sourceGuid, _, sourceFlags, _, targetGuid, _, targetFlags,
 			_, _, spellName, _, _, _, _, _, _, _, _ = CombatLogGetCurrentEventInfo();
 
 		local sourceData = CreatePlayerDataFromCombatLogEvent(sourceGuid, sourceFlags, spellName);
@@ -235,6 +232,16 @@ frame:SetScript("OnEvent", OnEvent);
 --
 --
 
-Threatrack_GetFreshPlayerData = GetFreshPlayerData;
-Threatrack_HandlePlayerPresence = HandlePlayerPresence;
-Threatrack_IsPresenceStale = IsPresenceStale;
+ThreatrackAPI = {};
+
+function ThreatrackAPI:GetFreshPlayerData(...)
+	return GetFreshPlayerData(...);
+end
+
+function ThreatrackAPI:HandlePlayerPresence(...)
+	return HandlePlayerPresence(...);
+end
+
+function ThreatrackAPI:IsPresenceStale(...)
+	return IsPresenceStale(...);
+end

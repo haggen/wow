@@ -22,108 +22,6 @@ local MAXED = 60;
 --
 local GUTTER = 8;
 
--- Race enum.
---
-local DWARF = "Dwarf";
-local GNOME = "Gnome";
-local HUMAN = "Human";
-local NIGHTELF = "NightElf";
-local ORC = "Orc";
-local SCOURGE = "Scourge";
-local TAUREN = "Tauren";
-local TROLL = "Troll";
-
--- ...
---
-local RACES = {
-	[DWARF] = {
-		id = 3
-	},
-	[GNOME] = {
-		id = 7
-	},
-	[HUMAN] = {
-		id = 1
-	},
-	[NIGHTELF] = {
-		id = 4
-	},
-	[ORC] = {
-		id = 2
-	},
-	[SCOURGE] = {
-		id = 5
-	},
-	[TAUREN] = {
-		id = 6
-	},
-	[TROLL] = {
-		id = 8
-	},
-};
-
--- Class enum.
---
-local DRUID = "DRUID";
-local HUNTER = "HUNTER";
-local MAGE = "MAGE";
-local PALADIN = "PALADIN";
-local PRIEST = "PRIEST";
-local ROGUE = "ROGUE";
-local SHAMAN = "SHAMAN";
-local WARLOCK = "WARLOCK";
-local WARRIOR = "WARRIOR";
-
--- ...
---
-local CLASSES = {
-	[DRUID] = {
-		id = 11,
-		order = 5,
-		textureCoords = {0.750000000, 0.976562500, 0.01171875, 0.23828125}
-	},
-	[HUNTER] = {
-		id = 3,
-		order = 4,
-		textureCoords = {0.011718750, 0.238281250, 0.26171875, 0.48828125}
-	},
-	[MAGE] = {
-		id = 8,
-		order = 8,
-		textureCoords = {0.257812500, 0.484375000, 0.01171875, 0.23828125}
-	},
-	[PALADIN] = {
-		id = 2,
-		order = 2,
-		textureCoords = {0.011718750, 0.238281250, 0.51171875, 0.73828125}
-	},
-	[PRIEST] = {
-		id = 5,
-		order = 7,
-		textureCoords = {0.503906250, 0.730468750, 0.26171875, 0.48828125}
-	},
-	[ROGUE] = {
-		id = 4,
-		order = 3,
-		textureCoords = {0.503906250, 0.730468750, 0.01171875, 0.23828125}
-	},
-	[SHAMAN] = {
-		id = 7,
-		order = 6,
-		textureCoords = {0.257812500, 0.484375000, 0.26171875, 0.48828125}
-	},
-	[WARLOCK] = {
-		id = 9,
-		order = 9,
-		textureCoords = {0.753906250, 0.980468750, 0.26171875, 0.48828125}
-	},
-	[WARRIOR] = {
-		id = 1,
-		order = 1,
-		textureCoords = {0.011718750, 0.238281250, 0.01171875, 0.23828125}
-	},
-};
-
 --
 --
 --
@@ -167,7 +65,7 @@ local function UpdateStackedPortrait(portrait, data)
 	portrait.Level:Show();
 	portrait.Level:SetText(string.format("×%d", #data.stack));
 
-	portrait.Class:SetTexCoord(unpack(CLASSES[data.class].textureCoords));
+	portrait.Class:SetTexCoord(unpack(ThreatrackData:GetClassTexCoords(data.class)));
 end
 
 -- Update portrait frame given flat data, i.e. non-stacked.
@@ -190,28 +88,16 @@ local function UpdateFlatPortrait(portrait, data)
 		end
 	end
 
-	portrait.Class:SetTexCoord(unpack(CLASSES[data.class].textureCoords));
-end
-
--- ...
---
-local function GetLocalizedRaceName(race)
-	return C_CreatureInfo.GetRaceInfo(RACES[race].id).raceName;
-end
-
--- ...
---
-local function GetLocalizedClassName(class)
-	return C_CreatureInfo.GetClassInfo(CLASSES[class].id).className;
+	portrait.Class:SetTexCoord(unpack(ThreatrackData:GetClassTexCoords(data.class)));
 end
 
 -- ...
 --
 local function SetStackedPortraitTooltip(data)
-	GameTooltip:SetText(GetLocalizedClassName(data.class));
+	GameTooltip:SetText(ThreatrackData:GetLocalizedClassName(data.class));
 
 	for i = 1, #data.stack do
-		local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayLevel(data.stack[i]), GetLocalizedRaceName(data.stack[i].race), "");
+		local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayLevel(data.stack[i]), ThreatrackData:GetLocalizedRaceName(data.stack[i].race), "");
 		GameTooltip:AddLine(data.stack[i].name or "??");
 		GameTooltip:AddLine(details, 1, 1, 1);
 
@@ -224,7 +110,7 @@ end
 -- ...
 --
 local function SetFlatPortraitTooltip(data)
-	local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayLevel(data), GetLocalizedRaceName(data.race), GetLocalizedClassName(data.class));
+	local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayLevel(data), ThreatrackData:GetLocalizedRaceName(data.race), ThreatrackData:GetLocalizedClassName(data.class));
 	GameTooltip:SetText(data.name or "??");
 	GameTooltip:AddLine(details, 1, 1, 1);
 end
@@ -241,32 +127,6 @@ local function RestoreTooltipTextHeight()
 		frame = _G["GameTooltipTextLeft"..index];
 	end
 end
-
--- ..
---
-local function StartMoving(frame)
-	if (not frame.isLocked) then
-		frame.isDragging = true;
-		frame:SetUserPlaced(true);
-		frame:StartMoving();
-	end
-end
-
--- ..
---
-local function StopMoving(frame)
-	frame.isDragging = nil;
-	frame:StopMovingOrSizing();
-end
-
--- ..
---
-local function ResetPosition(frame)
-	frame:SetUserPlaced(false);
-	frame:ClearAllPoints();
-	frame:SetPoint("TOP", 0, -8);
-end
-
 
 --
 --
@@ -302,13 +162,13 @@ function ThreatrackPortraitTemplateMixin:OnUpdate()
 	if (self.data.stack) then
 		local stack = self.data.stack;
 		for i = 1, #stack do
-			if Threatrack_IsPresenceStale(stack[i]) then
+			if ThreatrackAPI:IsPresenceStale(stack[i]) then
 				ThreatrackFrame:Update();
 				return nil;
 			end
 		end
 	else
-		if Threatrack_IsPresenceStale(self.data) then
+		if ThreatrackAPI:IsPresenceStale(self.data) then
 			ThreatrackFrame:Update();
 		end
 	end
@@ -318,7 +178,11 @@ end
 --
 function ThreatrackPortraitTemplateMixin:OnMouseDown(button)
 	if (button == "LeftButton") then
-		StartMoving(ThreatrackFrame);
+		if (not ThreatrackFrame.isLocked) then
+			ThreatrackFrame.isDragging = true;
+			ThreatrackFrame:SetUserPlaced(true);
+			ThreatrackFrame:StartMoving();
+		end
 	elseif (button == "RightButton") then
 		ToggleDropDownMenu(1, nil, ThreatrackDropDown, "cursor", 0, -8);
 	end
@@ -327,7 +191,8 @@ end
 -- ...
 --
 function ThreatrackPortraitTemplateMixin:OnMouseUp()
-	StopMoving(ThreatrackFrame);
+	ThreatrackFrame.isDragging = nil;
+	ThreatrackFrame:StopMovingOrSizing();
 end
 
 -- Portrait OnEnter handler. Used to display tooltip.
@@ -359,7 +224,7 @@ end
 -- ...
 --
 local function SortStackedPresenceData(a, b)
-	return CLASSES[a.class].order < CLASSES[b.class].order;
+	return ThreatrackData:GetClassOrder(a.class) < ThreatrackData:GetClassOrder(b.class);
 end
 
 -- ...
@@ -395,7 +260,7 @@ end
 -- ...
 --
 local function GetPresenceData(stackedModeThreshold)
-	local data = Threatrack_GetFreshPlayerData();
+	local data = ThreatrackAPI:GetFreshPlayerData();
 
 	if (ThreatrackSavedVars.showHostileOnly) then
 		local filteredData = {};
@@ -462,6 +327,14 @@ function ThreatrackFrameMixin:Update()
 	end
 end
 
+-- ..
+--
+function ThreatrackFrameMixin:ResetPosition()
+	self:SetUserPlaced(false);
+	self:ClearAllPoints();
+	self:SetPoint("TOP", 0, -8);
+end
+
 -- ...
 --
 function ThreatrackFrameMixin:OnLoad()
@@ -473,7 +346,7 @@ function ThreatrackFrameMixin:OnLoad()
 		MirrorTimer1:SetPoint(point, relativeTo, relativePoint, x, y - 8);
 	end
 
-	Threatrack_HandlePlayerPresence(function()
+	ThreatrackAPI:HandlePlayerPresence(function()
 		self:Update();
 	end);
 
@@ -547,7 +420,7 @@ function ThreatrackDropDownMixin:Initialize()
 		text = "Reset",
 		notCheckable = 1,
 		func = function()
-			ResetPosition(ThreatrackFrame);
+			ThreatrackFrame:ResetPosition();
 		end,
 	});
 
