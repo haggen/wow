@@ -2,18 +2,19 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 	<Script file="Data.lua"/>
 	<Script file="API.lua"/>
+	<Script file="SavedVars.lua"/>
 	<Script file="Threatrack.lua"/>
 
-	<Font name="ThreatrackLevelFont" inherits="Game12Font_o1" virtual="true">
+	<Font name="ThreatrackNumberFont" inherits="Game12Font_o1" virtual="true">
 		<Shadow>
 			<Color r="0" g="0" b="0" a="1"/>
 			<Offset>
-				<AbsDimension x="0" y="0" />
+				<AbsDimension x="0" y="0"/>
 			</Offset>
 		</Shadow>
 	</Font>
 
-	<Frame name="ThreatrackPortraitTemplate" mixin="ThreatrackPortrait" enableMouse="true" virtual="true">
+	<Frame name="ThreatrackPortraitTemplate" mixin="ThreatrackPortraitTemplateMixin" enableMouse="true" registerForClicks="RightButtonDown" virtual="true">
 		<Size x="64" y="64"/>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -28,7 +29,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="ARTWORK">
-				<FontString parentKey="Level" inherits="ThreatrackLevelFont" justifyH="CENTER" justifyV="MIDDLE">
+				<FontString parentKey="Level" inherits="ThreatrackNumberFont" justifyH="CENTER" justifyV="MIDDLE">
 					<Anchors>
 						<Anchor point="CENTER" relativeTo="$parentRing"/>
 					</Anchors>
@@ -44,11 +45,19 @@
 		<Scripts>
 			<OnEnter method="OnEnter"/>
 			<OnLeave method="OnLeave"/>
+			<OnMouseDown method="OnMouseDown"/>
+			<OnMouseUp method="OnMouseUp"/>
 			<OnUpdate method="OnUpdate"/>
 		</Scripts>
 	</Frame>
 
-	<Frame name="ThreatrackFrame" mixin="Threatrack" toplevel="true" parent="UIParent">
+	<Frame name="ThreatrackDropDown" mixin="ThreatrackDropDownMixin" inherits="UIDropDownMenuTemplate">
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+		</Scripts>
+	</Frame>
+
+	<Frame name="ThreatrackFrame" mixin="ThreatrackFrameMixin" toplevel="true" movable="true" clampedToScreen="true" parent="UIParent">
 		<Size y="64"/>
 		<Anchors>
 			<Anchor point="TOP" y="-8"/>

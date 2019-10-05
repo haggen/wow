@@ -2,17 +2,25 @@
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
--- High level hostile players.
+-- Grab add-on name from local space.
 --
-local SKULL = -1;
+local NAMESPACE = ...;
 
 -- Flag/value for combat log event hostile reaction.
 --
 local HOSTILE = 0x00000040;
 
+-- High level hostile players.
+--
+local SKULL = -1;
+
 -- Max player level.
 --
 local MAXED = 60;
+
+-- Gap between portraits.
+--
+local GUTTER = 8;
 
 -- Race enum.
 --
@@ -24,6 +32,35 @@ local ORC = "Orc";
 local SCOURGE = "Scourge";
 local TAUREN = "Tauren";
 local TROLL = "Troll";
+
+-- ...
+--
+local RACES = {
+	[DWARF] = {
+		id = 3
+	},
+	[GNOME] = {
+		id = 7
+	},
+	[HUMAN] = {
+		id = 1
+	},
+	[NIGHTELF] = {
+		id = 4
+	},
+	[ORC] = {
+		id = 2
+	},
+	[SCOURGE] = {
+		id = 5
+	},
+	[TAUREN] = {
+		id = 6
+	},
+	[TROLL] = {
+		id = 8
+	},
+};
 
 -- Class enum.
 --
@@ -39,56 +76,52 @@ local WARRIOR = "WARRIOR";
 
 -- ...
 --
-local SORT_RANKING = {
-	[WARRIOR] = 1,
-	[PALADIN] = 2,
-	[ROGUE] = 3,
-	[HUNTER] = 4,
-	[DRUID] = 5,
-	[SHAMAN] = 6,
-	[PRIEST] = 7,
-	[MAGE] = 8,
-	[WARLOCK] = 9,
-};
-
--- Used for getting localized names.
---
-local CLASS_RACE_IDS = {
-	[DWARF] = 3,
-	[GNOME] = 7,
-	[HUMAN] = 1,
-	[NIGHTELF] = 4,
-	[ORC] = 2,
-	[SCOURGE] = 5,
-	[TAUREN] = 6,
-	[TROLL] = 8,
-	[DRUID] = 11,
-	[HUNTER] = 3,
-	[MAGE] = 8,
-	[PALADIN] = 2,
-	[PRIEST] = 5,
-	[ROGUE] = 4,
-	[SHAMAN] = 7,
-	[WARLOCK] = 9,
-	[WARRIOR] = 1,
-};
-
--- Gap between portraits.
---
-local GUTTER = 8;
-
--- Coordinates for cropping race/class texture maps.
---
-local TEXTURE_COORDS = {
-	[WARRIOR] = {0.011718750, 0.238281250, 0.01171875, 0.23828125},
-	[MAGE] = {0.257812500, 0.484375000, 0.01171875, 0.23828125},
-	[ROGUE] = {0.503906250, 0.730468750, 0.01171875, 0.23828125},
-	[DRUID] = {0.750000000, 0.976562500, 0.01171875, 0.23828125},
-	[HUNTER] = {0.011718750, 0.238281250, 0.26171875, 0.48828125},
-	[SHAMAN] = {0.257812500, 0.484375000, 0.26171875, 0.48828125},
-	[PRIEST] = {0.503906250, 0.730468750, 0.26171875, 0.48828125},
-	[WARLOCK] = {0.753906250, 0.980468750, 0.26171875, 0.48828125},
-	[PALADIN] = {0.011718750, 0.238281250, 0.51171875, 0.73828125},
+local CLASSES = {
+	[DRUID] = {
+		id = 11,
+		order = 5,
+		textureCoords = {0.750000000, 0.976562500, 0.01171875, 0.23828125}
+	},
+	[HUNTER] = {
+		id = 3,
+		order = 4,
+		textureCoords = {0.011718750, 0.238281250, 0.26171875, 0.48828125}
+	},
+	[MAGE] = {
+		id = 8,
+		order = 8,
+		textureCoords = {0.257812500, 0.484375000, 0.01171875, 0.23828125}
+	},
+	[PALADIN] = {
+		id = 2,
+		order = 2,
+		textureCoords = {0.011718750, 0.238281250, 0.51171875, 0.73828125}
+	},
+	[PRIEST] = {
+		id = 5,
+		order = 7,
+		textureCoords = {0.503906250, 0.730468750, 0.26171875, 0.48828125}
+	},
+	[ROGUE] = {
+		id = 4,
+		order = 3,
+		textureCoords = {0.503906250, 0.730468750, 0.01171875, 0.23828125}
+	},
+	[SHAMAN] = {
+		id = 7,
+		order = 6,
+		textureCoords = {0.257812500, 0.484375000, 0.26171875, 0.48828125}
+	},
+	[WARLOCK] = {
+		id = 9,
+		order = 9,
+		textureCoords = {0.753906250, 0.980468750, 0.26171875, 0.48828125}
+	},
+	[WARRIOR] = {
+		id = 1,
+		order = 1,
+		textureCoords = {0.011718750, 0.238281250, 0.01171875, 0.23828125}
+	},
 };
 
 --
@@ -134,7 +167,7 @@ local function UpdateStackedPortrait(portrait, data)
 	portrait.Level:Show();
 	portrait.Level:SetText(string.format("×%d", #data.stack));
 
-	portrait.Class:SetTexCoord(unpack(TEXTURE_COORDS[data.class]));
+	portrait.Class:SetTexCoord(unpack(CLASSES[data.class].textureCoords));
 end
 
 -- Update portrait frame given flat data, i.e. non-stacked.
@@ -153,23 +186,23 @@ local function UpdateFlatPortrait(portrait, data)
 
 		if (displayLevel ~= "??") then
 			local color = GetCreatureDifficultyColor(string.match(displayLevel, "%d+"));
-			portrait.Level:SetVertexColor(color.r, color.g, color.b);
+			portrait.Level:SetTextColor(color.r, color.g, color.b);
 		end
 	end
 
-	portrait.Class:SetTexCoord(unpack(TEXTURE_COORDS[data.class]));
+	portrait.Class:SetTexCoord(unpack(CLASSES[data.class].textureCoords));
 end
 
 -- ...
 --
 local function GetLocalizedRaceName(race)
-	return C_CreatureInfo.GetRaceInfo(CLASS_RACE_IDS[race]).raceName;
+	return C_CreatureInfo.GetRaceInfo(RACES[race].id).raceName;
 end
 
 -- ...
 --
 local function GetLocalizedClassName(class)
-	return C_CreatureInfo.GetClassInfo(CLASS_RACE_IDS[class]).className;
+	return C_CreatureInfo.GetClassInfo(CLASSES[class].id).className;
 end
 
 -- ...
@@ -209,22 +242,48 @@ local function RestoreTooltipTextHeight()
 	end
 end
 
+-- ..
+--
+local function StartMoving(frame)
+	if (not frame.isLocked) then
+		frame.isDragging = true;
+		frame:SetUserPlaced(true);
+		frame:StartMoving();
+	end
+end
+
+-- ..
+--
+local function StopMoving(frame)
+	frame.isDragging = nil;
+	frame:StopMovingOrSizing();
+end
+
+-- ..
+--
+local function ResetPosition(frame)
+	frame:SetUserPlaced(false);
+	frame:ClearAllPoints();
+	frame:SetPoint("TOP", 0, -8);
+end
+
+
 --
 --
 --
 
--- Portrait mixin.
+-- Portrait template mixin.
 --
-ThreatrackPortrait = {};
+ThreatrackPortraitTemplateMixin = {};
 
 -- Update portrait.
 --
-function ThreatrackPortrait:Update(data)
+function ThreatrackPortraitTemplateMixin:Update(data)
 	self.data = data;
 
 	self.Skull:Hide();
 	self.Level:Hide();
-	self.Level:SetVertexColor(NORMAL_FONT_COLOR:GetRGB());
+	self.Level:SetTextColor(NORMAL_FONT_COLOR:GetRGB());
 
 	if (data.stack) then
 		UpdateStackedPortrait(self, data);
@@ -235,7 +294,7 @@ end
 
 -- Portrait OnUpdate handler. We use it to request an update once the data becomes stale.
 --
-function ThreatrackPortrait:OnUpdate()
+function ThreatrackPortraitTemplateMixin:OnUpdate()
 	if (not self:IsShown()) then
 		return nil;
 	end
@@ -244,20 +303,36 @@ function ThreatrackPortrait:OnUpdate()
 		local stack = self.data.stack;
 		for i = 1, #stack do
 			if Threatrack_IsPresenceStale(stack[i]) then
-				Threatrack:Update();
+				ThreatrackFrame:Update();
 				return nil;
 			end
 		end
 	else
 		if Threatrack_IsPresenceStale(self.data) then
-			Threatrack:Update();
+			ThreatrackFrame:Update();
 		end
 	end
 end
 
+-- ...
+--
+function ThreatrackPortraitTemplateMixin:OnMouseDown(button)
+	if (button == "LeftButton") then
+		StartMoving(ThreatrackFrame);
+	elseif (button == "RightButton") then
+		ToggleDropDownMenu(1, nil, ThreatrackDropDown, "cursor", 0, -8);
+	end
+end
+
+-- ...
+--
+function ThreatrackPortraitTemplateMixin:OnMouseUp(button)
+	StopMoving(ThreatrackFrame);
+end
+
 -- Portrait OnEnter handler. Used to display tooltip.
 --
-function ThreatrackPortrait:OnEnter()
+function ThreatrackPortraitTemplateMixin:OnEnter()
 	GameTooltip:ClearAllPoints();
 	GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, -8);
 
@@ -272,7 +347,7 @@ end
 
 -- Portrait OnEnter handler. Used to hide the tooltip.
 --
-function ThreatrackPortrait:OnLeave()
+function ThreatrackPortraitTemplateMixin:OnLeave()
 	GameTooltip:Hide();
 	RestoreTooltipTextHeight();
 end
@@ -284,7 +359,7 @@ end
 -- ...
 --
 local function SortStackedPresenceData(a, b)
-	return SORT_RANKING[a.class] < SORT_RANKING[b.class];
+	return CLASSES[a.class].order < CLASSES[b.class].order;
 end
 
 -- ...
@@ -317,53 +392,12 @@ local function SortFlatPresenceData(a, b)
 	return a.lastEncounterTime < b.lastEncounterTime;
 end
 
--- Enforce saved variables schema by deleting unrecognized keys from
--- from current saved vars and setting the default value for new .
---
-local function Migrate(default, current)
-	for key, defaultValue in pairs(default) do
-		if (current[key] == nil) then
-			current[key] = defaultValue;
-		end
-	end
-
-	for key, currentValue in pairs(current) do
-		if (default[key] == nil) then
-			current[key] = nil;
-		end
-
-		if (type(currentValue) == "table") then
-			Migrate(default[key], currentValue);
-		end
-	end
-end
-
 -- ...
 --
-local defaultSavedVars = {
-	options = {
-		showOnlyHostile = true
-	},
-};
-
--- ...
---
-ThreatrackSavedVars = {};
-
---
---
---
-
--- Frame and mixin.
---
-Threatrack = {};
-
--- ...
---
-function Threatrack:GetPresenceData()
+local function GetPresenceData(stackedModeThreshold)
 	local data = Threatrack_GetFreshPlayerData();
 
-	if (ThreatrackSavedVars.options.showOnlyHostile) then
+	if (ThreatrackSavedVars.showHostileOnly) then
 		local filteredData = {};
 		for i = 1, #data do
 			if (data[i].reaction == HOSTILE) then
@@ -373,7 +407,7 @@ function Threatrack:GetPresenceData()
 		data = filteredData;
 	end
 
-	if (#data > #self.portraits) then
+	if (#data > stackedModeThreshold) then
 		data = StackPresenceData(data);
 		table.sort(data, SortStackedPresenceData);
 	else
@@ -383,10 +417,26 @@ function Threatrack:GetPresenceData()
 	return data;
 end
 
+--
+--
+--
+
+ThreatrackFrameMixin = {};
+
+-- ..
+--
+function ThreatrackFrameMixin:ShouldSkipUpdate()
+	return self.isDragging;
+end
+
 -- ...
 --
-function Threatrack:Update()
-	local presenceData = self:GetPresenceData();
+function ThreatrackFrameMixin:Update()
+	if self:ShouldSkipUpdate() then
+		return nil;
+	end
+
+	local presenceData = GetPresenceData(#self.portraits);
 
 	self:SetWidth(0);
 
@@ -414,13 +464,14 @@ end
 
 -- ...
 --
-function Threatrack:OnLoad()
-	Threatrack = self;
-
-	-- BreathBar default position overlaps with the portraits.
-	-- FrameXML/MirrorTimer.xml:80
-	MirrorTimer1:ClearAllPoints();
-	MirrorTimer1:SetPoint("TOP", 0, -104);
+function ThreatrackFrameMixin:OnLoad()
+	do
+		-- The breath bar default position overlaps with our frame, so we move it a bit.
+		-- See FrameXML/MirrorTimer.xml:80
+		local point, relativeTo, relativePoint, x, y = MirrorTimer1:GetPoint(1);
+		MirrorTimer1:ClearAllPoints();
+		MirrorTimer1:SetPoint(point, relativeTo, relativePoint, x, y - 8);
+	end
 
 	Threatrack_HandlePlayerPresence(function()
 		self:Update();
@@ -431,11 +482,87 @@ end
 
 -- ...
 --
-function Threatrack:OnEvent(event, ...)
+function ThreatrackFrameMixin:OnEvent(event, ...)
 	if (event == "ADDON_LOADED") then
 		local name = ...;
-		if (name == "Threatrack") then
-			Migrate(defaultSavedVars, ThreatrackSavedVars);
+		if (name == NAMESPACE) then
+			self:SetScale(ThreatrackSavedVars.frameScale);
 		end
 	end
 end
+
+--
+--
+--
+
+-- ..
+--
+ThreatrackDropDownMixin = {};
+
+-- ..
+--
+function ThreatrackDropDownMixin:Initialize()
+	UIDropDownMenu_AddButton({
+		text = NAMESPACE,
+		notCheckable = 1,
+		isTitle = 1,
+	});
+
+	UIDropDownMenu_AddSeparator(1);
+
+	UIDropDownMenu_AddButton({
+		text = "Size",
+		notCheckable = 1,
+		isTitle = 1,
+	});
+	UIDropDownMenu_AddButton({
+		text = "Default",
+		checked = function()
+			return (1 == ThreatrackFrame:GetScale());
+		end,
+		func = function()
+			ThreatrackFrame:SetScale(1);
+			ThreatrackSavedVars.frameScale = 1;
+		end,
+	});
+	UIDropDownMenu_AddButton({
+		text = "Small",
+		checked = function()
+			return (0.75 == ThreatrackFrame:GetScale());
+		end,
+		func = function()
+			ThreatrackFrame:SetScale(0.75);
+			ThreatrackSavedVars.frameScale = 0.75;
+		end,
+	});
+
+	UIDropDownMenu_AddSeparator(1);
+
+	UIDropDownMenu_AddButton({
+		text = "Position",
+		notCheckable = 1,
+		isTitle = 1,
+	});
+	UIDropDownMenu_AddButton({
+		text = "Reset",
+		notCheckable = 1,
+		func = function()
+			ResetPosition(ThreatrackFrame);
+		end,
+	});
+
+	UIDropDownMenu_AddSeparator(1);
+
+	UIDropDownMenu_AddButton({
+		text = "Cancel",
+		notCheckable = 1,
+	});
+end
+
+-- ..
+--
+function ThreatrackDropDownMixin:OnLoad()
+	UIDropDownMenu_SetInitializeFunction(self, ThreatrackDropDownMixin.Initialize);
+	UIDropDownMenu_SetDisplayMode(self, "MENU");
+end
+
