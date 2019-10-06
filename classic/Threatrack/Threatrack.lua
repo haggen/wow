@@ -43,7 +43,7 @@ end
 
 -- Format player level's information to be displayed.
 --
-local function GetDisplayLevel(data)
+local function GetDisplayPlayerLevel(data)
 	if (data.effectiveLevel > 0) then
 		return tostring(data.effectiveLevel);
 	end
@@ -75,7 +75,7 @@ local function UpdateFlatPortrait(portrait, data)
 		portrait.Skull:Show()
 	else
 		portrait.Level:Show();
-		local displayLevel = GetDisplayLevel(data);
+		local displayLevel = GetDisplayPlayerLevel(data);
 		-- Small tweak to fix text alignment problems due to the font not being fixed width.
 		if string.find(displayLevel, "[2-6]%d?%+") then
 			displayLevel = " "..displayLevel;
@@ -91,27 +91,42 @@ local function UpdateFlatPortrait(portrait, data)
 	portrait.Class:SetTexCoord(unpack(ThreatrackData:GetClassTexCoords(data.class)));
 end
 
+-- ..
+--
+local function GetDisplayPlayerName(data)
+	return data.name;
+end
+
 -- ...
 --
 local function SetStackedPortraitTooltip(data)
 	GameTooltip:SetText(ThreatrackData:GetLocalizedClassName(data.class));
 
+	local skip = 0;
 	for i = 1, #data.stack do
-		local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayLevel(data.stack[i]), ThreatrackData:GetLocalizedRaceName(data.stack[i].race), "");
-		GameTooltip:AddLine(data.stack[i].name or "??");
-		GameTooltip:AddLine(details, 1, 1, 1);
+		local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayPlayerLevel(data.stack[i]), ThreatrackData:GetLocalizedRaceName(data.stack[i].race), "");
 
-		local frame = _G["GameTooltipTextLeft"..(i * 2)];
+		local frame = _G["GameTooltipTextLeft"..(i * 2 + skip)];
 		frame:SetHeight(18);
 		frame:SetJustifyV("BOTTOM");
+
+		GameTooltip:AddLine(GetDisplayPlayerName(data.stack[i]));
+		if (data.stack[i].guild) then
+			GameTooltip:AddLine(data.stack[i].guild.name, DIM_GREEN_FONT_COLOR:GetRGB());
+			skip = skip + 1;
+		end
+		GameTooltip:AddLine(details, 1, 1, 1);
 	end
 end
 
 -- ...
 --
 local function SetFlatPortraitTooltip(data)
-	local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayLevel(data), ThreatrackData:GetLocalizedRaceName(data.race), ThreatrackData:GetLocalizedClassName(data.class));
-	GameTooltip:SetText(data.name or "??");
+	local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayPlayerLevel(data), ThreatrackData:GetLocalizedRaceName(data.race), ThreatrackData:GetLocalizedClassName(data.class));
+	GameTooltip:SetText(GetDisplayPlayerName(data));
+	if (data.guild) then
+		GameTooltip:AddLine(data.guild.name, DIM_GREEN_FONT_COLOR:GetRGB());
+	end
 	GameTooltip:AddLine(details, 1, 1, 1);
 end
 
@@ -200,6 +215,7 @@ end
 function ThreatrackPortraitTemplateMixin:OnEnter()
 	GameTooltip:ClearAllPoints();
 	GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, -8);
+	GameTooltip:ClearLines();
 
 	if (self.data.stack) then
 		SetStackedPortraitTooltip(self.data);

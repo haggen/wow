@@ -36,6 +36,7 @@ local function CreatePlayerData()
 	return {
 		lastEncounterTime = GetTime(),
 		lastDetectionTime = GetTime(),
+		guild = nil,
 		guid = nil,
 		name = nil,
 		sex = nil,
@@ -147,6 +148,16 @@ local function CreatePlayerDataFromUnit(unit)
 	data.class = select(2, UnitClass(unit));
 	data.effectiveLevel = UnitLevel(unit);
 
+	do
+		local name, _, rank = GetGuildInfo(unit);
+		if (name) then
+			data.guild = {
+				name = name,
+				isGuildMaster = (rank == 0),
+			};
+		end
+	end
+
 	if UnitIsEnemy(unit, "player") then
 		data.reaction = HOSTILE;
 	elseif UnitIsFriend(unit, "player") then
@@ -180,6 +191,15 @@ local function CreatePlayerDataFromPlayerGUID(guid)
 	local data = CreatePlayerData();
 	data.guid = guid;
 	_, data.class, _, data.race, data.sex, data.name = GetPlayerInfoByGUID(guid);
+	do
+		local name, _, rank = GetGuildInfo(data.name);
+		if (name) then
+			data.guild = {
+				name = name,
+				isGuildMaster = (rank == 0),
+			};
+		end
+	end
 	return data;
 end
 
