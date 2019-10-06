@@ -1,4 +1,4 @@
-<p align="center"><img src="threatrack.png" width="256"></p>
+<p align="center"><img src="https://imgur.com/tkedztL.png" width="256"></p>
 
 <h1 align="center">Threatrack</h1>
 

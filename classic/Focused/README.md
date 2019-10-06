@@ -1,4 +1,4 @@
-<p align="center"><img src="focused.png" width="256"></p>
+<p align="center"><img src="https://imgur.com/Us6pJ7f.png" width="256"></p>
 
 <h1 align="center">Focused</h1>
 
