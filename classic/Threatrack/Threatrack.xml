@@ -51,7 +51,7 @@
 		</Scripts>
 	</Frame>
 
-	<Frame name="ThreatrackFrame" mixin="ThreatrackFrameMixin" toplevel="true" movable="true" clampedToScreen="true" parent="UIParent">
+	<Frame name="ThreatrackFrame" mixin="ThreatrackFrameMixin" frameStrata="LOW" toplevel="true" movable="true" clampedToScreen="true" parent="UIParent">
 		<Size y="64"/>
 		<Anchors>
 			<Anchor point="TOP" y="-8"/>
