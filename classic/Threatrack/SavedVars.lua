@@ -2,10 +2,19 @@
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
+-- Add-on namespace.
+--
 local NAMESPACE = ...;
 
--- Enforce saved variables schema by deleting unrecognized keys
--- from current saved vars and setting new default values.
+-- Default values.
+--
+local defaultSavedVars = {
+	showHostileOnly = true,
+	frameScale = 1,
+};
+
+-- Enforce schema by deleting unrecognized keys from
+-- current saved vars and setting new defaults.
 --
 local function UpdateSavedVars(default, current)
 	for key, defaultValue in pairs(default) do
@@ -25,16 +34,10 @@ local function UpdateSavedVars(default, current)
 	end
 end
 
-local defaultSavedVars = {
-	showHostileOnly = true,
-	frameScale = 1,
-};
-
 do
 	local frame = CreateFrame("FRAME");
-	frame:RegisterEvent("ADDON_LOADED");
 
-	-- ...
+	-- Wait for saved variables to be loaded.
 	--
 	frame:SetScript("OnEvent", function(self, event, ...)
 		if (event == "ADDON_LOADED") then
@@ -44,4 +47,5 @@ do
 			end
 		end
 	end);
+	frame:RegisterEvent("ADDON_LOADED");
 end

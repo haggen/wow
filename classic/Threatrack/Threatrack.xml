@@ -14,7 +14,7 @@
 		</Shadow>
 	</Font>
 
-	<Frame name="ThreatrackPortraitTemplate" mixin="ThreatrackPortraitTemplateMixin" enableMouse="true" virtual="true">
+	<Frame name="ThreatrackPortraitTemplate" mixin="ThreatrackPortraitMixin" enableMouse="true" virtual="true">
 		<Size x="64" y="64"/>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -43,17 +43,11 @@
 			</Layer>
 		</Layers>
 		<Scripts>
+			<OnUpdate method="OnUpdate"/>
 			<OnEnter method="OnEnter"/>
 			<OnLeave method="OnLeave"/>
 			<OnMouseDown method="OnMouseDown"/>
 			<OnMouseUp method="OnMouseUp"/>
-			<OnUpdate method="OnUpdate"/>
-		</Scripts>
-	</Frame>
-
-	<Frame name="ThreatrackDropDown" mixin="ThreatrackDropDownMixin" inherits="UIDropDownMenuTemplate">
-		<Scripts>
-			<OnLoad method="OnLoad"/>
 		</Scripts>
 	</Frame>
 
@@ -76,6 +70,12 @@
 		<Scripts>
 			<OnLoad method="OnLoad"/>
 			<OnEvent method="OnEvent"/>
+		</Scripts>
+	</Frame>
+
+	<Frame name="ThreatrackDropDown" mixin="ThreatrackDropDownMixin" inherits="UIDropDownMenuTemplate">
+		<Scripts>
+			<OnLoad method="OnLoad"/>
 		</Scripts>
 	</Frame>
 </Ui>

@@ -26,13 +26,13 @@ local GUTTER = 8;
 --
 --
 
--- ...
+-- At which estimated level it should be displayed instead of Skull level (??).
 --
 local function EstimatedLevelThreshold()
 	return UnitLevel("player") + 10;
 end
 
--- Tell whether the Skull icon should be displayed given a player's level information.
+-- Tells whether the Skull icon should be displayed given a player's level information.
 --
 local function ShouldDisplaySkullLevel(data)
 	if (data.effectiveLevel == SKULL) then
@@ -59,16 +59,16 @@ local function GetDisplayPlayerLevel(data)
 	return "??";
 end
 
--- Update portrait frame given stacked data, i.e. non-flat.
+-- Update portrait given stacked player data.
 --
-local function UpdateStackedPortrait(portrait, data)
+local function UpdateStackedPortrait(portrait, stackedData)
 	portrait.Level:Show();
-	portrait.Level:SetText(string.format("×%d", #data.stack));
+	portrait.Level:SetText(string.format("×%d", #stackedData.stack));
 
-	portrait.Class:SetTexCoord(unpack(ThreatrackData:GetClassTexCoords(data.class)));
+	portrait.Class:SetTexCoord(unpack(ThreatrackData:GetClassTexCoords(stackedData.class)));
 end
 
--- Update portrait frame given flat data, i.e. non-stacked.
+-- Update portrait given flat player data.
 --
 local function UpdateFlatPortrait(portrait, data)
 	if ShouldDisplaySkullLevel(data) then
@@ -76,10 +76,16 @@ local function UpdateFlatPortrait(portrait, data)
 	else
 		portrait.Level:Show();
 		local displayLevel = GetDisplayPlayerLevel(data);
-		-- Small tweak to fix text alignment problems due to the font not being fixed width.
-		if string.find(displayLevel, "[2-6]%d?%+") then
+
+		-- Small tweak to fix text alignment problems.
+		--
+		-- When we're showing an estimated level with append a "+" sign at the end.
+		-- This kinda screws with the text alignment, unless the level starts with
+		-- a "1". To help with we prepend a space character in every other case.
+		if string.find(displayLevel, "^[2-9]%d?%+") then
 			displayLevel = " "..displayLevel;
 		end
+
 		portrait.Level:SetText(displayLevel);
 
 		if (displayLevel ~= "??") then
@@ -149,11 +155,11 @@ end
 
 -- Portrait template mixin.
 --
-ThreatrackPortraitTemplateMixin = {};
+ThreatrackPortraitMixin = {};
 
 -- Update portrait.
 --
-function ThreatrackPortraitTemplateMixin:Update(data)
+function ThreatrackPortraitMixin:Update(data)
 	self.data = data;
 
 	self.Skull:Hide();
@@ -169,7 +175,7 @@ end
 
 -- Portrait OnUpdate handler. We use it to request an update once the data becomes stale.
 --
-function ThreatrackPortraitTemplateMixin:OnUpdate()
+function ThreatrackPortraitMixin:OnUpdate()
 	if (not self:IsShown()) then
 		return nil;
 	end
@@ -189,30 +195,9 @@ function ThreatrackPortraitTemplateMixin:OnUpdate()
 	end
 end
 
--- ...
---
-function ThreatrackPortraitTemplateMixin:OnMouseDown(button)
-	if (button == "LeftButton") then
-		if (not ThreatrackFrame.isLocked) then
-			ThreatrackFrame.isDragging = true;
-			ThreatrackFrame:SetUserPlaced(true);
-			ThreatrackFrame:StartMoving();
-		end
-	elseif (button == "RightButton") then
-		ToggleDropDownMenu(1, nil, ThreatrackDropDown, "cursor", 0, -8);
-	end
-end
-
--- ...
---
-function ThreatrackPortraitTemplateMixin:OnMouseUp()
-	ThreatrackFrame.isDragging = nil;
-	ThreatrackFrame:StopMovingOrSizing();
-end
-
 -- Portrait OnEnter handler. Used to display tooltip.
 --
-function ThreatrackPortraitTemplateMixin:OnEnter()
+function ThreatrackPortraitMixin:OnEnter()
 	GameTooltip:ClearAllPoints();
 	GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, -8);
 	GameTooltip:ClearLines();
@@ -228,9 +213,30 @@ end
 
 -- Portrait OnEnter handler. Used to hide the tooltip.
 --
-function ThreatrackPortraitTemplateMixin:OnLeave()
+function ThreatrackPortraitMixin:OnLeave()
 	GameTooltip:Hide();
 	RestoreTooltipTextHeight();
+end
+
+-- ...
+--
+function ThreatrackPortraitMixin:OnMouseDown(button)
+	if (button == "RightButton") then
+		ToggleDropDownMenu(1, nil, ThreatrackDropDown, "cursor", 0, -8);
+	elseif (button == "LeftButton") then
+		if (not ThreatrackFrame.isLocked) then
+			ThreatrackFrame.isDragging = true;
+			ThreatrackFrame:SetUserPlaced(true);
+			ThreatrackFrame:StartMoving();
+		end
+	end
+end
+
+-- ...
+--
+function ThreatrackPortraitMixin:OnMouseUp()
+	ThreatrackFrame.isDragging = nil;
+	ThreatrackFrame:StopMovingOrSizing();
 end
 
 --
@@ -255,10 +261,9 @@ local function StackPresenceData(data)
 				class = playerClass,
 				stack = {data[i]},
 			};
-			-- stackedData is a numbered as well as associative table,
-			-- we use hash maps to quickly check and gain access, but
-			-- we also insert in a numbered position to be able to more
-			-- easily sort and manipulate it later on.
+			-- The stacked data is a table that is both sequential and associative.
+			-- We use keyed indices to quickly check existing values, and the
+			-- sequential numbered indices to sort and manipulate it later on.
 			table.insert(stackedData, stackedData[playerClass]);
 		else
 			table.insert(stackedData[playerClass].stack, data[i]);
