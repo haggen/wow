@@ -5,4 +5,10 @@
 ## DefaultState: enabled
 ## SavedVariablesPerCharacter: ThreatrackSavedVars
 
+Data.lua
+API.lua
+SavedVars.lua
+
+DropDownMenu.xml
+Portrait.xml
 Threatrack.xml
