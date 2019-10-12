@@ -91,6 +91,7 @@ local DATA = {
 				["Hurricane"] = {reqLevel = 40},
 				["Innervate"] = {reqLevel = 40},
 				["Insect Swarm"] = {reqLevel = 30},
+				["Leader of the Pack"] = {reqLevel = 40},
 				["Maul"] = {reqLevel = 10},
 				["Moonfire"] = {reqLevel = 4},
 				["Moonkin Form"] = {reqLevel = 40},
