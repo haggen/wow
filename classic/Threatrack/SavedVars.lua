@@ -9,6 +9,7 @@ local NAMESPACE = ...;
 -- Default values.
 --
 local defaultSavedVars = {
+	devMode = false,
 	showHostileOnly = true,
 	frameScale = 1,
 };

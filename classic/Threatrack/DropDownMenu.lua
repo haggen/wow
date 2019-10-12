@@ -24,8 +24,20 @@ function ThreatrackDropDownMenuMixin:Initialize()
 		isTitle = 1,
 	});
 
-	UIDropDownMenu_AddSeparator(1);
+	if (ThreatrackSavedVars.devMode) then
+		UIDropDownMenu_AddButton({
+			text = "Show Hostile Only",
+			isNotRadio = 1,
+			checked = function()
+				return (ThreatrackSavedVars.showHostileOnly);
+			end,
+			func = function()
+				ThreatrackSavedVars.showHostileOnly = not ThreatrackSavedVars.showHostileOnly;
+			end,
+		});
+	end
 
+	UIDropDownMenu_AddSeparator(1);
 	UIDropDownMenu_AddButton({
 		text = "Size",
 		notCheckable = 1,
@@ -53,7 +65,6 @@ function ThreatrackDropDownMenuMixin:Initialize()
 	});
 
 	UIDropDownMenu_AddSeparator(1);
-
 	UIDropDownMenu_AddButton({
 		text = "Position",
 		notCheckable = 1,
@@ -68,7 +79,6 @@ function ThreatrackDropDownMenuMixin:Initialize()
 	});
 
 	UIDropDownMenu_AddSeparator(1);
-
 	UIDropDownMenu_AddButton({
 		text = "Cancel",
 		notCheckable = 1,
