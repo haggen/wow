@@ -7,19 +7,18 @@
 
 Add-ons compatible with WoW Classic (1.13).
 
-- **[Threatrack](/classic/Threatrack) `*NEW*`**
-- **[Fastbind](/classic/Fastbind)**
-- **[Focused](/classic/Focused)**
-- **[Developer](/classic/Developer)**
+- [**Threatrack**](/classic/Threatrack)
+- [**Fastbind**](/classic/Fastbind)
+- [**Focused**](/classic/Focused)
+- [**Developer**](/classic/Developer)
 
 ## Development
 
-This is a monorepo, meaning it contains multiple add-ons in the same repository. For this reason and more there are some guidelines we should follow:
+This is a monorepo, meaning it tracks several add-ons for different version of WoW in the same repository. As such some of the common assumptions about a repository don't hold.
 
-- Avoid commiting changes in more than one add-on at a time.
-- Tags must use the format `platform/name/version`.
-- Scripts should be sensible the multi-project nature of the repository.
-- Create issues and branches containing the issue reference for each _unit_ of work such as a new feature, a fix, a change or chores.
+- Always use separate commits for changes in different projects.
+- Tags must follow the format `platform/name/version`.
+- Working branches should be named after an existing issue, e.g. `issue-11`.
 
 ## Linters
 
@@ -30,19 +29,19 @@ scripts/validate-lua <directory>
 scripts/validate-xml <directory>
 ```
 
-These scripts will recursively walk the given directory looking for files to validate and exit non-zero status when they fail.
+These scripts will recursively walk the given directory looking for files to validate and exit non-zero status if they fail.
 
 They're also automatically ran for every push thanks to [Travis](https://travis-ci.org).
 
 ## Release
 
-Releases loosely follow the [semantic versioning](https://semver.org/) system. Always have the bump of a version in its own commit and always tag it. Actually, there's a script for that.
+Releases loosely follow [semantic versioning](https://semver.org/). Do not edit versions manually. Use the script:
 
 ```shell
 scripts/release [-h|-p|-m|-M] <path>
 ```
 
-`scripts/release` will bump the version for given add-on, commit it, tag it and push the change to the remote respository. Use the options `-p`, `-m`, or `-M` for patch, minor, or major releases respectively. Minor and major are increments of one. Patch releases count the commits since last version.
+This will bump the specified version for given add-on, commit it, tag it and push to the remote respository. Options `-p`, `-m`, or `-M` stand for patch, minor, or major release respectively. Minor and major are increments of one. Patch releases count the commits since last release.
 
 ## Legal
 
