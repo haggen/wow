@@ -227,6 +227,10 @@ local function CreatePlayerDataFromCombatLogEvent(guid, flags, spellName)
 
 	if (spellName) then
 		data.estimatedLevel = ThreatrackData:GetSpellReqLevel(data.class, spellName);
+
+		if (ThreatrackSavedVars.verboseMode and data.estimatedLevel == 0) then
+			print(spellName, 'is not recognized');
+		end
 	end
 
 	return data;

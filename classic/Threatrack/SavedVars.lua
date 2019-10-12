@@ -4,12 +4,13 @@
 
 -- Add-on namespace.
 --
-local NAMESPACE = ...;
+local THREATRACK = ...;
 
 -- Default values.
 --
 local defaultSavedVars = {
-	devMode = false,
+	developerMode = false,
+	verboseMode = false,
 	showHostileOnly = true,
 	frameScale = 1,
 };
@@ -29,9 +30,9 @@ local function UpdateSavedVars(default, current)
 			current[key] = nil;
 		end
 
-		if ("table" == type(currentValue)) then
-			UpdateSavedVars(default[key], currentValue);
-		end
+		-- if ("table" == type(currentValue)) then
+		-- 	UpdateSavedVars(default[key], currentValue);
+		-- end
 	end
 end
 
@@ -43,7 +44,7 @@ do
 	frame:SetScript("OnEvent", function(self, event, ...)
 		if (event == "ADDON_LOADED") then
 			local name = ...;
-			if (name == NAMESPACE) then
+			if (name == THREATRACK) then
 				UpdateSavedVars(defaultSavedVars, ThreatrackSavedVars);
 			end
 		end

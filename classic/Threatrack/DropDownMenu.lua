@@ -24,7 +24,7 @@ function ThreatrackDropDownMenuMixin:Initialize()
 		isTitle = 1,
 	});
 
-	if (ThreatrackSavedVars.devMode) then
+	if (ThreatrackSavedVars.developerMode) then
 		UIDropDownMenu_AddButton({
 			text = "Show Hostile Only",
 			isNotRadio = 1,
@@ -33,6 +33,16 @@ function ThreatrackDropDownMenuMixin:Initialize()
 			end,
 			func = function()
 				ThreatrackSavedVars.showHostileOnly = not ThreatrackSavedVars.showHostileOnly;
+			end,
+		});
+		UIDropDownMenu_AddButton({
+			text = "Verbose Mode",
+			isNotRadio = 1,
+			checked = function()
+				return (ThreatrackSavedVars.verboseMode);
+			end,
+			func = function()
+				ThreatrackSavedVars.verboseMode = not ThreatrackSavedVars.verboseMode;
 			end,
 		});
 	end
