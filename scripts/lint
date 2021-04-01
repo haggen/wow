@@ -15,5 +15,6 @@ for arg in "$@"; do
         exit 1
     fi
 
+    find "$directory" -name "*.lua" -exec luacheck {} +
     find "$directory" -name "*.xml" -exec xmllint --noout --schema UI.xsd {} +
 done

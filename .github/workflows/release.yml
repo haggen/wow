@@ -1,0 +1,26 @@
+name: Release
+
+on:
+  push:
+    - tags
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare environment
+        run: source scripts/env
+
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: sudo apt-get install libxml2-utils lua-check httpie
+
+      - name: Lint source files
+        run: scripts/lint "$TARGET"
+
+      - name: Packaging
+        run: scripts/archive "$GIT_TAG"
+
+      - name: Publishing release
+        run: scripts/archive "$GIT_TAG"

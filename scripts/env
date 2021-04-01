@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+export TAG="${GITHUB_REF#refs/tags/}"
+
+test -z "${TAG##*/*/*}" || { echo "$0: not a release tag" >&2; exit 1; }
+
+export TARGET="${TAG%/*}"
+
+if test "$TARGET" != "$GITHUB_REF"; then
+	platform="${TARGET%/*}"
+	name="${TARGET#*/}"
+	version="${TAG#$TARGET/}"
+
+	export RELEASE="$name $version ($platform)"
+	export ARCHIVE="$name-$version-$platform"
+fi
