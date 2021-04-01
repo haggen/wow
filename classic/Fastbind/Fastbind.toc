@@ -1,5 +1,5 @@
 ## Interface: 11302
-## Version: 1.0.5
+## Version: 1.0.14
 ## Title: Fastbind
 ## Notes: Easily change your keybindings.
 ## DefaultState: enabled
