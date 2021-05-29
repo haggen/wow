@@ -1,10 +1,9 @@
 @echo off
 
-set platform=%~1
-set source=%~dp0%~1
-set target=%~f2\_%~1_\Interface\AddOns
+pushd %~dp0
 
-if "%platform%" == "" goto missing
+set source=%~1
+set target=%~f2\Interface\AddOns
 
 if not exist "%source%" (
     set invalid=%source%
@@ -21,10 +20,12 @@ for /f %%f in ('dir /b "%source%"') do (
     mklink /D "%target%\%%f" "%source%\%%f"
 )
 
+popd
+
 goto :eof
 
 :missing
-echo %0: missing argument, e.g. %0 classic "C:\World of Warcraft"
+echo %0: missing argument, e.g. %0 .\classic "C:\World of Warcraft\_classic_"
 exit /B 1
 
 :invalid
