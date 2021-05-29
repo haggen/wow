@@ -2,7 +2,7 @@
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
--- Grab add-on name from local space.
+-- Add-on namespace.
 --
 local THREATRACK = ...;
 
@@ -13,11 +13,11 @@ local SCALE = {
 
 -- ..
 --
-ThreatrackDropDownMenuMixin = {};
+ThreatrackMenuMixin = {};
 
 -- ..
 --
-function ThreatrackDropDownMenuMixin:Initialize()
+function ThreatrackMenuMixin:Initialize()
 	UIDropDownMenu_AddButton({
 		text = THREATRACK,
 		notCheckable = 1,
@@ -97,7 +97,7 @@ end
 
 -- ..
 --
-function ThreatrackDropDownMenuMixin:OnLoad()
-	UIDropDownMenu_SetInitializeFunction(self, ThreatrackDropDownMenuMixin.Initialize);
+function ThreatrackMenuMixin:OnLoad()
+	UIDropDownMenu_SetInitializeFunction(self, ThreatrackMenuMixin.Initialize);
 	UIDropDownMenu_SetDisplayMode(self, "MENU");
 end

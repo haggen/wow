@@ -10,6 +10,10 @@ local SKULL = -1;
 --
 local MAXED = 60;
 
+-- Colors. Stolen from WoW default interface.
+RegularColor = CreateColor(1.0, 0.82, 0.0);
+GuildColor = CreateColor(0.251, 0.753, 0.251);
+
 --
 --
 --
@@ -126,7 +130,7 @@ local function SetStackedPortraitTooltip(data)
 
 		GameTooltip:AddLine(GetDisplayPlayerName(data.stack[i]));
 		if (data.stack[i].guild) then
-			GameTooltip:AddLine(data.stack[i].guild.name, DIM_GREEN_FONT_COLOR:GetRGB());
+			GameTooltip:AddLine(data.stack[i].guild.name, GuildColor:GetRGB());
 			skip = skip + 1;
 		end
 		GameTooltip:AddLine(details, 1, 1, 1);
@@ -139,7 +143,7 @@ local function SetFlatPortraitTooltip(data)
 	local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayPlayerLevel(data), ThreatrackData:GetLocalizedRaceName(data.race), ThreatrackData:GetLocalizedClassName(data.class));
 	GameTooltip:SetText(GetDisplayPlayerName(data));
 	if (data.guild) then
-		GameTooltip:AddLine(data.guild.name, DIM_GREEN_FONT_COLOR:GetRGB());
+		GameTooltip:AddLine(data.guild.name, GuildColor:GetRGB());
 	end
 	GameTooltip:AddLine(details, 1, 1, 1);
 end
@@ -172,7 +176,7 @@ function ThreatrackPortraitMixin:Update(data)
 
 	self.Skull:Hide();
 	self.Level:Hide();
-	self.Level:SetTextColor(NORMAL_FONT_COLOR:GetRGB());
+	self.Level:SetTextColor(RegularColor:GetRGB());
 
 	if (data.stack) then
 		UpdateStackedPortrait(self, data);
@@ -230,7 +234,7 @@ end
 --
 function ThreatrackPortraitMixin:OnMouseDown(button)
 	if (button == "RightButton") then
-		ToggleDropDownMenu(1, nil, ThreatrackDropDownMenu, "cursor", 0, -8);
+		ToggleDropDownMenu(1, nil, ThreatrackMenu, "cursor", 0, -8);
 	elseif (button == "LeftButton") then
 		if (not ThreatrackFrame.isLocked) then
 			ThreatrackFrame.isDragging = true;
