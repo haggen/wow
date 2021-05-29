@@ -23,6 +23,8 @@ local ORC = "Orc";
 local SCOURGE = "Scourge";
 local TAUREN = "Tauren";
 local TROLL = "Troll";
+local BLOODELF = "BloodElf";
+local DRAENEI = "Draenei";
 
 -- Static data.
 --
@@ -32,29 +34,35 @@ local TROLL = "Troll";
 local DATA = {
 	races = {
 		[DWARF] = {
-			id = 3
+			id = 3,
 		},
 		[GNOME] = {
-			id = 7
+			id = 7,
 		},
 		[HUMAN] = {
-			id = 1
+			id = 1,
 		},
 		[NIGHTELF] = {
-			id = 4
+			id = 4,
 		},
 		[ORC] = {
-			id = 2
+			id = 2,
 		},
 		[SCOURGE] = {
-			id = 5
+			id = 5,
 		},
 		[TAUREN] = {
-			id = 6
+			id = 6,
 		},
 		[TROLL] = {
-			id = 8
-		}
+			id = 8,
+		},
+		[BLOODELF] = {
+			id = 10,
+		},
+		[DRAENEI] = {
+			id = 11,
+		},
 	},
 	classes = {
 		[DRUID] = {
