@@ -1,10 +1,6 @@
-<p align="center"><img src="https://imgur.com/tkedztL.png" width="256"></p>
+# Threatrack
 
-<h1 align="center">Threatrack</h1>
-
-<p align="center">Watch out for possible threats nearby.</p>
-
----
+> Warn about PvP threats nearby.
 
 ## About
 
