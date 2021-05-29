@@ -18,26 +18,29 @@ local defaultSavedVars = {
 -- Enforce schema by deleting unrecognized keys from
 -- current saved vars and setting new defaults.
 --
-local function UpdateSavedVars(default, current)
-	for key, defaultValue in pairs(default) do
-		if (current[key] == nil) then
-			current[key] = defaultValue;
+local function UpdateSavedVars(defaults, savedVars)
+	for key, defaultValue in pairs(defaults) do
+		if (savedVars[key] == nil) then
+			savedVars[key] = defaultValue;
 		end
 	end
 
-	for key, currentValue in pairs(current) do
-		if (default[key] == nil) then
-			current[key] = nil;
+	for key, value in pairs(savedVars) do
+		if (defaults[key] == nil) then
+			savedVars[key] = nil;
 		end
 
-		-- if ("table" == type(currentValue)) then
-		-- 	UpdateSavedVars(default[key], currentValue);
-		-- end
+		if ("table" == type(value)) then
+			UpdateSavedVars(defaults[key], value);
+		end
 	end
 end
 
 do
 	local frame = CreateFrame("FRAME");
+
+	-- Initialize global saved vars.
+	ThreatrackSavedVars = {};
 
 	-- Wait for saved variables to be loaded.
 	--
