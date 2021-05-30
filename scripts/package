@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+#
+# Generate package by release tag.
+#
+
+set -euo pipefail
+
+help() {
+	cat <<-EOF >&2
+		Usage: $0 [-h] <tag>
+	EOF
+}
+
+opts=$(getopt -n "$0" -o h -l help -- "$@")
+
+if test $? -ne 0; then
+	exit 1
+fi
+
+eval set -- "$opts"
+
+while :; do
+	case "$1" in
+		-h|--help)
+			help
+			exit
+			;;
+		--)
+			shift
+			break
+			;;
+	esac
+done
+
+if test -z "$*"; then
+	echo "$0: missing argument, try --help for more information" >&2
+	exit 1
+fi
+
+target="$(scripts/parse "$1")"
+platform="$(scripts/inspect -P "$target")"
+name="$(scripts/inspect -n "$target")"
+version="$(scripts/inspect -v "$target")"
+package="$name-$version-$platform"
+
+mkdir -p dist
+
+git archive --format=zip -o "dist/$package.zip" --prefix="$name/" "$1:$platform/$name/"
+

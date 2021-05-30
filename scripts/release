@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+#
+# Release new version of given add-on.
+#
+
 set -euo pipefail
 
 help() {
@@ -8,32 +12,26 @@ help() {
 	EOF
 }
 
-count-commits-since-last-tag() {
-	local range
-	range="$(git describe --tags --abbrev=0 --match "$1/*" 2>/dev/null)..HEAD"
-	git rev-list --count "${range#..}" -- "$1" 2>/dev/null
-}
-
-options=$(getopt -n "$0" -o hpmM -l help,patch,minor,major -- "$@")
+opts=$(getopt -n "$0" -o hpmM -l help,patch,minor,major -- "$@")
 
 if test $? -ne 0; then
 	exit 1
 fi
 
-eval set -- "$options"
+eval set -- "$opts"
 
 while :; do
 	case "$1" in
 		-p|--patch)
-			mode="patch"
+			bump="patch"
 			shift
 			;;
 		-m|--minor)
-			mode="minor"
+			bump="minor"
 			shift
 			;;
 		-M|--major)
-			mode="major"
+			bump="major"
 			shift
 			;;
 		-h|--help)
@@ -52,54 +50,22 @@ if test -z "$*"; then
 	exit 1
 fi
 
-if ! test -d "$1"; then
-	echo "$0: '$1' is not a directory" >&2
+target="$1"
+
+if ! test -d "$target"; then
+	echo "$0: '$target' is not a directory" >&2
 	exit 1
 fi
 
-scripts/validate-lua "$1"
-scripts/validate-xml "$1"
-
-platform="$(dirname "$1")"
-name="$(basename "$1")"
-manifest="$platform/$name/$name.toc"
-
-if ! test -f "$manifest"; then
-	echo "$0: '$manifest' is not a file" >&2
+if ! scripts/lint "$target"; then
+	echo "$0: linting failed" >&2
 	exit 1
 fi
 
-old_version="$(grep -Po "Version: \K.+" "$manifest")"
+release="$(scripts/inspect "$target")"
+tag="$(scripts/inspect -t "$target")"
 
-major="$(echo "$old_version" | cut -f1 -d.)"
-minor="$(echo "$old_version" | cut -f2 -d.)"
-patch="$(echo "$old_version" | cut -f3 -d.)"
+scripts/bump "--$bump" "$target"
 
-case "${mode=patch}" in
-	patch)
-		count=$(count-commits-since-last-tag "$platform/$name")
-		patch=$((patch + count))
-		;;
-	minor)
-		patch=0
-		minor=$((minor + 1))
-		;;
-	major)
-		patch=0
-		minor=0
-		major=$((major + 1))
-		;;
-esac
-
-new_version="$major.$minor.$patch"
-
-if test "$old_version" = "$new_version"; then
-	echo "$0: aborting, versions are identical" >&2
-	exit 1
-fi
-
-sed -i "s/Version: $old_version/Version: $new_version/" "$manifest"
-
-git commit -m "Bump $platform/$name to $new_version" "$manifest"
-git tag -m "Release $name $new_version ($platform)" "$platform/$name/$new_version"
+git tag -m "Release $release" "$tag"
 git push --follow-tags

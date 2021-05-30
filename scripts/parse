@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+#
+# Parse given Git tag into the respective add-on directory.
+#
+
+set -euo pipefail
+
+if test -z "$*"; then
+    echo "$0: missing argument. e.g. $0 <tag>" >&2
+    exit 1
+fi
+
+tag="$1"
+
+if ! git rev-parse "$tag" >/dev/null 2>&1; then
+    echo "$0: '$tag' is not a valid tag" >&2
+    exit 1
+fi
+
+target="${tag%/*}"
+
+if ! scripts/inspect "$target" >/dev/null; then
+    echo "$0: couldn't find corresponding add-on" >&2
+    exit 1
+fi
+
+realpath "$target" 

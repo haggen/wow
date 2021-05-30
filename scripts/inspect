@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+
+#
+# Inspect add-on information in given path.
+#
+
+set -euo pipefail
+
+help() {
+	cat <<-EOF >&2
+		Usage: $0 [-h|-P|-n|-v|-M|-m|-p] <path>
+	EOF
+}
+
+opts=$(getopt -n "$0" -o hPnvMmp -l help,platform,version,name,major,minor,patch -- "$@")
+
+if test $? -ne 0; then
+	exit 1
+fi
+
+eval set -- "$opts"
+
+while :; do
+	case "$1" in
+		-P|--platform)
+			output="platform"
+			shift
+			;;
+		-v|--version)
+			output="version"
+			shift
+			;;
+		-n|--name)
+			output="name"
+			shift
+			;;
+		-M|--major)
+			output="major"
+			shift
+			;;
+		-m|--minor)
+			output="minor"
+			shift
+			;;
+		-p|--patch)
+			output="patch"
+			shift
+			;;
+		-t|--tag)
+			output="tag"
+			shift
+			;;
+		--)
+			shift
+			break
+			;;
+	esac
+done
+
+if test -z "$*"; then
+	echo "$0: missing argument, try --help for more information" >&2
+	exit 1
+fi
+
+target="$1"
+
+if ! test -d "$target"; then
+	echo "$0: '$target' is not a directory" >&2
+	exit 1
+fi
+
+name="$(basename "$target")"
+manifest="$target/$name.toc"
+
+if ! test -f "$manifest"; then
+	echo "$0: manifest could not be found" >&2
+	exit 1
+fi
+
+interface="$(grep -Po "Interface: \K.+" "$manifest")"
+version="$(grep -Po "Version: \K.+" "$manifest")"
+
+case "$interface" in
+	11*)
+		platform="classic"
+		;;
+	20*)
+		platform="classic"
+		;;
+	*)
+		platform="retail"
+		;;
+esac
+
+case "${output=}" in
+	platform)
+		echo "$platform"
+		;;
+	name)
+		echo "$name"
+		;;
+	version)
+		echo "$version"
+		;;
+	major)
+		echo "$version" | cut -f1 -d.
+		;;
+	minor)
+		echo "$version" | cut -f2 -d.
+		;;
+	patch)
+		echo "$version" | cut -f3 -d.
+		;;
+	tag)
+		echo "$platform/$name/$version"
+		;;
+	*)
+		echo "$name $version ($platform)"
+		;;
+esac
+

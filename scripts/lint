@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+#
+# Lint Lua and XML files, recursively, in a given directory.
+#
+
 set -euo pipefail
 
 if test -z "$*"; then
@@ -8,13 +12,13 @@ if test -z "$*"; then
 fi
 
 for arg in "$@"; do
-    directory="$(realpath $arg)"
+    target="$(realpath $arg)"
 
-    if ! test -d "$directory"; then
-        echo "$directory is not a directory." >&2
+    if ! test -d "$target"; then
+        echo "$target is not a directory." >&2
         exit 1
     fi
 
-    find "$directory" -name "*.lua" -exec luacheck {} +
-    find "$directory" -name "*.xml" -exec xmllint --noout --schema UI.xsd {} +
+    find "$target" -name "*.lua" -exec luacheck {} +
+    find "$target" -name "*.xml" -exec xmllint --noout --schema UI.xsd {} +
 done
