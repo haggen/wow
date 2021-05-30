@@ -1,47 +1,50 @@
-<p align="center"><img src="wow.png" width="640"></p>
-<p align="center">My add-ons for World of Warcraft®. <a href="https://travis-ci.org/haggen/wow"><img src="https://travis-ci.org/haggen/wow.svg?branch=master" valign="middle"></a></p>
+<p align="center"><img src="wow.png" width="600" height="232" alt="World of Wacraft"></p>
+<p align="center">My add-ons for World of Warcraft®.</p>
 
 ---
 
-## Classic
+## Retail
 
-Add-ons compatible with WoW Classic (1.13).
+Add-ons compatible with WoW Retail (9.x).
+
+- [**Fastbind**](/retail/Fastbind)
+- [**Focused**](/retail/Focused)
+
+## TBC Classic
+
+Add-ons compatible with WoW TBC Classic (2.5.x).
 
 - [**Threatrack**](/classic/Threatrack)
 - [**Fastbind**](/classic/Fastbind)
 - [**Focused**](/classic/Focused)
-- [**Developer**](/classic/Developer)
 
 ## Development
 
-This is a monorepo, meaning it tracks several add-ons for different version of WoW in the same repository. As such some of the common assumptions about a repository don't hold.
+- The tooling is designed to work in a Unix environment.
+- This repository tracks several add-ons for different versions of WoW.
+- Always use separate commits for changes in different add-ons.
+- Commits **must** link to one or more existing issues, e.g. `Bump interface compatibility (#11)`.
+- Tags **must** follow the format `platform/name/version`, e.g. `classic/Focusight/1.0.0`.
 
-- Always use separate commits for changes in different projects.
-- Tags must follow the format `platform/name/version`.
-- Working branches should be named after an existing issue, e.g. `issue-11`.
+## Linting
 
-## Linters
-
-There are scripts to validate both Lua and XML files:
+Both Lua and XML files are validated on CI, but you can do it manually as well:
 
 ```shell
-scripts/validate-lua <directory>
-scripts/validate-xml <directory>
+scripts/lint <directory>
 ```
 
-These scripts will recursively walk the given directory looking for files to validate and exit non-zero status if they fail.
+The script will recursively walk the given directory looking for files to validate and exit non-zero status if any issue is encountered.
 
-They're also automatically ran for every push thanks to [Travis](https://travis-ci.org).
+## Releases
 
-## Release
-
-Releases loosely follow [semantic versioning](https://semver.org/). Do not edit versions manually. Use the script:
+Do **not** edit versions manually! Use the script:
 
 ```shell
 scripts/release [-h|-p|-m|-M] <path>
 ```
 
-This will bump the specified version for given add-on, commit it, tag it and push to the remote respository. Options `-p`, `-m`, or `-M` stand for patch, minor, or major release respectively. Minor and major are increments of one. Patch releases count the commits since last release.
+This will bump the version given given add-on, commit it, tag it and push to the remote respositorym, which will trigger a new release. Options `-p`, `-m`, or `-M` stand for patch, minor, or major release respectively. Patch version counts the commits since last release. Minor and major versions are increments of one and resets the patch version.
 
 ## Legal
 
