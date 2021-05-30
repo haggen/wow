@@ -2,7 +2,7 @@
 
 pushd %~dp0
 
-set source=%~1
+set source=%~f1
 set target=%~f2\Interface\AddOns
 
 if not exist "%source%" (
@@ -25,9 +25,9 @@ popd
 goto :eof
 
 :missing
-echo %0: missing argument, e.g. %0 .\classic "C:\World of Warcraft\_classic_"
+echo %0: Missing argument, e.g. %0 ".\classic" "C:\World of Warcraft\_classic_"
 exit /B 1
 
 :invalid
-echo %0: invalid argument "%invalid%"
+echo %0: Not a valid path "%invalid%"
 exit /B 1
