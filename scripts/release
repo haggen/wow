@@ -62,10 +62,10 @@ if ! scripts/lint "$target"; then
 	exit 1
 fi
 
+scripts/bump "--$bump" "$target"
+
 release="$(scripts/inspect "$target")"
 tag="$(scripts/inspect -t "$target")"
-
-scripts/bump "--$bump" "$target"
 
 git tag -m "Release $release" "$tag"
 git push --follow-tags
