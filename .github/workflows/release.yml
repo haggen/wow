@@ -11,20 +11,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Prepare environment
-        run: source scripts/env
-
       - name: Install dependencies
         run: sudo apt-get install libxml2-utils lua-check
 
+      - name: Prepare environment
+        run: source scripts/env
+
       - name: Lint source files
-        run: scripts/lint "$TARGET"
+        run: scripts/lint $TARGET
 
       - name: Generate package
-        run: scripts/package "$TAG"
+        run: scripts/package $TAG
 
       - name: Generate changelog
-        run: scripts/changelog "$TAG"
+        run: scripts/changelog $TAG
 
       - name: Upload assets
         uses: softprops/action-gh-release@v1

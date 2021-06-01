@@ -2,14 +2,12 @@
 
 set -euo pipefail
 
-export TAG="${GITHUB_REF#refs/tags/}"
-export TARGET="${TAG%/*}"
+tag="${GITHUB_REF#refs/tags/}"
+target="${tag%/*}"
+release="$(scripts/inspect "$target")"
 
-if test "$TARGET" != "$GITHUB_REF"; then
-	platform="${TARGET%/*}"
-	name="${TARGET#*/}"
-	version="${TAG#$TARGET/}"
-
-	export RELEASE="$name $version ($platform)"
-	export ARCHIVE="$name-$version-$platform"
-fi
+cat <<-EOF > "$GITHUB_ENV"
+	TAG="$tag"
+	TARGET="$target"
+	RELEASE="$release"
+EOF
