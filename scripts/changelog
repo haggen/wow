@@ -38,12 +38,14 @@ if test -z "$*"; then
 	exit 1
 fi
 
-if ! git rev-parse "$1" >/dev/null 2>&1; then
-    echo "$0: '$1' is not a valid tag" >&2
+tag="$1"
+
+if ! git rev-parse "$tag" >/dev/null 2>&1; then
+    echo "$0: '$tag' is not a valid tag" >&2
     exit 1
 fi
 
-prefix="${1%/*}"
-range="$(git describe --tags --abbrev=0 --match "$prefix/*" "$1^" 2>/dev/null || echo)..$1^"
+prefix="${tag%/*}"
+range="$(git describe --tags --abbrev=0 --match "$prefix/*" "$tag^" 2>/dev/null || echo)..$tag^"
 
 git log --format="- %h %s" "${range#..}" -- "$prefix" | grep "#[0-9]\+" > "dist/CHANGELOG.md"
