@@ -1,0 +1,10 @@
+{
+    "Lua.diagnostics.globals": [
+        "PlayerFrame",
+        "TargetFrame",
+        "UIParent",
+        "GetScreenWidth",
+        "PlayerFrame_SetLocked",
+        "TargetFrame_SetLocked"
+    ]
+}
