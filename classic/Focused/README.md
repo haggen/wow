@@ -1,16 +1,12 @@
-<p align="center"><img src="https://imgur.com/Us6pJ7f.png" width="256"></p>
+# Focused
 
-<h1 align="center">Focused</h1>
-
-<p align="center">Bring yours and your target's portrait to the center of attention.</p>
-
----
+> Put your character's and target's health bars closer to the center of attention.
 
 ## About
 
-![Video showing off the add-on in action](https://i.imgur.com/WHc1hCv.gif)
+![Gif showing off the add-on in action](https://i.imgur.com/WHc1hCv.gif)
 
-**Focused** changes the default position of both yours and your target's portrait to the center of the screen. It then ties the portraits together so that when you drag one around the other follows but in a symmetric fashion, mirroring your motion across the vertical axis.
+**Focused** changes the default position of both your character's and target's health bar to the center of the screen. It then ties the portraits together so that when you drag one around the other follows but in a symmetric fashion, mirroring your motion across the vertical axis.
 
 ## Installation
 
