@@ -11,14 +11,12 @@ if test -z "$*"; then
     exit 1
 fi
 
-for arg in "$@"; do
-    target="$(realpath $arg)"
+target="$1"
 
-    if ! test -d "$target"; then
-        echo "$target is not a directory." >&2
-        exit 1
-    fi
+if ! test -d "$target"; then
+    echo "$target is not a directory." >&2
+    exit 1
+fi
 
-    find "$target" -name "*.lua" -exec luacheck {} +
-    find "$target" -name "*.xml" -exec xmllint --noout --schema UI.xsd {} +
-done
+find "$target" -name "*.lua" -exec luacheck {} +
+find "$target" -name "*.xml" -exec xmllint --noout --schema UI.xsd {} +
