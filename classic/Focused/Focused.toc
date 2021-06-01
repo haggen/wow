@@ -1,8 +1,0 @@
-## Interface: 20501
-## Version: 1.0.16
-## Title: Focused
-## Notes: Bring yours and your target's health bar to the center of attention.
-## DefaultState: enabled
-## SavedVariablesPerCharacter: FocusedSavedVars
-
-Focused.xml

@@ -1,0 +1,8 @@
+## Interface: 20501
+## Version: 0.0.0
+## Title: Tunnelvision
+## Notes: For people with tunnel vision.
+## DefaultState: enabled
+## SavedVariablesPerCharacter: TunnelvisionSavedVars
+
+Tunnelvision.xml

@@ -1,4 +1,4 @@
-# Focused
+# Tunnelvision
 
 > Put your character's and target's health bars closer to the center of attention.
 
@@ -6,7 +6,7 @@
 
 ![Gif showing off the add-on in action](https://i.imgur.com/WHc1hCv.gif)
 
-**Focused** changes the default position of both your character's and target's health bar to the center of the screen. It then ties the portraits together so that when you drag one around the other follows but in a symmetric fashion, mirroring your motion across the vertical axis.
+**Tunnelvision** changes the default position of both your character's and target's health bar to the center of the screen. It then ties the portraits together so that when you drag one around the other follows but in a symmetric fashion, mirroring your motion across the vertical axis.
 
 ## Installation
 
@@ -18,7 +18,7 @@ Upon logging in after the add-on's been installed the default position of your c
 
 ## Uninstall
 
-Simply delete the `Focused` folder from your add-ons directory.
+Simply delete the `Tunnelvision` folder from your add-ons directory.
 
 Please note that uninstalling the add-on won't restore your character's and target's portrait position. For that you'll need to reset their position right-clicking each of them and selectin Move Frame > Reset Position.
 

@@ -1,10 +1,10 @@
--- Focused
+-- Tunnelvision
 -- MIT License © 2018 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
 -- Add-on namespace.
 --
-local FOCUSED = ...;
+local TUNNELVISION = ...;
 
 -- Default frame anchor points.
 --
@@ -37,41 +37,41 @@ end
 -- Saved variables.
 -- installed (boolean) - Tells if it's the first the add-on is being loaded.
 --
-FocusedSavedVars = {
+TunnelvisionSavedVars = {
 	installed = false,
 };
 
 -- Main frame mixin.
 --
-FocusedFrameMixin = {};
+TunnelvisionFrameMixin = {};
 
 -- Load callback.
 --
-function FocusedFrameMixin:OnLoad()
+function TunnelvisionFrameMixin:OnLoad()
 	self:RegisterEvent("ADDON_LOADED");
 end
 
 -- Registered events callback.
 --
-function FocusedFrameMixin:OnEvent(event, ...)
+function TunnelvisionFrameMixin:OnEvent(event, ...)
 	if (event == "ADDON_LOADED") then
 		local name = ...;
 
-		if (name == FOCUSED) then
-			if (not FocusedSavedVars.installed) then
+		if (name == TUNNELVISION) then
+			if (not TunnelvisionSavedVars.installed) then
 				SetInitialPosition(PlayerFrame);
 				PlayerFrame_SetLocked(false);
 				SetInitialPosition(TargetFrame);
 				TargetFrame_SetLocked(false);
 			end
-			FocusedSavedVars.installed = true;
+			TunnelvisionSavedVars.installed = true;
 		end
 	end
 end
 
 -- Update the other frame's position whenever one is being dragged.
 --
-function FocusedFrameMixin:OnUpdate()
+function TunnelvisionFrameMixin:OnUpdate()
 	if (PlayerFrame:IsDragging()) then
 		SetMirroredPosition(TargetFrame, {PlayerFrame:GetPoint(1)});
 	elseif (TargetFrame:IsDragging()) then
@@ -83,18 +83,26 @@ end
 --
 --
 
--- Override game's "Reset position" option.
--- FrameXML/TargetFrame.lua:1146
+-- Hook into frame options.
 --
-function TargetFrame_ResetUserPlacedPosition()
-	SetInitialPosition(PlayerFrame);
+hooksecurefunc("TargetFrame_ResetUserPlacedPosition", function()
 	SetInitialPosition(TargetFrame);
-end
+	SetInitialPosition(PlayerFrame);
+end);
 
--- Override game's "Reset position" option.
--- FrameXML/PlayerFrame.lua:821
---
-function PlayerFrame_ResetUserPlacedPosition()
-	SetInitialPosition(PlayerFrame);
+hooksecurefunc("TargetFrame_SetLocked", function(locked)
+	if (PLAYER_FRAME_UNLOCKED == locked) then
+		PlayerFrame_SetLocked(locked);
+	end
+end);
+
+hooksecurefunc("PlayerFrame_ResetUserPlacedPosition", function()
 	SetInitialPosition(TargetFrame);
-end
+	SetInitialPosition(PlayerFrame);
+end);
+
+hooksecurefunc("PlayerFrame_SetLocked", function(locked)
+	if (TARGET_FRAME_UNLOCKED == locked) then
+		TargetFrame_SetLocked(locked);
+	end
+end);
