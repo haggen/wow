@@ -1,4 +1,4 @@
-name: Release
+name: Release add-on
 
 on:
   push:
@@ -9,10 +9,10 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
       - name: Prepare environment
         run: source scripts/env
-
-      - uses: actions/checkout@v2
 
       - name: Install dependencies
         run: sudo apt-get install libxml2-utils lua-check
@@ -21,9 +21,10 @@ jobs:
         run: scripts/lint "$TARGET"
 
       - name: Generate package and changelog
-        run: scripts/archive "$TAG"
+        run: scripts/package "$TAG"
+        run: scripts/changelog "$TAG"
 
-      - name: Create release and upload assets
+      - name: Upload assets
         uses: softprops/action-gh-release@v1
         with:
           body_path: dist/CHANGELOG.md
