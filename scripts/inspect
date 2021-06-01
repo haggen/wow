@@ -8,11 +8,11 @@ set -euo pipefail
 
 help() {
 	cat <<-EOF >&2
-		Usage: $0 [-h|-P|-n|-v|-M|-m|-p] <path>
+		Usage: $0 [-h|-P|-n|-v|-M|-m|-p|-t] <path>
 	EOF
 }
 
-opts=$(getopt -n "$0" -o hPnvMmp -l help,platform,version,name,major,minor,patch -- "$@")
+opts=$(getopt -n "$0" -o hPnvMmpt -l help,platform,name,version,major,minor,patch,tag -- "$@")
 
 if test $? -ne 0; then
 	exit 1
@@ -26,12 +26,12 @@ while :; do
 			output="platform"
 			shift
 			;;
-		-v|--version)
-			output="version"
-			shift
-			;;
 		-n|--name)
 			output="name"
+			shift
+			;;
+		-v|--version)
+			output="version"
 			shift
 			;;
 		-M|--major)
