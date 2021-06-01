@@ -2,67 +2,76 @@
 -- MIT License © 2018 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
--- Constants.
+-- Add-on namespace.
 --
-local FRAME_POINT = {
+local FOCUSED = ...;
+
+-- Default frame anchor points.
+--
+local defaultFramePoint = {
 	[PlayerFrame] = "RIGHT",
 	[TargetFrame] = "LEFT"
 };
 
--- Global object.
---
-Focused = {};
-
-local framePositionChangedInCombat = false;
-local framePositionResetInCombat = false;
-
--- Reset frame's position to the center of the screen.
+-- Reset frame position to the center of the screen.
 --
 local function SetInitialPosition(frame)
-	if InCombatLockdown() then
-		framePositionResetInCombat = true;
-	else
-		frame:SetUserPlaced(true);
-		frame:ClearAllPoints();
-		frame:SetPoint(FRAME_POINT[frame], UIParent, "CENTER");
-	end
-end
-
-local function ResetUserPlacedPosition()
-	SetInitialPosition(PlayerFrame);
-	PlayerFrame_SetLocked(false);
-	SetInitialPosition(TargetFrame);
-	TargetFrame_SetLocked(false);
+	frame:SetUserPlaced(true);
+	frame:ClearAllPoints();
+	frame:SetPoint(defaultFramePoint[frame], UIParent, "CENTER");
 end
 
 -- Given a user placed frames, update its offsetX to a mirrored value of the given anchor.
 --
-function SetMirroredPosition(frame, anchor)
-	if InCombatLockdown() then
-		framePositionChangedInCombat = {frame, anchor};
-	else
-		local _, _, _, offsetX, offsetY = unpack(anchor);
-		local mirroredOffsetX = GetScreenWidth() - offsetX - frame:GetWidth();
-		frame:ClearAllPoints();
-		frame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", mirroredOffsetX, offsetY);
+local function SetMirroredPosition(frame, anchor)
+	local _, _, _, offsetX, offsetY = unpack(anchor);
+	local mirroredOffsetX = GetScreenWidth() - offsetX - frame:GetWidth();
+	frame:ClearAllPoints();
+	frame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", mirroredOffsetX, offsetY);
+end
+
+--
+--
+--
+
+-- Saved variables.
+-- installed (boolean) - Tells if it's the first the add-on is being loaded.
+--
+FocusedSavedVars = {
+	installed = false,
+};
+
+-- Main frame mixin.
+--
+FocusedFrameMixin = {};
+
+-- Load callback.
+--
+function FocusedFrameMixin:OnLoad()
+	self:RegisterEvent("ADDON_LOADED");
+end
+
+-- Registered events callback.
+--
+function FocusedFrameMixin:OnEvent(event, ...)
+	if (event == "ADDON_LOADED") then
+		local name = ...;
+
+		if (name == FOCUSED) then
+			if (not FocusedSavedVars.installed) then
+				SetInitialPosition(PlayerFrame);
+				PlayerFrame_SetLocked(false);
+				SetInitialPosition(TargetFrame);
+				TargetFrame_SetLocked(false);
+			end
+			FocusedSavedVars.installed = true;
+		end
 	end
 end
 
--- Initialization.
+-- Update the other frame's position whenever one is being dragged.
 --
-function Focused:OnLoad()
-	Focused = self;
-
-	self:RegisterEvent("PLAYER_REGEN_ENABLED");
-
-	if (not PlayerFrame:IsUserPlaced()) or (not TargetFrame:IsUserPlaced()) then
-		ResetUserPlacedPosition();
-	end
-end
-
--- Update the other frame position when one is moving.
---
-function Focused:OnUpdate()
+function FocusedFrameMixin:OnUpdate()
 	if (PlayerFrame:IsDragging()) then
 		SetMirroredPosition(TargetFrame, {PlayerFrame:GetPoint(1)});
 	elseif (TargetFrame:IsDragging()) then
@@ -70,33 +79,22 @@ function Focused:OnUpdate()
 	end
 end
 
-function Focused:OnEvent(event)
-	if (event == "PLAYER_REGEN_ENABLED") then
-		if (framePositionResetInCombat) then
-			ResetUserPlacedPosition();
-		elseif (framePositionChangedInCombat) then
-			SetMirroredPosition(unpack(framePositionChangedInCombat));
-		end
-
-		framePositionResetInCombat = false;
-		framePositionChangedInCombat = false;
-	end
-end
-
 --
 --
 --
 
+-- Override game's "Reset position" option.
 -- FrameXML/TargetFrame.lua:1146
+--
 function TargetFrame_ResetUserPlacedPosition()
--- hooksecurefunc("TargetFrame_ResetUserPlacedPosition", function()
-	ResetUserPlacedPosition();
--- end);
+	SetInitialPosition(PlayerFrame);
+	SetInitialPosition(TargetFrame);
 end
 
+-- Override game's "Reset position" option.
 -- FrameXML/PlayerFrame.lua:821
+--
 function PlayerFrame_ResetUserPlacedPosition()
--- hooksecurefunc("PlayerFrame_ResetUserPlacedPosition", function()
-	ResetUserPlacedPosition();
--- end);
+	SetInitialPosition(PlayerFrame);
+	SetInitialPosition(TargetFrame);
 end

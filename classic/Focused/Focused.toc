@@ -3,4 +3,6 @@
 ## Title: Focused
 ## Notes: Bring yours and your target's health bar to the center of attention.
 ## DefaultState: enabled
+## SavedVariablesPerCharacter: FocusedSavedVars
+
 Focused.xml
