@@ -7,7 +7,7 @@ target="${tag%/*}"
 release="$(scripts/inspect "$target")"
 
 cat <<-EOF > "$GITHUB_ENV"
-	TAG="$tag"
-	TARGET="$target"
-	RELEASE="$release"
+	TAG=$tag
+	TARGET=$target
+	RELEASE=$release
 EOF
