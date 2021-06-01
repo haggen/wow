@@ -5,6 +5,9 @@
         "UIParent",
         "GetScreenWidth",
         "PlayerFrame_SetLocked",
-        "TargetFrame_SetLocked"
+        "TargetFrame_SetLocked",
+        "hooksecurefunc",
+        "TARGET_FRAME_UNLOCKED",
+        "PLAYER_FRAME_UNLOCKED"
     ]
 }
