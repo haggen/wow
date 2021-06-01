@@ -20,8 +20,10 @@ jobs:
       - name: Lint source files
         run: scripts/lint "$TARGET"
 
-      - name: Generate package and changelog
+      - name: Generate package
         run: scripts/package "$TAG"
+
+      - name: Generate changelog
         run: scripts/changelog "$TAG"
 
       - name: Upload assets
