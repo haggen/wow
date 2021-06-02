@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/270076/120334782-511bf800-c2c7-11eb-8373-25a380caee44.png" width="533" height="468" alt="World of Warcraft®">
+  <img src="https://user-images.githubusercontent.com/270076/120495363-036cc180-c393-11eb-89b7-19d7d84e0af8.png" width="401" height="351" alt="World of Warcraft®">
   <br />
   My add-ons for World of Warcraft®.
 </p>
