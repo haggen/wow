@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+#
+# Upload release to CurseForge.
+#
+
+set -euo pipefail
+
+help() {
+	cat <<-EOF >&2
+		Usage: $0 [-h]|-t <token> <tag>
+	EOF
+}
+
+opts=$(getopt -n "$0" -o ht: -l help,token: -- "$@")
+
+if test $? -ne 0; then
+	exit 1
+fi
+
+eval set -- "$opts"
+
+while :; do
+	case "$1" in
+		-h|--help)
+			help
+			exit
+			;;
+		-t|--token)
+			token="$2"
+			shift 2
+			;;
+		--)
+			shift
+			break
+			;;
+	esac
+done
+
+tag="$1"
+target="$(scripts/parse "$tag")"
+
+if ! test -f "$target/.curseforge"; then
+	echo "$0: '$target/.curseforge' is not a file" >&2
+	exit 1
+fi
+
+# shellcheck disable=SC1091
+source "$target/.curseforge"
+
+if test -z "${project_id=}"; then
+	echo "$0: .curseforge is missing the 'project_id' variable" >&2
+	exit 1
+fi
+
+if test -z "${game_versions=}"; then
+	echo "$0: .curseforge is missing the 'game_versions' variable" >&2
+	exit 1
+fi
+
+archive="$(scripts/inspect -a "$target")"
+
+if ! test -f "dist/$archive"; then
+	echo "$0: dist/$archive is not a file" >&2
+	exit 1
+fi
+
+set +e
+
+read -r -d "" metadata <<-EOF 
+	{
+	"changelog": "",
+	"changelogType": "markdown",
+	"gameVersions": [$game_versions],
+	"releaseType": "release",
+	}
+EOF
+
+set -e
+
+url="https://wow.curseforge.com/api/projects/$project_id/upload-file"
+
+if ! curl -vf -X POST "$url" \
+	-H "X-Api-Token: $token" \
+	-F "metadata=$metadata" \
+	-F "file=@dist/$archive"; then
+	echo "$0: upload failed" >&2
+	exit 1
+fi
