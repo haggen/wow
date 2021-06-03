@@ -228,7 +228,7 @@
 		<xs:attribute name="b" type="ColorFloat" default="0.0"/>
 		<xs:attribute name="a" type="ColorFloat" default="1.0"/>
 		<xs:attribute name="color" type="xs:string"/>
-		<xs:assert test="(@r and @g and @b and not(@color)) or (not(@r and @g and @b) and @color)"/>
+		<!-- <xs:assert test="(@r and @g and @b and not(@color)) or (not(@r and @g and @b) and @color)"/> -->
 	</xs:complexType>
 
 	<xs:complexType name="ShadowType">
