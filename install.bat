@@ -16,8 +16,8 @@ if not exist "%target%" (
 
 echo Linking directories in %source% to %target%...
 
-for /f %%f in ('dir /b "%source%"') do (
-    mklink /D "%target%\%%f" "%source%\%%f"
+for /f %%d in ('dir /b "%source%"') do if exist "%source%\%%d\*" (
+    mklink /D "%target%\%%d" "%source%\%%d"
 )
 
 popd
