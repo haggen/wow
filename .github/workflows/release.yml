@@ -7,6 +7,7 @@ on:
 
 jobs:
   release:
+    name: Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,15 +21,15 @@ jobs:
         run: source scripts/env
 
       - name: Lint source files
-        run: scripts/lint $TARGET
+        run: scripts/lint "$TARGET"
 
-      - name: Generate package
-        run: scripts/package $TAG
+      - name: Generate archive
+        run: scripts/archive "$TAG"
 
       - name: Generate changelog
-        run: scripts/changelog $TAG
+        run: scripts/changelog "$TAG"
 
-      - name: Upload assets
+      - name: Upload to GitHub
         uses: softprops/action-gh-release@v1
         with:
           body_path: dist/CHANGELOG.md
@@ -38,3 +39,9 @@ jobs:
           name: ${{ env.RELEASE }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload to CurseForge
+        env:
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+        run: scripts/upload -t "$CURSEFORGE_TOKEN" "$TAG"
+      
