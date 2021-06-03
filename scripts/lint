@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 #
-# Lint Lua and XML files, recursively, in a given directory.
+# Lint Lua and XML files recursively in a given directory.
 #
 
 set -euo pipefail
 
 if test -z "$*"; then
-    echo "$0: missing argument. e.g. $0 <directory>..." >&2
+    echo "$0: missing argument. e.g. $0 <path>" >&2
     exit 1
 fi
 
@@ -18,5 +18,7 @@ if ! test -d "$target"; then
     exit 1
 fi
 
+platform="$(scripts/inspect --platform "$target")"
+
 find "$target" -name "*.lua" -exec luacheck {} +
-find "$target" -name "*.xml" -exec xmllint --noout --schema UI.xsd {} +
+find "$target" -name "*.xml" -exec xmllint --noout --schema "$platform/UI.xsd" {} +
