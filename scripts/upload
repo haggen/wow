@@ -65,11 +65,15 @@ if ! test -f "dist/$archive"; then
 	exit 1
 fi
 
+changelog="$(jq -aRs < dist/CHANGELOG.md)"
+
+# read returns non-zero when eof is found and since 
+# we're reading from heredoc, there will be an eof.
 set +e
 
 read -r -d "" metadata <<-EOF 
 	{
-	"changelog": "",
+	"changelog": $changelog,
 	"changelogType": "markdown",
 	"gameVersions": [$game_versions],
 	"releaseType": "release",
@@ -80,10 +84,7 @@ set -e
 
 url="https://wow.curseforge.com/api/projects/$project_id/upload-file"
 
-if ! curl -vf -X POST "$url" \
+curl -vf -X POST "$url" \
 	-H "X-Api-Token: $token" \
 	-F "metadata=$metadata" \
-	-F "file=@dist/$archive"; then
-	echo "$0: upload failed" >&2
-	exit 1
-fi
+	-F "file=@dist/$archive"
