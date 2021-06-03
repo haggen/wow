@@ -8,11 +8,11 @@ set -euo pipefail
 
 help() {
 	cat <<-EOF >&2
-		Usage: $0 [-h|-P|-n|-v|-M|-m|-p|-t] <path>
+		Usage: $0 [-h|-P|-n|-v|-M|-m|-p|-t|-a] <path>
 	EOF
 }
 
-opts=$(getopt -n "$0" -o hPnvMmpt -l help,platform,name,version,major,minor,patch,tag -- "$@")
+opts=$(getopt -n "$0" -o hPnvMmpta -l help,platform,name,version,major,minor,patch,tag,archive -- "$@")
 
 if test $? -ne 0; then
 	exit 1
@@ -48,6 +48,10 @@ while :; do
 			;;
 		-t|--tag)
 			output="tag"
+			shift
+			;;
+		-a|--archive)
+			output="archive"
 			shift
 			;;
 		--)
@@ -113,6 +117,9 @@ case "${output=}" in
 		;;
 	tag)
 		echo "$platform/$name/$version"
+		;;
+	archive)
+		echo "$name-$version-$platform.zip"
 		;;
 	*)
 		echo "$name $version ($platform)"
