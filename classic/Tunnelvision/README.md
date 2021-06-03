@@ -1,12 +1,12 @@
 # Tunnelvision
 
-> Put your character's and target's health bars closer to the center of attention.
+> For people with tunnel vision.
 
 ## About
 
 ![Gif showing off the add-on in action](https://i.imgur.com/WHc1hCv.gif)
 
-**Tunnelvision** changes the default position of both your character's and target's health bar to the center of the screen. It then ties the portraits together so that when you drag one around the other follows but in a symmetric fashion, mirroring your motion across the vertical axis.
+**Tunnelvision** resets both your character's and target's frames position to the center of the screen and then ties them together so when you drag one the other follows in a symmetrical fashion. It's simple stuff but helps you keep an eye on resources and cooldowns during the most stressful moments and also with your OCD. ;)
 
 ## Installation
 
@@ -14,13 +14,15 @@ Download the latest version from the [Releases page](https://github.com/haggen/w
 
 ## Usage
 
-Upon logging in after the add-on's been installed the default position of your character's and target's portrait will be close to the center of the screen. If you have moved these around you might want to reset their position via the right-click menu. Now whenever you move either of them, the other will mirror this movement across the vertical axis.
+Upon logging in after the add-on's been installed the default position of your character's and target's frames will be set to the center of the screen. Their position and locking mechanism will be tied together so that whatever happens to one will also be applied to the other.
+
+If you have moved the frames prios to the installation of this add-on you might want to reset their position via the right-click menu.
 
 ## Uninstall
 
 Simply delete the `Tunnelvision` folder from your add-ons directory.
 
-Please note that uninstalling the add-on won't restore your character's and target's portrait position. For that you'll need to reset their position right-clicking each of them and selectin Move Frame > Reset Position.
+Please note that uninstalling the add-on won't restore your character's and target's frames position. For that you'll need to reset their position via the right-click menu and selecting Move Frame → Reset Position.
 
 ## License
 
