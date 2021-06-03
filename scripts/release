@@ -62,7 +62,7 @@ if ! scripts/lint "$target"; then
 	exit 1
 fi
 
-scripts/bump "--$bump" "$target"
+scripts/bump "--${bump=patch}" "$target"
 
 release="$(scripts/inspect "$target")"
 tag="$(scripts/inspect -t "$target")"
