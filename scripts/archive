@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #
-# Generate package by release tag.
+# Generate add-on archive for given release tag.
 #
 
 set -euo pipefail
@@ -41,10 +41,9 @@ fi
 target="$(scripts/parse "$1")"
 platform="$(scripts/inspect -P "$target")"
 name="$(scripts/inspect -n "$target")"
-version="$(scripts/inspect -v "$target")"
-package="$name-$version-$platform"
+archive="$(scripts/inspect -a "$target")"
 
 mkdir -p dist
 
-git archive --format=zip -o "dist/$package.zip" --prefix="$name/" "$1:$platform/$name/"
+git archive --format=zip -o "dist/$archive" --prefix="$name/" "$1:$platform/$name/"
 
