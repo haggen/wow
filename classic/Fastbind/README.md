@@ -1,6 +1,6 @@
 # Fastbind
 
-> Easily change your keybindings.
+> Change your keybindings, fast.
 
 ## About
 

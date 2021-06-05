@@ -1,7 +1,7 @@
-## Interface: 11302
+## Interface: 20501
 ## Version: 1.0.14
 ## Title: Fastbind
-## Notes: Easily change your keybindings.
+## Notes: Change your keybindings, fast.
 ## DefaultState: enabled
 ## SavedVariablesPerCharacter: FastbindSavedVars
 Fastbind.xml
