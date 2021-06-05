@@ -194,7 +194,7 @@ function Fastbind_SetBinding(key)
 end
 
 function Fastbind_Apply()
-	AttemptToSaveBindings(2)
+	SaveBindings(2)
 	Fastbind_Deactivate()
 end
 
@@ -334,7 +334,7 @@ end
 --
 
 StaticPopupDialogs.FASTBIND = {
-	text = "Move your mouse over any action bar slot, inventory item, spell or macro, to see the its keybinding. Press a new key or key combination to change it. Press ESC or click on Discard to undo any changes.",
+	text = "Move your mouse over any action bar slot, inventory item, spell or macro, to see the its keybinding. While hovering it press a new key or key combination to change it or right-click to unbind it. Press ESC or click on Discard to undo any changes.",
 	button1 = "Save",
 	button2 = "Discard",
 	OnAccept = function()
