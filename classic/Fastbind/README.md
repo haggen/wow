@@ -12,10 +12,10 @@ Download the latest version from the [Releases page](https://github.com/haggen/w
 
 ## Usage
 
-1. Type `/fastbind`, `/fb`, or click on the cog icon next to your minimap.
-2. While the prompt is showing, move your mouse over any icon on your action bar to see what keys or key combinations are bound to it.
-3. While hovering your target, press a new key or key combination to bind to it.
-4. At any time you can press **Save** to commit or **Discard** to undo any changes.
+1. Click the cog on your minimap or type `/fastbind`.
+2. Move your mouse over any item on your action bar, spellbook, macro panel or inside your bags.
+3. Press a key or key combination to bind or right-click to unbind.
+4. Confirm or discard your changes.
 
 ## Uninstall
 
