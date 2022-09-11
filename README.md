@@ -11,43 +11,52 @@
 Add-ons compatible with WoW Retail (9.x).
 
 - [**Fastbind**](/retail/Fastbind)
-- [**Focused**](/retail/Focused)
+- [**Tunnelvision**](/retail/Tunnelvision)
 
-## TBC Classic
+## WotLK Classic
 
-Add-ons compatible with WoW TBC Classic (2.5.x).
+Add-ons compatible with WoW WotLK Classic (3.4.x).
 
 - [**Threatrack**](/classic/Threatrack)
 - [**Fastbind**](/classic/Fastbind)
-- [**Focused**](/classic/Focused)
+- [**Tunnelvision**](/classic/Tunnelvision)
 
 ## Development
 
-- The tooling is designed to work in a Unix environment.
-- This repository tracks several add-ons for different versions of WoW.
-- Always use separate commits for changes in different add-ons.
-- Commits **must** link to one or more existing issues, e.g. `Bump interface compatibility (#11)`.
-- Tags **must** follow the format `platform/name/version`, e.g. `classic/Focusight/1.0.0`.
+To install all add-ons via symbolic link, use the script `Install.ps1`. Launch a PowerShell prompt and execute the snippet below, changing the game installation path accordingly.
 
-## Linting
-
-Both Lua and XML files are validated on CI, but you can do it manually as well:
-
-```shell
-scripts/lint <directory>
+```
+> Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+> .\Install.psq -Game "C:\World of Warcraft"
 ```
 
-The script will recursively walk the given directory looking for files to validate and exit non-zero status if any issue is encountered.
+Please note;
 
-## Releases
+1. The tooling is designed to work in Linux, like WSL, not Windows.
+2. This repository tracks several add-ons for different versions of WoW.
+3. Never commit changes to multiple add-ons at the same time.
+4. Commits **should** link to one or more existing issues, e.g. `Bump interface compatibility #11`.
+5. Tags **must** follow the format `platform/name/version`, e.g. `classic/Tunnelvision/1.0.0`.
 
-Do **not** edit versions manually! Use the script:
+### Linting
 
-```shell
-scripts/release [-h|-p|-m|-M] <path>
+Both Lua and XML files must pass through validation.
+
+```sh
+$ scripts/lint <directory>
 ```
 
-This will bump the version given given add-on, commit it, tag it and push to the remote respositorym, which will trigger a new release. Options `-p`, `-m`, or `-M` stand for patch, minor, or major release respectively. Patch version counts the commits since last release. Minor and major versions are increments of one and resets the patch version.
+The script will recursively walk the given directory looking for files to validate, report and exit with a non-zero status if issues are encountered.
+
+### Releases
+
+Do **not** ever edit versions manually! Use the script:
+
+```sh
+$ scripts/release [-h|-p|-m|-M] <path>
+```
+
+This will bump the version string of given add-on, commit it, tag it and push to the remote respository, which will trigger a new automated release. Options `-p`, `-m`, or `-M` stand for patch, minor, or major release respectively. Patch version counts the commits since last release. Minor and major versions are increments of one on top of the current version.
 
 ## Legal
 
