@@ -85,10 +85,7 @@ interface="$(grep -Po "Interface: \K.+" "$manifest")"
 version="$(grep -Po "Version: \K.+" "$manifest")"
 
 case "$interface" in
-	11*)
-		platform="classic"
-		;;
-	20*)
+	113*|205*|304*)
 		platform="classic"
 		;;
 	*)
