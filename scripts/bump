@@ -14,7 +14,7 @@ help() {
 
 commits-since() {
 	local range
-	range="$(git describe --tags --abbrev=0 --match "$1/*" 2>/dev/null)..HEAD"
+	range="$(git describe --abbrev=0 --long --match "$1/*" 2>/dev/null | cut -f3 -d-)..HEAD"
 	git rev-list --count "${range#..}" -- "$1" 2>/dev/null
 }
 
