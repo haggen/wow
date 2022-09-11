@@ -1,5 +1,5 @@
 ## Interface: 30400
-## Version: 0.0.158
+## Version: 0.0.83
 ## Title: Dangeradar
 ## Notes: Watch out for danger.
 ## DefaultState: enabled
