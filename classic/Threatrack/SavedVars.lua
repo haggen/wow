@@ -19,19 +19,17 @@ local defaultSavedVars = {
 -- current saved vars and setting new defaults.
 --
 local function UpdateSavedVars(defaults, savedVars)
-	for key, defaultValue in pairs(defaults) do
-		if (savedVars[key] == nil) then
-			savedVars[key] = defaultValue;
-		end
-	end
-
-	for key, value in pairs(savedVars) do
+	-- Remove keys with no defaults.
+	for key in pairs(savedVars) do
 		if (defaults[key] == nil) then
 			savedVars[key] = nil;
 		end
+	end
 
-		if ("table" == type(value)) then
-			UpdateSavedVars(defaults[key], value);
+	-- Set new keys.
+	for key, defaultValue in pairs(defaults) do
+		if (savedVars[key] == nil) then
+			savedVars[key] = defaultValue;
 		end
 	end
 end
@@ -39,7 +37,8 @@ end
 do
 	local frame = CreateFrame("FRAME");
 
-	-- Initialize global saved vars.
+	-- Initialize global table. Will be overwritten if existing saved vars are loaded.
+	--
 	ThreatrackSavedVars = {};
 
 	-- Wait for saved variables to be loaded.
