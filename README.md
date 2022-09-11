@@ -17,7 +17,7 @@ Add-ons compatible with WoW Retail (9.x).
 
 Add-ons compatible with WoW WotLK Classic (3.4.x).
 
-- [**Threatrack**](/classic/Threatrack)
+- [**Dangeradar**](/classic/Dangeradar)
 - [**Fastbind**](/classic/Fastbind)
 - [**Tunnelvision**](/classic/Tunnelvision)
 

@@ -1,4 +1,4 @@
--- Threatrack
+-- Dangeradar
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
@@ -21,7 +21,7 @@ local GUTTER = 8;
 -- ...
 --
 local function SortStackedPresenceData(a, b)
-	return ThreatrackData:GetClassOrder(a.class) < ThreatrackData:GetClassOrder(b.class);
+	return DangeradarData:GetClassOrder(a.class) < DangeradarData:GetClassOrder(b.class);
 end
 
 -- ...
@@ -34,7 +34,7 @@ local function StackPresenceData(data)
 		if (stackedData[playerClass] == nil) then
 			stackedData[playerClass] = {
 				class = playerClass,
-				stack = {data[i]},
+				stack = { data[i] },
 			};
 			-- The stacked data is a table that is both sequential and associative.
 			-- We use keyed indices to quickly check existing values, and the
@@ -56,9 +56,9 @@ end
 -- ...
 --
 local function GetPresenceData(stackedModeThreshold)
-	local data = ThreatrackAPI:GetFreshPlayerData();
+	local data = DangeradarAPI:GetFreshPlayerData();
 
-	if (ThreatrackSavedVars.showHostileOnly) then
+	if (DangeradarSavedVars.showHostileOnly) then
 		local filteredData = {};
 		for i = 1, #data do
 			if (data[i].reaction == HOSTILE) then
@@ -82,17 +82,17 @@ end
 --
 --
 
-ThreatrackFrameMixin = {};
+DangeradarFrameMixin = {};
 
 -- ..
 --
-function ThreatrackFrameMixin:ShouldSkipUpdate()
+function DangeradarFrameMixin:ShouldSkipUpdate()
 	return self.isDragging;
 end
 
 -- ...
 --
-function ThreatrackFrameMixin:Update()
+function DangeradarFrameMixin:Update()
 	if self:ShouldSkipUpdate() then
 		return nil;
 	end
@@ -125,7 +125,7 @@ end
 
 -- ..
 --
-function ThreatrackFrameMixin:ResetPosition()
+function DangeradarFrameMixin:ResetPosition()
 	self:SetUserPlaced(false);
 	self:ClearAllPoints();
 	self:SetPoint("TOP", 0, -8);
@@ -133,7 +133,7 @@ end
 
 -- ...
 --
-function ThreatrackFrameMixin:OnLoad()
+function DangeradarFrameMixin:OnLoad()
 	do
 		-- The breath bar default position overlaps with our frame, so we move it a bit.
 		-- See FrameXML/MirrorTimer.xml:80
@@ -142,7 +142,7 @@ function ThreatrackFrameMixin:OnLoad()
 		MirrorTimer1:SetPoint(point, relativeTo, relativePoint, x, y - 8);
 	end
 
-	ThreatrackAPI:HandlePlayerPresence(function()
+	DangeradarAPI:HandlePlayerPresence(function()
 		self:Update();
 	end);
 
@@ -151,11 +151,11 @@ end
 
 -- ...
 --
-function ThreatrackFrameMixin:OnEvent(event, ...)
+function DangeradarFrameMixin:OnEvent(event, ...)
 	if (event == "ADDON_LOADED") then
 		local name = ...;
 		if (name == NAMESPACE) then
-			self:SetScale(ThreatrackSavedVars.frameScale);
+			self:SetScale(DangeradarSavedVars.frameScale);
 		end
 	end
 end

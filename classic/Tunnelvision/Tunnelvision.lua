@@ -73,9 +73,9 @@ end
 --
 function TunnelvisionFrameMixin:OnUpdate()
 	if (PlayerFrame:IsDragging()) then
-		SetMirroredPosition(TargetFrame, {PlayerFrame:GetPoint(1)});
+		SetMirroredPosition(TargetFrame, { PlayerFrame:GetPoint(1) });
 	elseif (TargetFrame:IsDragging()) then
-		SetMirroredPosition(PlayerFrame, {TargetFrame:GetPoint(1)});
+		SetMirroredPosition(PlayerFrame, { TargetFrame:GetPoint(1) });
 	end
 end
 

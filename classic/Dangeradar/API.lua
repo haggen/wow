@@ -1,4 +1,4 @@
--- Threatrack
+-- Dangeradar
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
@@ -226,9 +226,9 @@ local function CreatePlayerDataFromCombatLogEvent(guid, flags, spellName)
 	data.reaction = ReadCombatLogFlagsReaction(flags);
 
 	if (spellName) then
-		data.estimatedLevel = ThreatrackData:GetSpellReqLevel(data.class, spellName);
+		data.estimatedLevel = DangeradarData:GetSpellReqLevel(data.class, spellName);
 
-		if (ThreatrackSavedVars.verboseMode and data.estimatedLevel == 0) then
+		if (DangeradarSavedVars.verboseMode and data.estimatedLevel == 0) then
 			print(spellName, 'is not recognized');
 		end
 	end
@@ -253,7 +253,7 @@ local function OnEvent(_, event, ...)
 		end
 	elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
 		local _, _, _, sourceGuid, _, sourceFlags, _, targetGuid, _, targetFlags,
-			_, _, spellName, _, _, _, _, _, _, _, _ = CombatLogGetCurrentEventInfo();
+		_, _, spellName, _, _, _, _, _, _, _, _ = CombatLogGetCurrentEventInfo();
 
 		local sourceData = CreatePlayerDataFromCombatLogEvent(sourceGuid, sourceFlags, spellName);
 		if (sourceData) then
@@ -277,22 +277,23 @@ local function OnEvent(_, event, ...)
 		end
 	end
 end
+
 frame:SetScript("OnEvent", OnEvent);
 
 --
 --
 --
 
-ThreatrackAPI = {};
+DangeradarAPI = {};
 
-function ThreatrackAPI:GetFreshPlayerData(...)
+function DangeradarAPI:GetFreshPlayerData(...)
 	return GetFreshPlayerData(...);
 end
 
-function ThreatrackAPI:HandlePlayerPresence(...)
+function DangeradarAPI:HandlePlayerPresence(...)
 	return HandlePlayerPresence(...);
 end
 
-function ThreatrackAPI:IsPresenceStale(...)
+function DangeradarAPI:IsPresenceStale(...)
 	return IsPresenceStale(...);
 end

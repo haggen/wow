@@ -1,0 +1,26 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+	<Script file="Dangeradar.lua"/>
+
+	<Frame name="DangeradarFrame" mixin="DangeradarFrameMixin" frameStrata="LOW" toplevel="true" movable="true" clampedToScreen="true" parent="UIParent">
+		<Size y="64"/>
+		<Anchors>
+			<Anchor point="TOP" y="-8"/>
+		</Anchors>
+		<Frames>
+			<Frame name="$parentPortrait1" parentArray="portraits" inherits="DangeradarPortraitTemplate" hidden="true"/>
+			<Frame name="$parentPortrait2" parentArray="portraits" inherits="DangeradarPortraitTemplate" hidden="true"/>
+			<Frame name="$parentPortrait3" parentArray="portraits" inherits="DangeradarPortraitTemplate" hidden="true"/>
+			<Frame name="$parentPortrait4" parentArray="portraits" inherits="DangeradarPortraitTemplate" hidden="true"/>
+			<Frame name="$parentPortrait5" parentArray="portraits" inherits="DangeradarPortraitTemplate" hidden="true"/>
+			<Frame name="$parentPortrait6" parentArray="portraits" inherits="DangeradarPortraitTemplate" hidden="true"/>
+			<Frame name="$parentPortrait7" parentArray="portraits" inherits="DangeradarPortraitTemplate" hidden="true"/>
+			<Frame name="$parentPortrait8" parentArray="portraits" inherits="DangeradarPortraitTemplate" hidden="true"/>
+			<Frame name="$parentPortrait9" parentArray="portraits" inherits="DangeradarPortraitTemplate" hidden="true"/>
+		</Frames>
+		<Scripts>
+			<OnLoad method="OnLoad"/>
+			<OnEvent method="OnEvent"/>
+		</Scripts>
+	</Frame>
+</Ui>

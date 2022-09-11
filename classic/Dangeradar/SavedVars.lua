@@ -1,10 +1,10 @@
--- Threatrack
+-- Dangeradar
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
 -- Add-on namespace.
 --
-local THREATRACK = ...;
+local DANGERADAR = ...;
 
 -- Default values.
 --
@@ -39,15 +39,15 @@ do
 
 	-- Initialize global table. Will be overwritten if existing saved vars are loaded.
 	--
-	ThreatrackSavedVars = {};
+	DangeradarSavedVars = {};
 
 	-- Wait for saved variables to be loaded.
 	--
 	frame:SetScript("OnEvent", function(self, event, ...)
 		if (event == "ADDON_LOADED") then
 			local name = ...;
-			if (name == THREATRACK) then
-				UpdateSavedVars(defaultSavedVars, ThreatrackSavedVars);
+			if (name == DANGERADAR) then
+				UpdateSavedVars(defaultSavedVars, DangeradarSavedVars);
 			end
 		end
 	end);

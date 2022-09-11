@@ -649,6 +649,7 @@ local DATA = {
 				["Summon Felguard"] = { reqLevel = 50 },
 				["Summon Felhunter"] = { reqLevel = 30 },
 				["Summon Felsteed"] = { reqLevel = 30 },
+				["Felsteed"] = { reqLevel = 30 }, -- If the player logs in already mounted the spell is different.
 				["Summon Imp"] = { reqLevel = 1 },
 				["Summon Succubus"] = { reqLevel = 20 },
 				["Summon Voidwalker"] = { reqLevel = 10 },
@@ -735,33 +736,33 @@ end
 --
 --
 
-ThreatrackData = {};
+DangeradarData = {};
 
-function ThreatrackData:GetClassTexCoords(class)
+function DangeradarData:GetClassTexCoords(class)
 	return DATA.classes[class].textureCoords;
 end
 
-function ThreatrackData:GetRaceID(race)
+function DangeradarData:GetRaceID(race)
 	return DATA.races[race].id;
 end
 
-function ThreatrackData:GetClassID(class)
+function DangeradarData:GetClassID(class)
 	return DATA.classes[class].id;
 end
 
-function ThreatrackData:GetClassOrder(class)
+function DangeradarData:GetClassOrder(class)
 	return DATA.classes[class].order;
 end
 
-function ThreatrackData:GetLocalizedRaceName(race)
+function DangeradarData:GetLocalizedRaceName(race)
 	return DATA.races[race].localizedName;
 end
 
-function ThreatrackData:GetLocalizedClassName(class)
+function DangeradarData:GetLocalizedClassName(class)
 	return DATA.classes[class].localizedName;
 end
 
-function ThreatrackData:GetSpellReqLevel(class, spell)
+function DangeradarData:GetSpellReqLevel(class, spell)
 	local data = DATA.classes[class].spells[spell];
 	if (data) then
 		return data.reqLevel;

@@ -1,8 +1,8 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/" 
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 	<Script file="Portrait.lua"/>
 
-	<Font name="ThreatrackNumberFont" inherits="Game12Font_o1" virtual="true">
+	<Font name="DangeradarNumberFont" inherits="Game12Font_o1" virtual="true">
 		<Shadow>
 			<Color r="0" g="0" b="0" a="1"/>
 			<Offset>
@@ -11,13 +11,13 @@
 		</Shadow>
 	</Font>
 
-	<Texture name="ThreatrackPortraitTextureTemplate" mixin="ThreatrackPortraitTextureMixin" file="Interface/TargetingFrame/UI-Classes-Circles" virtual="true"/>
+	<Texture name="DangeradarPortraitTextureTemplate" mixin="DangeradarPortraitTextureMixin" file="Interface/TargetingFrame/UI-Classes-Circles" virtual="true"/>
 
-	<Frame name="ThreatrackPortraitTemplate" mixin="ThreatrackPortraitMixin" enableMouse="true" virtual="true">
+	<Frame name="DangeradarPortraitTemplate" mixin="DangeradarPortraitMixin" enableMouse="true" virtual="true">
 		<Size x="64" y="64"/>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture parentKey="Texture" inherits="ThreatrackPortraitTextureTemplate" setAllPoints="true"/>
+				<Texture parentKey="Texture" inherits="DangeradarPortraitTextureTemplate" setAllPoints="true"/>
 			</Layer>
 			<Layer level="BORDER">
 				<Texture name="$parentRing" file="Interface/Common/Portrait-Ring-WithBg">

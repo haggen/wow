@@ -1,4 +1,4 @@
--- Threatrack
+-- Dangeradar
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
@@ -20,18 +20,18 @@ GuildColor = CreateColor(0.251, 0.753, 0.251);
 
 -- ...
 --
-ThreatrackPortraitTextureMixin = {};
+DangeradarPortraitTextureMixin = {};
 
 -- ...
 --
-function ThreatrackPortraitTextureMixin:SetRace(race)
-	self:SetTexCoord(unpack(ThreatrackData:GetRaceTexCoords(race)));
+function DangeradarPortraitTextureMixin:SetRace(race)
+	self:SetTexCoord(unpack(DangeradarData:GetRaceTexCoords(race)));
 end
 
 -- ...
 --
-function ThreatrackPortraitTextureMixin:SetClass(class)
-	self:SetTexCoord(unpack(ThreatrackData:GetClassTexCoords(class)));
+function DangeradarPortraitTextureMixin:SetClass(class)
+	self:SetTexCoord(unpack(DangeradarData:GetClassTexCoords(class)));
 end
 
 --
@@ -77,7 +77,7 @@ local function UpdateStackedPortrait(portrait, stackedData)
 	portrait.Level:Show();
 	portrait.Level:SetText(string.format("×%d", #stackedData.stack));
 
-	portrait.Texture:SetTexCoord(unpack(ThreatrackData:GetClassTexCoords(stackedData.class)));
+	portrait.Texture:SetTexCoord(unpack(DangeradarData:GetClassTexCoords(stackedData.class)));
 end
 
 -- Update portrait given flat player data.
@@ -95,7 +95,7 @@ local function UpdateFlatPortrait(portrait, data)
 		-- This kinda screws with the text alignment, unless the level starts with
 		-- a "1". To help with we prepend a space character in every other case.
 		if string.find(displayLevel, "^[2-9]%d?%+") then
-			displayLevel = " "..displayLevel;
+			displayLevel = " " .. displayLevel;
 		end
 
 		portrait.Level:SetText(displayLevel);
@@ -106,7 +106,7 @@ local function UpdateFlatPortrait(portrait, data)
 		end
 	end
 
-	portrait.Texture:SetTexCoord(unpack(ThreatrackData:GetClassTexCoords(data.class)));
+	portrait.Texture:SetTexCoord(unpack(DangeradarData:GetClassTexCoords(data.class)));
 end
 
 -- ..
@@ -118,13 +118,14 @@ end
 -- ...
 --
 local function SetStackedPortraitTooltip(data)
-	GameTooltip:SetText(ThreatrackData:GetLocalizedClassName(data.class));
+	GameTooltip:SetText(DangeradarData:GetLocalizedClassName(data.class));
 
 	local skip = 0;
 	for i = 1, #data.stack do
-		local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayPlayerLevel(data.stack[i]), ThreatrackData:GetLocalizedRaceName(data.stack[i].race), "");
+		local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayPlayerLevel(data.stack[i]),
+			DangeradarData:GetLocalizedRaceName(data.stack[i].race), "");
 
-		local frame = _G["GameTooltipTextLeft"..(i * 2 + skip)];
+		local frame = _G["GameTooltipTextLeft" .. (i * 2 + skip)];
 		frame:SetHeight(18);
 		frame:SetJustifyV("BOTTOM");
 
@@ -140,7 +141,8 @@ end
 -- ...
 --
 local function SetFlatPortraitTooltip(data)
-	local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayPlayerLevel(data), ThreatrackData:GetLocalizedRaceName(data.race), ThreatrackData:GetLocalizedClassName(data.class));
+	local details = string.format(TOOLTIP_UNIT_LEVEL_RACE_CLASS, GetDisplayPlayerLevel(data),
+		DangeradarData:GetLocalizedRaceName(data.race), DangeradarData:GetLocalizedClassName(data.class));
 	GameTooltip:SetText(GetDisplayPlayerName(data));
 	if (data.guild) then
 		GameTooltip:AddLine(data.guild.name, GuildColor:GetRGB());
@@ -157,7 +159,7 @@ local function RestoreTooltipTextHeight()
 	while (frame ~= nil) do
 		index = index + 1
 		frame:SetHeight(0);
-		frame = _G["GameTooltipTextLeft"..index];
+		frame = _G["GameTooltipTextLeft" .. index];
 	end
 end
 
@@ -167,11 +169,11 @@ end
 
 -- Portrait template mixin.
 --
-ThreatrackPortraitMixin = {};
+DangeradarPortraitMixin = {};
 
 -- Update portrait.
 --
-function ThreatrackPortraitMixin:Update(data)
+function DangeradarPortraitMixin:Update(data)
 	self.data = data;
 
 	self.Skull:Hide();
@@ -187,7 +189,7 @@ end
 
 -- Portrait OnUpdate handler. We use it to request an update once the data becomes stale.
 --
-function ThreatrackPortraitMixin:OnUpdate()
+function DangeradarPortraitMixin:OnUpdate()
 	if (not self:IsShown()) then
 		return nil;
 	end
@@ -195,21 +197,21 @@ function ThreatrackPortraitMixin:OnUpdate()
 	if (self.data.stack) then
 		local stack = self.data.stack;
 		for i = 1, #stack do
-			if ThreatrackAPI:IsPresenceStale(stack[i]) then
-				ThreatrackFrame:Update();
+			if DangeradarAPI:IsPresenceStale(stack[i]) then
+				DangeradarFrame:Update();
 				return nil;
 			end
 		end
 	else
-		if ThreatrackAPI:IsPresenceStale(self.data) then
-			ThreatrackFrame:Update();
+		if DangeradarAPI:IsPresenceStale(self.data) then
+			DangeradarFrame:Update();
 		end
 	end
 end
 
 -- Portrait OnEnter handler. Used to display tooltip.
 --
-function ThreatrackPortraitMixin:OnEnter()
+function DangeradarPortraitMixin:OnEnter()
 	GameTooltip:ClearAllPoints();
 	GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, -8);
 	GameTooltip:ClearLines();
@@ -225,28 +227,28 @@ end
 
 -- Portrait OnEnter handler. Used to hide the tooltip.
 --
-function ThreatrackPortraitMixin:OnLeave()
+function DangeradarPortraitMixin:OnLeave()
 	GameTooltip:Hide();
 	RestoreTooltipTextHeight();
 end
 
 -- ...
 --
-function ThreatrackPortraitMixin:OnMouseDown(button)
+function DangeradarPortraitMixin:OnMouseDown(button)
 	if (button == "RightButton") then
-		ToggleDropDownMenu(1, nil, ThreatrackMenu, "cursor", 0, -8);
+		ToggleDropDownMenu(1, nil, DangeradarMenu, "cursor", 0, -8);
 	elseif (button == "LeftButton") then
-		if (not ThreatrackFrame.isLocked) then
-			ThreatrackFrame.isDragging = true;
-			ThreatrackFrame:SetUserPlaced(true);
-			ThreatrackFrame:StartMoving();
+		if (not DangeradarFrame.isLocked) then
+			DangeradarFrame.isDragging = true;
+			DangeradarFrame:SetUserPlaced(true);
+			DangeradarFrame:StartMoving();
 		end
 	end
 end
 
 -- ...
 --
-function ThreatrackPortraitMixin:OnMouseUp()
-	ThreatrackFrame.isDragging = nil;
-	ThreatrackFrame:StopMovingOrSizing();
+function DangeradarPortraitMixin:OnMouseUp()
+	DangeradarFrame.isDragging = nil;
+	DangeradarFrame:StopMovingOrSizing();
 end

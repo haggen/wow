@@ -9,14 +9,15 @@
 -- Also, it's not really a feature of this add-on but
 -- I've got no where else to put it.
 --
-TargetFrame.healthbar.Text = TargetFrameTextureFrame:CreateFontString("TargetFrameHealthBarText", "BACKGROUND", "TextStatusBarText");
-TargetFrame.healthbar.Text:SetPoint("CENTER", -50, 3);
-TargetFrame.healthbar.showPercentage = true;
-TargetFrame.healthbar.showNumeric = false;
-SetTextStatusBarText(TargetFrame.healthbar, TargetFrame.healthbar.Text);
+-- TargetFrame.healthbar.Text = TargetFrameTextureFrame:CreateFontString(
+--     "TargetFrameHealthBarText", "BACKGROUND", "TextStatusBarText");
+-- TargetFrame.healthbar.Text:SetPoint("CENTER", -50, 3);
+-- TargetFrame.healthbar.showPercentage = true;
+-- TargetFrame.healthbar.showNumeric = false;
+-- SetTextStatusBarText(TargetFrame.healthbar, TargetFrame.healthbar.Text);
 
---
---
+-- Move the left vertical action bars a
+-- bit away from the edge of the screen.
 --
 hooksecurefunc("MultiActionBar_Update", function()
     local point, _, _, x, y = VerticalMultiBarsContainer:GetPoint(1);

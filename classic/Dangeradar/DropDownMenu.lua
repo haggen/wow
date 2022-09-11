@@ -1,10 +1,10 @@
--- Threatrack
+-- Dangeradar
 -- MIT License © 2019 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
 -- Add-on namespace.
 --
-local THREATRACK = ...;
+local DANGERADAR = ...;
 
 local SCALE = {
 	default = 1,
@@ -13,36 +13,36 @@ local SCALE = {
 
 -- ..
 --
-ThreatrackMenuMixin = {};
+DangeradarMenuMixin = {};
 
 -- ..
 --
-function ThreatrackMenuMixin:Initialize()
+function DangeradarMenuMixin:Initialize()
 	UIDropDownMenu_AddButton({
-		text = THREATRACK,
+		text = DANGERADAR,
 		notCheckable = 1,
 		isTitle = 1,
 	});
 
-	if (ThreatrackSavedVars.developerMode) then
+	if (DangeradarSavedVars.developerMode) then
 		UIDropDownMenu_AddButton({
 			text = "Show Hostile Only",
 			isNotRadio = 1,
 			checked = function()
-				return (ThreatrackSavedVars.showHostileOnly);
+				return (DangeradarSavedVars.showHostileOnly);
 			end,
 			func = function()
-				ThreatrackSavedVars.showHostileOnly = not ThreatrackSavedVars.showHostileOnly;
+				DangeradarSavedVars.showHostileOnly = not DangeradarSavedVars.showHostileOnly;
 			end,
 		});
 		UIDropDownMenu_AddButton({
 			text = "Verbose Mode",
 			isNotRadio = 1,
 			checked = function()
-				return (ThreatrackSavedVars.verboseMode);
+				return (DangeradarSavedVars.verboseMode);
 			end,
 			func = function()
-				ThreatrackSavedVars.verboseMode = not ThreatrackSavedVars.verboseMode;
+				DangeradarSavedVars.verboseMode = not DangeradarSavedVars.verboseMode;
 			end,
 		});
 	end
@@ -56,21 +56,21 @@ function ThreatrackMenuMixin:Initialize()
 	UIDropDownMenu_AddButton({
 		text = "Default",
 		checked = function()
-			return (SCALE.default == ThreatrackFrame:GetScale());
+			return (SCALE.default == DangeradarFrame:GetScale());
 		end,
 		func = function()
-			ThreatrackFrame:SetScale(SCALE.default);
-			ThreatrackSavedVars.frameScale = SCALE.default;
+			DangeradarFrame:SetScale(SCALE.default);
+			DangeradarSavedVars.frameScale = SCALE.default;
 		end,
 	});
 	UIDropDownMenu_AddButton({
 		text = "Small",
 		checked = function()
-			return (SCALE.small == ThreatrackFrame:GetScale());
+			return (SCALE.small == DangeradarFrame:GetScale());
 		end,
 		func = function()
-			ThreatrackFrame:SetScale(SCALE.small);
-			ThreatrackSavedVars.frameScale = SCALE.small;
+			DangeradarFrame:SetScale(SCALE.small);
+			DangeradarSavedVars.frameScale = SCALE.small;
 		end,
 	});
 
@@ -84,7 +84,7 @@ function ThreatrackMenuMixin:Initialize()
 		text = "Reset",
 		notCheckable = 1,
 		func = function()
-			ThreatrackFrame:ResetPosition();
+			DangeradarFrame:ResetPosition();
 		end,
 	});
 
@@ -97,7 +97,7 @@ end
 
 -- ..
 --
-function ThreatrackMenuMixin:OnLoad()
-	UIDropDownMenu_SetInitializeFunction(self, ThreatrackMenuMixin.Initialize);
+function DangeradarMenuMixin:OnLoad()
+	UIDropDownMenu_SetInitializeFunction(self, DangeradarMenuMixin.Initialize);
 	UIDropDownMenu_SetDisplayMode(self, "MENU");
 end
