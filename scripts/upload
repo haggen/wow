@@ -65,6 +65,7 @@ if ! test -f "dist/$archive"; then
 	exit 1
 fi
 
+# I think I'm escaping the string. Not sure though.
 changelog="$(jq -aRs < dist/CHANGELOG.md)"
 
 # read returns non-zero when eof is found and since 
