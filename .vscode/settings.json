@@ -1,13 +1,36 @@
 {
-    "Lua.diagnostics.globals": [
-        "PlayerFrame",
-        "TargetFrame",
-        "UIParent",
-        "GetScreenWidth",
-        "PlayerFrame_SetLocked",
-        "TargetFrame_SetLocked",
-        "hooksecurefunc",
-        "TARGET_FRAME_UNLOCKED",
-        "PLAYER_FRAME_UNLOCKED"
-    ]
+  "Lua.runtime.version": "Lua 5.1",
+  "Lua.diagnostics.globals": [
+    "PlayerFrame",
+    "TargetFrame",
+    "UIParent",
+    "GetScreenWidth",
+    "PlayerFrame_SetLocked",
+    "TargetFrame_SetLocked",
+    "hooksecurefunc",
+    "TARGET_FRAME_UNLOCKED",
+    "PLAYER_FRAME_UNLOCKED"
+  ],
+  "xml.fileAssociations": [
+    {
+      "pattern": "Classic/**/*.xml",
+      "systemId": "${workspaceFolder}/support/UI_Vanilla.xsd"
+    },
+    {
+      "pattern": "Vanilla/**/*.xml",
+      "systemId": "${workspaceFolder}/support/UI_Vanilla.xsd"
+    },
+    {
+      "pattern": "TBC/**/*.xml",
+      "systemId": "${workspaceFolder}/support/UI_TBC.xsd"
+    },
+    {
+      "pattern": "Wrath/**/*.xml",
+      "systemId": "${workspaceFolder}/support/UI_Wrath.xsd"
+    },
+    {
+      "pattern": "**/*.xml",
+      "systemId": "${workspaceFolder}/support/UI_Mainline.xsd"
+    }
+  ]
 }
