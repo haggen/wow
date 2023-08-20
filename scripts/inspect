@@ -1,125 +1,158 @@
 #!/usr/bin/env bash
 
 #
-# Inspect add-on information in given path.
+# Inspect add-on information.
 #
 
+# Sane defaults.
 set -euo pipefail
 
+# Find scripts directory.
+script="$0"
+if test -L "$script"; then
+	script="$(readlink -f "$0")"
+fi
+prefix="$(dirname "$script")"
+script="$(basename "$script")"
+
+# Print the manual.
 help() {
 	cat <<-EOF >&2
-		Usage: $0 [-h|-P|-n|-v|-M|-m|-p|-t|-a] <path>
+		Usage: $script [-xhVpmnivta] <path>
 	EOF
 }
 
-opts=$(getopt -n "$0" -o hPnvMmpta -l help,platform,name,version,major,minor,patch,tag,archive -- "$@")
-
-if test $? -ne 0; then
-	exit 1
-fi
-
-eval set -- "$opts"
-
-while :; do
-	case "$1" in
-		-P|--platform)
-			output="platform"
-			shift
+# Parse and apply flags.
+while getopts ":xhVpmnivta" option; do
+	case "$option" in
+		x)
+			set -x
 			;;
-		-n|--name)
+		h)
+			help
+			exit
+			;;
+		V)
+			output="validate"
+			;;
+		p)
+			output="platforms"
+			;;
+		m)
+			output="manifest"
+			;;
+		n)
 			output="name"
-			shift
 			;;
-		-v|--version)
+		i)
+			output="interface"
+			;;
+		v)
 			output="version"
-			shift
 			;;
-		-M|--major)
-			output="major"
-			shift
-			;;
-		-m|--minor)
-			output="minor"
-			shift
-			;;
-		-p|--patch)
-			output="patch"
-			shift
-			;;
-		-t|--tag)
+		t)
 			output="tag"
-			shift
 			;;
-		-a|--archive)
+		a)
 			output="archive"
-			shift
 			;;
-		--)
-			shift
-			break
+		?)
+			echo "$script: unknown flag '$OPTARG', try -h" >&2
+			exit
 			;;
 	esac
 done
 
+# Drop flags by shifting arguments.
+shift $((OPTIND - 1))
+
+# Test required arguments.
 if test -z "$*"; then
-	echo "$0: missing argument, try --help for more information" >&2
-	exit 1
+	echo "$script: missing required argument, see -h" >&2
+	exit
 fi
 
+# Add-on directory path, e.g. ./Add-on.
 target="$1"
 
+# Test the add-on directory.
 if ! test -d "$target"; then
-	echo "$0: '$target' is not a directory" >&2
+	echo "$script: '$target' is not a directory" >&2
 	exit 1
 fi
 
+# Name of the add-on, e.g. Add-on.
 name="$(basename "$target")"
+
+# Manifest file path. e.g. Add-on/Add-on.toc.
 manifest="$target/$name.toc"
 
+# Test manifest file.
 if ! test -f "$manifest"; then
-	echo "$0: manifest could not be found" >&2
+	echo "$0: manifest '$manifest' is not a file" >&2
 	exit 1
 fi
 
+# Interface version, e.g. 11301.
 interface="$(grep -Po "Interface: \K.+" "$manifest")"
+
+# Add-on version, e.g. 42.
 version="$(grep -Po "Version: \K.+" "$manifest")"
 
+# Detect game from interface version.
 case "$interface" in
-	113*|205*|304*)
-		platform="classic"
+	3????)
+		platforms="Wrath"
+		;;
+	2????)
+		platforms="TBC"
+		;;
+	1????)
+		platforms="Vanilla"
+		;;
+	1?????|9????|8????)
+		platforms="Mainline"
 		;;
 	*)
-		platform="retail"
+		echo "$0: unrecognized interface version '$interface'" >&2
+		exit 1
 		;;
 esac
 
+# Detect additional supported platforms from suffixed manifest files.
+for f in "$target"/*_*.toc; do
+	f="${f#*_}"
+	platforms="$platforms,${f%%.*}"
+done
+
+# Output requested information.
 case "${output=}" in
-	platform)
-		echo "$platform"
+	validate)
+		exit 0
+		;;
+	platforms)
+		echo "$platforms"
+		;;
+	manifest)
+		echo "$manifest"
 		;;
 	name)
 		echo "$name"
 		;;
+	interface)
+		echo "$interface"
+		;;
 	version)
 		echo "$version"
 		;;
-	major)
-		echo "$version" | cut -f1 -d.
-		;;
-	minor)
-		echo "$version" | cut -f2 -d.
-		;;
-	patch)
-		echo "$version" | cut -f3 -d.
-		;;
 	tag)
-		echo "$platform/$name/$version"
+		echo "$name/v$version"
 		;;
 	archive)
-		echo "$name-$version-$platform.zip"
+		echo "$name-v$version.zip"
 		;;
 	*)
-		echo "$name $version ($platform)"
+		echo "$name v$version"
 		;;
 esac
 

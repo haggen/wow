@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #
-# Upload release to CurseForge.
+# Upload archive to CurseForge.
 #
 
 set -euo pipefail
@@ -45,19 +45,6 @@ if ! test -f "$target/.curseforge"; then
 	exit 1
 fi
 
-# shellcheck disable=SC1091
-source "$target/.curseforge"
-
-if test -z "${project_id=}"; then
-	echo "$0: .curseforge is missing the 'project_id' variable" >&2
-	exit 1
-fi
-
-if test -z "${game_versions=}"; then
-	echo "$0: .curseforge is missing the 'game_versions' variable" >&2
-	exit 1
-fi
-
 archive="$(scripts/inspect -a "$target")"
 
 if ! test -f "dist/$archive"; then
@@ -65,27 +52,13 @@ if ! test -f "dist/$archive"; then
 	exit 1
 fi
 
-# I think I'm escaping the string. Not sure though.
-changelog="$(jq -aRs < dist/CHANGELOG.md)"
+project_id="$(jq .projectId "$target/.curseforge")"
 
-# read returns non-zero when eof is found and since 
-# we're reading from heredoc, there will be an eof.
-set +e
+# `$changelog` here is a jq variable.
+jq --rawfile changelog dist/CHANGELOG.md '.changelog = $changelog | del(.projectId)' .curseforge \
+	| jq -r tostring > metadata.json
 
-read -r -d "" metadata <<-EOF 
-	{
-	"changelog": $changelog,
-	"changelogType": "markdown",
-	"gameVersions": [$game_versions],
-	"releaseType": "release",
-	}
-EOF
-
-set -e
-
-url="https://wow.curseforge.com/api/projects/$project_id/upload-file"
-
-curl -vf -X POST "$url" \
+curl -vf -X POST "https://wow.curseforge.com/api/projects/$project_id/upload-file" \
 	-H "X-Api-Token: $token" \
-	-F "metadata=$metadata" \
+	-F "metadata=@metadata.json" \
 	-F "file=@dist/$archive"

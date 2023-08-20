@@ -1,101 +1,70 @@
 #!/usr/bin/env bash
 
 #
-# Bump version of given add-on.
+# Bump version of the add-on.
 #
 
+# Sane defaults.
 set -euo pipefail
 
+# Find scripts directory.
+script="$0"
+if test -L "$script"; then
+	script="$(readlink -f "$0")"
+fi
+prefix="$(dirname "$script")"
+script="$(basename "$script")"
+
+# Print the manual.
 help() {
 	cat <<-EOF >&2
-		Usage: $0 [-h|-p|-m|-M] <path>
+		Usage: $script [-xh] <path>
 	EOF
 }
 
-commits-since() {
-	local range
-	range="$(git describe --abbrev=0 --match "$1/*" 2>/dev/null | cut -f1 -d-)..HEAD"
-	git rev-list --count "${range#..}" -- "$1" 2>/dev/null
-}
-
-opts=$(getopt -n "$0" -o hpmM -l help,patch,minor,major -- "$@")
-
-if test $? -ne 0; then
-	exit 1
-fi
-
-eval set -- "$opts"
-
-while :; do
-	case "$1" in
-		-p|--patch)
-			bump="patch"
-			shift
+# Parse and apply flags.
+while getopts ":xh" option; do
+	case "$option" in
+		x)
+			set -x
 			;;
-		-m|--minor)
-			bump="minor"
-			shift
-			;;
-		-M|--major)
-			bump="major"
-			shift
-			;;
-		-h|--help)
+		h)
 			help
 			exit
 			;;
-		--)
-			shift
-			break
+		?)
+			echo "$script: unknown flag '$OPTARG', try -h" >&2
+			exit
 			;;
 	esac
 done
 
+# Drop flags by shifting arguments.
+shift $((OPTIND - 1))
+
+# Test required arguments.
 if test -z "$*"; then
-	echo "$0: missing argument, try --help for more information" >&2
-	exit 1
+	echo "$script: missing required argument, see -h" >&2
+	exit
 fi
 
+# Add-on directory path, e.g. ./Add-on.
 target="$1"
 
-if ! test -d "$target"; then
-	echo "$0: '$target' is not a directory" >&2
-	exit 1
-fi
+# Validate target.
+"$prefix/inspect" -V "$target"
 
-name="$(scripts/inspect -n "$target")"
-manifest="$target/$name.toc"
-platform="$(scripts/inspect -P "$target")"
+# Name of the add-on, e.g. Add-on.
+name="$("$prefix/inspect" -n "$target")"
 
-old_version="$(scripts/inspect -v "$target")"
+# Manifest file path. e.g. Add-on/Add-on.toc.
+manifest="$("$prefix/inspect" -m "$target")"
 
-patch="$(scripts/inspect -p "$target")"
-minor="$(scripts/inspect -m "$target")"
-major="$(scripts/inspect -M "$target")"
+# Version, e.g. 42.
+version="$("$prefix/inspect" -v "$target")"
 
-case "${bump=patch}" in
-	patch)
-		count=$(commits-since "$platform/$name")
-		patch=$((patch + count))
-		;;
-	minor)
-		patch=0
-		minor=$((minor + 1))
-		;;
-	major)
-		patch=0
-		minor=0
-		major=$((major + 1))
-		;;
-esac
+# Change version in the manifest.
+sed -i "s/Version: $version/Version: $((version + 1))/" "$manifest"
 
-new_version="$major.$minor.$patch"
-
-if test "$old_version" = "$new_version"; then
-	echo "$0: versions are identical" >&2
-	exit 1
-fi
-
-sed -i "s/Version: $old_version/Version: $new_version/" "$manifest"
-
-git commit -m "Bump $platform/$name to $new_version" "$manifest"
+# Commit the change.
+git commit -m "Bump $name to $((version + 1))" "$manifest"

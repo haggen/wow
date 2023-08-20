@@ -1,71 +1,71 @@
 #!/usr/bin/env bash
 
 #
-# Release new version of given add-on.
+# Release new version of the add-on.
 #
 
+# Sane defaults.
 set -euo pipefail
 
+# Find scripts directory.
+script="$0"
+if test -L "$script"; then
+	script="$(readlink -f "$0")"
+fi
+prefix="$(dirname "$script")"
+script="$(basename "$script")"
+
+# Print the manual.
 help() {
 	cat <<-EOF >&2
-		Usage: $0 [-h|-p|-m|-M] <path>
+		Usage: $script [-xh] <path>
 	EOF
 }
 
-opts=$(getopt -n "$0" -o hpmM -l help,patch,minor,major -- "$@")
-
-if test $? -ne 0; then
-	exit 1
-fi
-
-eval set -- "$opts"
-
-while :; do
-	case "$1" in
-		-p|--patch)
-			bump="patch"
-			shift
+# Parse and apply flags.
+while getopts ":xh" option; do
+	case "$option" in
+		x)
+			set -x
 			;;
-		-m|--minor)
-			bump="minor"
-			shift
-			;;
-		-M|--major)
-			bump="major"
-			shift
-			;;
-		-h|--help)
+		h)
 			help
 			exit
 			;;
-		--)
-			shift
-			break
+		?)
+			echo "$script: unknown flag '$OPTARG', try -h" >&2
+			exit
 			;;
 	esac
 done
 
+# Drop flags by shifting arguments.
+shift $((OPTIND - 1))
+
+# Test required arguments.
 if test -z "$*"; then
-	echo "$0: missing argument, try --help for more information" >&2
-	exit 1
+	echo "$script: missing required argument, see -h" >&2
+	exit
 fi
 
+# Add-on directory path, e.g. ./Add-on.
 target="$1"
 
-if ! test -d "$target"; then
-	echo "$0: '$target' is not a directory" >&2
-	exit 1
-fi
+# Validate target.
+"$prefix/inspect -V" "$target"
 
-if ! scripts/lint "$target"; then
-	echo "$0: linting failed" >&2
-	exit 1
-fi
+# Lint add-on source.
+"$prefix/lint" "$target"
 
-scripts/bump "--${bump=patch}" "$target"
+# Bump the add-on's version.
+"$prefix/bump" "$target"
 
-release="$(scripts/inspect "$target")"
-tag="$(scripts/inspect -t "$target")"
+# Release's title, e.g. Add-on v42.
+release="$("$prefix/inspect" "$target")"
 
+# Tag, e.g. Add-on/v42.
+tag="$("$prefix/inspect" -t "$target")"
+
+# Tag and push.
 git tag -m "Release $release" "$tag"
 git push --follow-tags
