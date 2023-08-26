@@ -1,49 +1,78 @@
 #!/usr/bin/env bash
 
-#
-# Generate add-on archive for given release tag.
-#
-
+# Sane defaults.
 set -euo pipefail
 
+# Find scripts directory.
+script="$0"
+if test -L "$script"; then
+	script="$(readlink -f "$0")"
+fi
+prefix="$(dirname "$script")"
+script="$(basename "$script")"
+
+# Print the manual.
 help() {
 	cat <<-EOF >&2
-		Usage: $0 [-h] <tag>
+		About
+		        Generate add-on archive for given release tag.
+
+		Usage
+		        $script -h
+		        $script [-x] <tag>
+
+		Flags
+		        -h      Print this manual.
+		        -x      Enable debug mode.
 	EOF
 }
 
-opts=$(getopt -n "$0" -o h -l help -- "$@")
-
-if test $? -ne 0; then
-	exit 1
-fi
-
-eval set -- "$opts"
-
-while :; do
-	case "$1" in
-		-h|--help)
+# Parse and apply flags.
+while getopts ":xh" option; do
+	case "$option" in
+		x)
+			set -x
+			;;
+		h)
 			help
 			exit
 			;;
-		--)
-			shift
-			break
+		?)
+			echo "$script: unknown flag '$OPTARG', try -h" >&2
+			exit
 			;;
 	esac
 done
 
+# Drop flags by shifting arguments.
+shift $((OPTIND - 1))
+
+# Test required arguments.
 if test -z "$*"; then
-	echo "$0: missing argument, try --help for more information" >&2
-	exit 1
+	echo "$script: missing required argument, see -h" >&2
+	exit
 fi
 
-target="$(scripts/parse "$1")"
-platform="$(scripts/inspect -P "$target")"
-name="$(scripts/inspect -n "$target")"
-archive="$(scripts/inspect -a "$target")"
+# Release tag, e.g. Add-on/42.
+tag="$1"
 
-mkdir -p dist
+# Add-on absolute path, e.g. /Add-on.
+target="$("$prefix/parse" -a "$tag")"
 
-git archive --format=zip -o "dist/$archive" --prefix="$name/" "$1:$platform/$name/"
+# Add-on name, e.g. Add-on.
+name="$("$prefix/inspect" -n "$target")"
 
+# Add-on archive, e.g. Add-on-v42.zip.
+archive="$("$prefix/inspect" -a "$target")"
+
+# Distributable directory, e.g. ./dist.
+dist="$target/dist"
+
+# Make sure distributable directory exists.
+mkdir -p "$dist"
+
+# Git root directory.
+root="$(git rev-parse --show-toplevel)"
+
+# Generate add-on archive.
+git archive --format=zip -o "$dist/$archive" --prefix="$name/" "$tag:${target#"$root"}"

@@ -1,13 +1,76 @@
 #!/usr/bin/env bash
 
+# Sane defaults.
 set -euo pipefail
 
-tag="${GITHUB_REF#refs/tags/}"
-target="${tag%/*}"
-release="$(scripts/inspect "$target")"
+# Find scripts directory.
+script="$0"
+if test -L "$script"; then
+	script="$(readlink -f "$0")"
+fi
+prefix="$(dirname "$script")"
+script="$(basename "$script")"
 
-cat <<-EOF > "$GITHUB_ENV"
-	TAG=$tag
-	TARGET=$target
-	RELEASE=$release
+# Print the manual.
+help() {
+	cat <<-EOF >&2
+		About
+		        Prepare envinroment variables from Git tag.
+
+		Usage
+		        $script -h
+		        $script [-x] <tag>
+
+		Flags
+		        -h      Print this manual.
+		        -x      Enable debug mode.
+	EOF
+}
+
+# Parse and apply flags.
+while getopts ":xh" option; do
+	case "$option" in
+		x)
+			set -x
+			;;
+		h)
+			help
+			exit
+			;;
+		?)
+			echo "$script: unknown flag '$OPTARG', try -h" >&2
+			exit
+			;;
+	esac
+done
+
+# Drop flags by shifting arguments.
+shift $((OPTIND - 1))
+
+# Test required arguments.
+if test -z "$*"; then
+	echo "$script: missing required argument, see -h" >&2
+	exit
+fi
+
+# Test Git tag.
+if ! git rev-parse --verify --quiet "$1" >/dev/null 2>&1; then
+	echo "$script: invalid Git tag '$1'" >&2
+	exit
+fi
+
+# Unprefixed tag, e.g. Add-on/v42.
+tag="${1#refs/tags/}"
+
+# Add-on name, e.g. Add-on.
+target="${tag%/*}"
+
+# Release title, e.g. Add-on v42.
+release="$("$prefix/inspect" -r "$target")"
+
+# Output environment.
+cat <<-EOF
+	TAG="$tag"
+	TARGET="$target"
+	RELEASE="$release"
 EOF

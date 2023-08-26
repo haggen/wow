@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-#
-# Release new version of the add-on.
-#
-
 # Sane defaults.
 set -euo pipefail
 
@@ -18,7 +14,16 @@ script="$(basename "$script")"
 # Print the manual.
 help() {
 	cat <<-EOF >&2
-		Usage: $script [-xh] <path>
+		About
+		        Bump and generate a distributable of the add-on.
+
+		Usage
+		        $script -h
+		        $script [-x] <path>
+
+		Flags
+		        -h      Print this manual.
+		        -x      Enable debug mode.
 	EOF
 }
 

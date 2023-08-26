@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-#
-# Inspect add-on information.
-#
-
 # Sane defaults.
 set -euo pipefail
 
@@ -18,12 +14,38 @@ script="$(basename "$script")"
 # Print the manual.
 help() {
 	cat <<-EOF >&2
-		Usage: $script [-xhVpmnivta] <path>
+		About
+		        Inspect add-on information.
+
+		Usage
+		        $script -h
+		        $script [-x] -V <path>
+		        $script [-x] -p <path>
+		        $script [-x] -m <path>
+		        $script [-x] -n <path>
+		        $script [-x] -i <path>
+		        $script [-x] -v <path>
+		        $script [-x] -t <path>
+		        $script [-x] -a <path>
+		        $script [-x] -r <path>
+
+		Flags
+		        -h      Print this manual.
+		        -x      Enable debug mode.
+		        -V      Validate given path is a valid add-on.
+		        -p      Print add-on supported platforms.
+		        -m      Print add-on manifest file path.
+		        -n      Print add-on name.
+		        -i      Print add-on interface version.
+		        -v      Print add-on version.
+		        -t      Print add-on release tag.
+		        -a      Print add-on archive file name.
+		        -r      Print add-on release title.
 	EOF
 }
 
 # Parse and apply flags.
-while getopts ":xhVpmnivta" option; do
+while getopts ":xhVpmnivtar" option; do
 	case "$option" in
 		x)
 			set -x
@@ -56,6 +78,9 @@ while getopts ":xhVpmnivta" option; do
 		a)
 			output="archive"
 			;;
+		r)
+			output="release"
+			;;
 		?)
 			echo "$script: unknown flag '$OPTARG', try -h" >&2
 			exit
@@ -69,6 +94,12 @@ shift $((OPTIND - 1))
 # Test required arguments.
 if test -z "$*"; then
 	echo "$script: missing required argument, see -h" >&2
+	exit
+fi
+
+# Test required flags.
+if test -z "${output:-}"; then
+	echo "$script: missing required flag, see -h" >&2
 	exit
 fi
 
@@ -151,7 +182,7 @@ case "${output=}" in
 	archive)
 		echo "$name-v$version.zip"
 		;;
-	*)
+	release)
 		echo "$name v$version"
 		;;
 esac

@@ -1,64 +1,107 @@
 #!/usr/bin/env bash
 
-#
-# Upload archive to CurseForge.
-#
-
+# Sane defaults.
 set -euo pipefail
 
+# Find scripts directory.
+script="$0"
+if test -L "$script"; then
+	script="$(readlink -f "$0")"
+fi
+prefix="$(dirname "$script")"
+script="$(basename "$script")"
+
+# Print the manual.
 help() {
 	cat <<-EOF >&2
-		Usage: $0 [-h]|-t <token> <tag>
+		About
+		        Upload distributable to CurseForge. Depends on jq.
+
+		Usage
+		        $script -h
+		        $script [-x] -t <token> <path>
+
+		Flags
+		        -h      Print this manual.
+		        -x      Enable debug mode.
+		        -t      CurseForge API token.
 	EOF
 }
 
-opts=$(getopt -n "$0" -o ht: -l help,token: -- "$@")
-
-if test $? -ne 0; then
-	exit 1
-fi
-
-eval set -- "$opts"
-
-while :; do
-	case "$1" in
-		-h|--help)
+# Parse and apply flags.
+while getopts ":xht:" option; do
+	case "$option" in
+		x)
+			set -x
+			;;
+		h)
 			help
 			exit
 			;;
-		-t|--token)
-			token="$2"
-			shift 2
+		t)
+			token="$OPTARG"
 			;;
-		--)
-			shift
-			break
+		?)
+			echo "$script: unknown flag '$OPTARG', try -h" >&2
+			exit
 			;;
 	esac
 done
 
-tag="$1"
-target="$(scripts/parse "$tag")"
+# Drop flags by shifting arguments.
+shift $((OPTIND - 1))
 
+# Test required arguments.
+if test -z "$*"; then
+	echo "$script: missing required argument, see -h" >&2
+	exit
+fi
+
+# Test required flags.
+if test -z "${token:-}"; then
+	echo "$script: missing required flag, see -h" >&2
+	exit
+fi
+
+# Test for jq.
+if ! command -v jq >/dev/null; then
+	echo "$script: missing dependency 'jq'" >&2
+	exit 1
+fi
+
+# Add-on directory path, e.g. ./Add-on.
+target="$1"
+
+# Validate target.
+"$prefix/inspect" -V "$target"
+
+# Check for .curseforge file.
 if ! test -f "$target/.curseforge"; then
-	echo "$0: '$target/.curseforge' is not a file" >&2
+	echo "$script: '$target/.curseforge' is not a file" >&2
 	exit 1
 fi
 
-archive="$(scripts/inspect -a "$target")"
+# Archive name, e.g. Add-on-v42.zip.
+archive="$("$prefix/inspect" -a "$target")"
 
-if ! test -f "dist/$archive"; then
-	echo "$0: dist/$archive is not a file" >&2
+# Distributable directory, e.g. ./dist.
+dist="$target/dist"
+
+# Test archive.
+if ! test -f "$dist/$archive"; then
+	echo "$script: '$dist/$archive' is not a file" >&2
 	exit 1
 fi
 
+# Read project id from .curseforge file.
 project_id="$(jq .projectId "$target/.curseforge")"
 
-# `$changelog` here is a jq variable.
-jq --rawfile changelog dist/CHANGELOG.md '.changelog = $changelog | del(.projectId)' .curseforge \
-	| jq -r tostring > metadata.json
+# Generate metadata. `$changelog` here is a jq variable.
+jq --rawfile changelog "$dist/CHANGELOG.md" '.changelog = $changelog | del(.projectId)' .curseforge \
+	| jq -r tostring > "$dist/metadata.json"
 
+# Upload to CurseForge.
 curl -vf -X POST "https://wow.curseforge.com/api/projects/$project_id/upload-file" \
 	-H "X-Api-Token: $token" \
-	-F "metadata=@metadata.json" \
-	-F "file=@dist/$archive"
+	-F "metadata=@$dist/metadata.json" \
+	-F "file=@$dist/$archive"

@@ -1,24 +1,70 @@
 #!/usr/bin/env bash
 
-#
-# Lint Lua and XML files recursively in a given directory.
-#
-
+# Sane defaults.
 set -euo pipefail
 
+# Find scripts directory.
+script="$0"
+if test -L "$script"; then
+	script="$(readlink -f "$0")"
+fi
+prefix="$(dirname "$script")"
+script="$(basename "$script")"
+
+# Print the manual.
+help() {
+	cat <<-EOF >&2
+		About
+		        Lint Lua and XML files recursively in the given directory.
+
+		Usage
+		        $script -h
+		        $script [-x] <path>
+
+		Flags
+		        -h      Print this manual.
+		        -x      Enable debug mode.
+	EOF
+}
+
+# Parse and apply flags.
+while getopts ":xh" option; do
+	case "$option" in
+		x)
+			set -x
+			;;
+		h)
+			help
+			exit
+			;;
+		?)
+			echo "$script: unknown flag '$OPTARG', try -h" >&2
+			exit
+			;;
+	esac
+done
+
+# Drop flags by shifting arguments.
+shift $((OPTIND - 1))
+
+# Test required arguments.
 if test -z "$*"; then
-    echo "$0: missing argument. e.g. $0 <path>" >&2
-    exit 1
+	echo "$script: missing required argument, see -h" >&2
+	exit
 fi
 
+# Target directory.
 target="$1"
 
+# Validate target directory.
 if ! test -d "$target"; then
-    echo "$target is not a directory." >&2
+    echo "$script: '$target' is not a directory" >&2
     exit 1
 fi
 
-platform="$(scripts/inspect --platform "$target")"
-
+# Lint Lua files.
 find "$target" -name "*.lua" -exec luacheck {} +
-find "$target" -name "*.xml" -exec xmllint --noout --schema "$platform/UI.xsd" {} +
+
+# Lint XML files.
+printf "\n"
+find "$target" -name "*.xml" -exec xmllint --noout --schema "$prefix/../UI.xsd" {} +

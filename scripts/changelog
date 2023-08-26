@@ -48,6 +48,9 @@ fi
 prefix="${tag%/*}"
 range="$(git describe --abbrev=0 --match "$prefix/*" -- "$tag^" 2>/dev/null | cut -f1 -d-)..$tag^"
 
-mkdir -p dist
+# Distributable directory, e.g. ./dist.
+dist="$target/dist"
+
+mkdir -p "$dist"
 
 git log --format="- %h %s" "${range#..}" -- "$prefix" | grep "#[0-9]\+" > "dist/CHANGELOG.md"
