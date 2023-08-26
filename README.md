@@ -3,8 +3,8 @@
 | Add-on           | Description                    | Supported game version |                                                                       |
 | ---------------- | ------------------------------ | ---------------------- | --------------------------------------------------------------------- |
 | **Dangeradar**   | Watch out for danger.          | Classic                | [Source](/addons/Dangeradar) — [Download](/releases?q=Dangeradar)     |
+| **Tunnelvision** | For people with tunnel vision. | Classic                | [Source](/addons/Tunnelvision) — [Download](/releases?q=Tunnelvision) |
 | **Fastbind**     | Change your keybindings, fast. | Mainline, Classic      | [Source](/addons/Fastbind) — [Download](/releases?q=Fastbind)         |
-| **Tunnelvision** | For people with tunnel vision. | Mainline, Classic      | [Source](/addons/Tunnelvision) — [Download](/releases?q=Tunnelvision) |
 
 ## Development
 
