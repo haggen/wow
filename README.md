@@ -20,7 +20,7 @@ New-Item "C:\World of Warcraft\_classic_era_\Interface\AddOns\Tunnelvision" -Ite
 
 The tooling is designed to work in a Unix environment, like WSL, not Windows.
 
-There are several Bash scripts to help development, packaging and distribution of the add-ons. See the [scripts](/scripts) directory for more information.
+There are several Bash scripts to help development, packaging, and distribution of the add-ons. See the [scripts](/scripts) directory for more information.
 
 It also includes workspace settings for VSCode and recommended extensions.
 
@@ -48,7 +48,7 @@ Both Lua and XML files must pass validation.
 scripts/lint <path>
 ```
 
-The script will recursively walk the given directory looking for files to validate, report and exit with a non-zero status if any issues are encountered.
+The script will recursively walk the given directory looking for files to validate, report, and exit with a non-zero status if any issues are encountered.
 
 #### Release
 
@@ -58,9 +58,9 @@ Do **not** ever edit versions manually! Use the script:
 scripts/release <path>
 ```
 
-This script will bump the version of the add-on in all ToC files, commit it, tag the commit and push it to remote.
+This script will bump the version of the add-on in all ToC files, commit it, tag the commit, and push it to remote.
 
-GitHub actions will trigger a pipeline that will package the add-on, generate a changelog and upload it to both GitHub and CurseForge.
+GitHub actions will trigger a pipeline that will package the add-on, generate a changelog, and upload it to both GitHub and CurseForge.
 
 #### CurseForge
 
@@ -90,4 +90,4 @@ curl -s https://wow.curseforge.com/api/game/versions -H "X-Api-Token: $CURSEFORG
 
 The MIT License © 2017 Arthur Corenzan
 
-These Add-ons are not created by, affiliated with or sponsored by Blizzard Entertainment, Inc. or its affiliates. The World of Warcraft® and related logos are registered trademarks or trademarks of Blizzard Entertainment, Inc. in the United States and/or other countries. All rights reserved.
+These Add-ons are not created by, affiliated with, or sponsored by Blizzard Entertainment, Inc. or its affiliates. The World of Warcraft® and related logos are registered trademarks or trademarks of Blizzard Entertainment, Inc. in the United States and/or other countries. All rights reserved.

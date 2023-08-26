@@ -4,11 +4,11 @@
 
 ## About
 
-Bind keys directly to action bar slots, spells, macros and inventory items without having to visit the settings menu.
+Bind keys directly to action bar slots, spells, macros, and inventory items without having to visit the settings menu.
 
 ## Installation
 
-Download the package from [Releases page](https://github.com/haggen/wow/releases) and extract it into `World of Warcraft\_retail_\Interface\AddOns` prior to launching the game.
+Download the package from the [Releases page](https://github.com/haggen/wow/releases) and extract it into `World of Warcraft\_retail_\Interface\AddOns` before launching the game.
 
 ## Usage
 
@@ -27,4 +27,4 @@ Please note that uninstalling the add-on won't restore your keybindings.
 
 The MIT License © 2017 Arthur Corenzan
 
-This Add-on is not created by, affiliated with or sponsored by Blizzard Entertainment, Inc. or its affiliates. The World of Warcraft® and related logos are registered trademarks or trademarks of Blizzard Entertainment, Inc. in the United States and/or other countries. All rights reserved.
+This Add-on is not created by, affiliated with, or sponsored by Blizzard Entertainment, Inc. or its affiliates. The World of Warcraft® and related logos are registered trademarks or trademarks of Blizzard Entertainment, Inc. in the United States and/or other countries. All rights reserved.
