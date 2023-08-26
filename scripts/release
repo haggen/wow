@@ -57,7 +57,7 @@ fi
 target="$1"
 
 # Validate target.
-"$prefix/inspect -V" "$target"
+"$prefix/inspect" -V "$target"
 
 # Lint add-on source.
 "$prefix/lint" "$target"
