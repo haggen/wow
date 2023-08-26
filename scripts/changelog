@@ -1,56 +1,75 @@
 #!/usr/bin/env bash
 
-#
-# Generate dist/CHANGELOG.md based off of given Git tag.
-#
-
+# Sane defaults.
 set -euo pipefail
 
+# Find scripts directory.
+script="$0"
+if test -L "$script"; then
+	script="$(readlink -f "$0")"
+fi
+prefix="$(dirname "$script")"
+script="$(basename "$script")"
+
+# Print the manual.
 help() {
 	cat <<-EOF >&2
-		Usage: $0 [-h] <tag>
+		About
+		        Generate CHANGELOG.md for given release tag.
+
+		Usage
+		        $script -h
+		        $script [-x] <path>
+
+		Flags
+		        -h      Print this manual.
+		        -x      Enable debug mode.
 	EOF
 }
 
-opts=$(getopt -n "$0" -o h -l help -- "$@")
-
-if test $? -ne 0; then
-	exit 1
-fi
-
-eval set -- "$opts"
-
-while :; do
-	case "$1" in
-		-h|--help)
+# Parse and apply flags.
+while getopts ":xh" option; do
+	case "$option" in
+		x)
+			set -x
+			;;
+		h)
 			help
 			exit
 			;;
-		--)
-			shift
-			break
+		?)
+			echo "$script: unknown flag '$OPTARG', try -h" >&2
+			exit
 			;;
 	esac
 done
 
+# Drop flags by shifting arguments.
+shift $((OPTIND - 1))
+
+# Test required arguments.
 if test -z "$*"; then
-	echo "$0: missing argument, try --help for more information" >&2
-	exit 1
+	echo "$script: missing required argument, see -h" >&2
+	exit
 fi
 
+# Release tag, e.g. Add-on/42.
 tag="$1"
 
-if ! git rev-parse "$tag" >/dev/null 2>&1; then
-    echo "$0: '$tag' is not a valid tag" >&2
-    exit 1
-fi
+# Add-on absolute path, e.g. /Add-on.
+target="$("$prefix/parse" -a "$tag")"
 
+# Tag prefix, e.g. Add-on.
 prefix="${tag%/*}"
+
+# Commit range between now and last tag with given prefix, e.g. Add-on/v42..Add-on/v41.
 range="$(git describe --abbrev=0 --match "$prefix/*" -- "$tag^" 2>/dev/null | cut -f1 -d-)..$tag^"
 
 # Distributable directory, e.g. ./dist.
 dist="$target/dist"
 
+# Make sure distributable directory exists.
 mkdir -p "$dist"
 
-git log --format="- %h %s" "${range#..}" -- "$prefix" | grep "#[0-9]\+" > "dist/CHANGELOG.md"
+# List all commits in the range that mention issues and touches the add-on directory.
+git log --format="- %h %s" "${range#..}" -- "$target" | grep "#[0-9]\+" > "$dist/CHANGELOG.md"

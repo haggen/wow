@@ -53,17 +53,11 @@ if test -z "$*"; then
 	exit
 fi
 
-# Test Git tag.
-if ! git rev-parse --verify --quiet "$1" >/dev/null 2>&1; then
-	echo "$script: invalid Git tag '$1'" >&2
-	exit
-fi
-
 # Unprefixed tag, e.g. Add-on/v42.
 tag="${1#refs/tags/}"
 
 # Add-on name, e.g. Add-on.
-target="${tag%/*}"
+target="$("$prefix/parse" "$tag")"
 
 # Release title, e.g. Add-on v42.
 release="$("$prefix/inspect" -r "$target")"
