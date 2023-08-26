@@ -21,7 +21,6 @@ help() {
 		        $script -h
 		        $script [-x] -V <path>
 		        $script [-x] -p <path>
-		        $script [-x] -m <path>
 		        $script [-x] -n <path>
 		        $script [-x] -i <path>
 		        $script [-x] -v <path>
@@ -32,11 +31,10 @@ help() {
 		Flags
 		        -h      Print this manual.
 		        -x      Enable debug mode.
-		        -V      Validate given path is a valid add-on.
+		        -V      Validate path is an add-on directory.
 		        -p      Print add-on supported platforms.
-		        -m      Print add-on manifest file path.
 		        -n      Print add-on name.
-		        -i      Print add-on interface version.
+		        -i      Print add-on supported APIs.
 		        -v      Print add-on version.
 		        -t      Print add-on release tag.
 		        -a      Print add-on archive file name.
@@ -45,7 +43,7 @@ help() {
 }
 
 # Parse and apply flags.
-while getopts ":xhVpmnivtar" option; do
+while getopts ":xhVpnivtar" option; do
 	case "$option" in
 		x)
 			set -x
@@ -59,9 +57,6 @@ while getopts ":xhVpmnivtar" option; do
 			;;
 		p)
 			output="platforms"
-			;;
-		m)
-			output="manifest"
 			;;
 		n)
 			output="name"
@@ -164,9 +159,6 @@ case "${output=}" in
 		;;
 	platforms)
 		echo "$platforms"
-		;;
-	manifest)
-		echo "$manifest"
 		;;
 	name)
 		echo "$name"
