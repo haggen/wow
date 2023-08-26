@@ -1,69 +1,68 @@
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/270076/120495363-036cc180-c393-11eb-89b7-19d7d84e0af8.png" width="401" height="351" alt="World of Warcraft®">
-  <br />
-  My add-ons for World of Warcraft®.
-</p>
+# My add-ons for World of Warcraft®
 
----
-
-## Mainline
-
-Add-ons compatible with WoW Mainline.
-
-- [**Fastbind**](/addons/Fastbind)
-- [**Tunnelvision**](/addons/Tunnelvision)
-
-## Classic
-
-Add-ons compatible with WoW Classic.
-
-- [**Dangeradar**](/addons/Dangeradar)
-- [**Fastbind**](/addons/Fastbind)
-- [**Tunnelvision**](/addons/Tunnelvision)
+| Add-on           | Description                    | Supported game version |                                                                       |
+| ---------------- | ------------------------------ | ---------------------- | --------------------------------------------------------------------- |
+| **Dangeradar**   | Watch out for danger.          | Classic                | [Source](/addons/Dangeradar) — [Download](/releases?q=Dangeradar)     |
+| **Fastbind**     | Change your keybindings, fast. | Mainline, Classic      | [Source](/addons/Fastbind) — [Download](/releases?q=Fastbind)         |
+| **Tunnelvision** | For people with tunnel vision. | Mainline, Classic      | [Source](/addons/Tunnelvision) — [Download](/releases?q=Tunnelvision) |
 
 ## Development
 
-To install all add-ons via symbolic link, use the script `Install.ps1`. Launch a PowerShell prompt and execute the snippet below, changing the game installation path accordingly.
+### Linking
+
+During development, it's best if we link add-ons from WSL to the game directory. Launch a PowerShell prompt and execute the snippet below, changing the paths accordingly.
 
 ```psh
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
-.\Install.psq -Game "C:\World of Warcraft"
+New-Item "C:\World of Warcraft\_classic_era_\Interface\AddOns\Tunnelvision" -ItemType SymbolicLink -Target "\\wsl.localhost\Ubuntu-22.04\wow\src\Tunnelvision"
 ```
 
-Please note;
+### Tooling
 
-1. The tooling is designed to work in a Unix environment, like WSL, not Windows.
-2. This repository tracks several different add-ons.
-3. Never commit changes to multiple add-ons at the same time.
-4. Commits **should** link to one or more existing issues, e.g. `Bump interface compatibility #11`.
-5. Tags **must** follow the format `platform/name/version`, e.g. `classic/Tunnelvision/1.0.0`.
+The tooling is designed to work in a Unix environment, like WSL, not Windows.
 
-### Manifest (ToC files)
+There are several Bash scripts to help development, packaging and distribution of the add-ons. See the [scripts](/scripts) directory for more information.
 
-1. Supported game instances are derived from the presence of their respective suffixed ToC file. For example, if you have an add-on with a single, non-suffixed ToC file `AddOn.toc` then the conclusion is that the add-on only supports Mainline. But if you have two ToC files, one non-suffixed and one suffixed with TBC then the conclusion is the add-on only supports Mainline and TBC. See <https://wowpedia.fandom.com/wiki/TOC_format> for more information on ToC suffixes.
-2. You must always have at least one non-suffixed ToC file.
+It also includes workspace settings for VSCode and recommended extensions.
 
-### Linting
+### Workflow
 
-Both Lua and XML files must pass through validation.
+The repository tracks several different add-ons.
+
+To keep a clean history and allow for generated changelogs you should never commit changes to multiple add-ons at the same time.
+
+Also, commits you wish to include in the changelog should mention an issue from GitHub, e.g. Add new feature #42.
+
+There are some guidelines you need to follow regarding source files.
+
+#### Supported game versions
+
+Additional supported game versions are configured by providing suffixed ToC files. See <https://wowpedia.fandom.com/wiki/TOC_format> for more information.
+
+Also, you must always provide at least one main ToC file, without suffixes.
+
+#### Linting
+
+Both Lua and XML files must pass validation.
 
 ```sh
-scripts/lint <directory>
+scripts/lint <path>
 ```
 
-The script will recursively walk the given directory looking for files to validate, report and exit with a non-zero status if issues are encountered.
+The script will recursively walk the given directory looking for files to validate, report and exit with a non-zero status if any issues are encountered.
 
-### Releases
+#### Release
 
 Do **not** ever edit versions manually! Use the script:
 
 ```sh
-scripts/release [-h|-p|-m|-M] <path>
+scripts/release <path>
 ```
 
-This will bump the version string of given add-on, commit it, tag it and push to the remote respository, which will trigger a new automated release. Options `-p`, `-m`, or `-M` stand for patch, minor, or major release respectively. Patch version counts the commits since last release. Minor and major versions are increments of one on top of the current version.
+This script will bump the version of the add-on in all ToC files, commit it, tag the commit and push it to remote.
 
-## .curseforge file
+GitHub actions will trigger a pipeline that will package the add-on, generate a changelog and upload it to both GitHub and CurseForge.
+
+#### CurseForge
 
 Each add-on should have a `.curseforge` file containing information about the project on CurseForge as JSON. Example:
 
@@ -79,13 +78,11 @@ Each add-on should have a `.curseforge` file containing information about the pr
 
 This information is then used during release to upload the new archive via API.
 
-### CurseForge game version
-
-Find game version IDs using `curl` and `jq`:
+You can find the game version IDs you should use with `curl` and `jq`:
 
 ```sh
-export CURSEFORGE_API_TOKEN=...
-curl -s https://wow.curseforge.com/api/game/versions -H "X-Api-Token: $CURSEFORGE_API_TOKEN" \
+export CURSEFORGE_TOKEN=...
+curl -s https://wow.curseforge.com/api/game/versions -H "X-Api-Token: $CURSEFORGE_TOKEN" \
   | jq '.[] | select([.apiVersion] | inside(["100105","30402","11403"])).id'
 ```
 
