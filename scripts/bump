@@ -62,14 +62,11 @@ target="$1"
 # Name of the add-on, e.g. Add-on.
 name="$("$prefix/inspect" -n "$target")"
 
-# Manifest file path. e.g. Add-on/Add-on.toc.
-manifest="$("$prefix/inspect" -m "$target")"
-
 # Version, e.g. 42.
 version="$("$prefix/inspect" -v "$target")"
 
-# Change version in the manifest.
-sed -i "s/Version: $version/Version: $((version + 1))/" "$manifest"
+# Change version in ToC files.
+find "$target" -type f -name "*.toc" -exec sed -i "s/## Version: .\+/## Version: $((version + 1))/" {} \;
 
 # Commit the change.
-git commit -m "Bump $name to $((version + 1))" "$manifest"
+git commit -m "Bump $name to v$((version + 1))" "$target/*.toc"
