@@ -66,7 +66,7 @@ target="$1"
 "$prefix/bump" "$target"
 
 # Release's title, e.g. Add-on v42.
-release="$("$prefix/inspect" "$target")"
+release="$("$prefix/inspect" -r "$target")"
 
 # Tag, e.g. Add-on/v42.
 tag="$("$prefix/inspect" -t "$target")"
