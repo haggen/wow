@@ -15,7 +15,7 @@ script="$(basename "$script")"
 help() {
 	cat <<-EOF >&2
 		About
-		        Prepare envinroment variables from Git tag.
+		        Prepare CI environment.
 
 		Usage
 		        $script -h
