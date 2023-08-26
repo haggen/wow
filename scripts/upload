@@ -96,9 +96,17 @@ fi
 # Read project id from .curseforge file.
 project_id="$(jq .projectId "$target/.curseforge")"
 
+# ...
+interface="$("$prefix/inspect" -i "$target" | jq -Rc '[.]')"
+
+# ...
+curl -s "https://wow.curseforge.com/api/game/versions" -H "X-Api-Token: $token" \
+	| jq -c --argjson interface "$interface" '.[] | select([.apiVersion] | inside($interface)).id' > "$dist/gameVersions"
+
 # Generate metadata. `$changelog` here is a jq variable.
-jq --rawfile changelog "$dist/CHANGELOG.md" '.changelog = $changelog | del(.projectId)' .curseforge \
-	| jq -r tostring > "$dist/metadata.json"
+jq --rawfile changelog "$dist/CHANGELOG.md" \
+	--slurpfile gameVersions "$dist/gameVersions" \
+	'.changelog = $changelog | .gameVersions = $gameVersions | del(.projectId)' "$target/.curseforge" > "$dist/metadata.json"
 
 # Upload to CurseForge.
 curl -vf -X POST "https://wow.curseforge.com/api/projects/$project_id/upload-file" \
