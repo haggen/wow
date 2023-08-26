@@ -1,9 +1,9 @@
-name: Release add-on
+name: Release tagged add-on
 
 on:
   push:
     tags:
-      - "*/*/*"
+      - "*/*"
 
 jobs:
   release:
@@ -13,22 +13,16 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
       - name: Install dependencies
-        run: sudo apt-get install libxml2-utils lua-check
-
+        run: sudo apt-get --no-install-recommends install libxml2-utils lua-check
       - name: Prepare environment
-        run: source scripts/env
-
+        run: scripts/env "$GITHUB_REF" >> "$GITHUB_ENV"
       - name: Lint source files
-        run: scripts/lint "$TARGET"
-
+        run: scripts/lint "$ADDON"
       - name: Generate archive
         run: scripts/archive "$TAG"
-
       - name: Generate changelog
         run: scripts/changelog "$TAG"
-
       - name: Upload to GitHub
         uses: softprops/action-gh-release@v1
         with:
@@ -39,9 +33,7 @@ jobs:
           name: ${{ env.RELEASE }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Upload to CurseForge
         env:
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
         run: scripts/upload -t "$CURSEFORGE_TOKEN" "$TAG"
-      
