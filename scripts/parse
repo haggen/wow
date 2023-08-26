@@ -73,7 +73,7 @@ if test -z "$commit"; then
 fi
 
 # Manifest file path. e.g. Add-on/Add-on.toc.
-manifest="$(git diff-tree --no-commit-id --name-only -r "$commit")"
+manifest="$(git diff-tree --no-commit-id --name-only -r "$commit" | head -1)"
 
 # Print out relative path.
 if test "$output" = "relative"; then
