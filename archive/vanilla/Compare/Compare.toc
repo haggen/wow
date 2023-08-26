@@ -1,7 +1,0 @@
-## Interface: 11200
-## Version: 1.0.0
-## Title: Compare
-## Notes: Compare items in your bag with what you have currently equipped.
-## DefaultState: enabled
-## SavedVariablesPerCharacter: CompareSavedVars
-Compare.xml

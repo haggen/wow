@@ -1,0 +1,11 @@
+{
+  "projectId": 344402,
+  "releaseType": "release",
+  "changelog": "",
+  "changelogType": "markdown",
+  "gameVersions": [
+    9094,
+    9894,
+    9919
+  ]
+}

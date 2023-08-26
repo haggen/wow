@@ -4,4 +4,5 @@
 ## Notes: Change your keybindings, fast.
 ## DefaultState: enabled
 ## SavedVariablesPerCharacter: FastbindSavedVars
-Fastbind.xml
+
+Vanilla\Fastbind.xml

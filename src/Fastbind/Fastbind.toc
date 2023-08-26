@@ -1,7 +1,8 @@
 ## Interface: 80200
 ## Version: 1.0.0
 ## Title: Fastbind
-## Notes: Quickly bind keys to your action bar, items in your bags, spells, or macros.
+## Notes: Change your keybindings, fast.
 ## DefaultState: enabled
 ## SavedVariablesPerCharacter: FastbindSavedVars
-Fastbind.xml
+
+Mainline\Fastbind.xml

@@ -1,5 +1,5 @@
-## Interface: 90005
-## Version: 1.0.1
+## Interface: 30402
+## Version: 100
 ## Title: Tunnelvision
 ## Notes: For people with tunnel vision.
 ## DefaultState: enabled

@@ -1,0 +1,8 @@
+## Interface: 20501
+## Version: 1.0.16
+## Title: Fastbind
+## Notes: Change your keybindings, fast.
+## DefaultState: enabled
+## SavedVariablesPerCharacter: FastbindSavedVars
+
+Vanilla\Fastbind.xml
