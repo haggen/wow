@@ -152,8 +152,9 @@ esac
 
 # Detect additional supported platforms from suffixed manifest files.
 for f in "$target"/*_*.toc; do
-	f="${f#*_}"
-	platforms="$platforms,${f%%.*}"
+	substring="${f#*_}"
+	platforms="$platforms,${substring%%.*}"
+	interface="$interface,$(grep -Po "Interface: \K.+" "$f")"
 done
 
 # Output requested information.
