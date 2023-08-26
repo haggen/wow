@@ -71,20 +71,11 @@ Each add-on should have a `.curseforge` file containing information about the pr
   "projectId": 344402,
   "releaseType": "release",
   "changelog": "",
-  "changelogType": "markdown",
-  "gameVersions": [9094, 9894, 9919]
+  "changelogType": "markdown"
 }
 ```
 
-This information is then used during release to upload the new archive via API.
-
-You can find the game version IDs you should use with `curl` and `jq`:
-
-```sh
-export CURSEFORGE_TOKEN=...
-curl -s https://wow.curseforge.com/api/game/versions -H "X-Api-Token: $CURSEFORGE_TOKEN" \
-  | jq '.[] | select([.apiVersion] | inside(["100105","30402","11403"])).id'
-```
+This information is then used during release to upload the file to CurseForge via API.
 
 ## Legal
 
