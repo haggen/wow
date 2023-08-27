@@ -62,8 +62,8 @@ target="$("$prefix/parse" -a "$tag")"
 # Tag prefix, e.g. Add-on.
 prefix="${tag%/*}"
 
-# Commit range between now and last tag with given prefix, e.g. Add-on/v42..Add-on/v41.
-range="$(git describe --abbrev=0 --match "$prefix/*" -- "$tag^" 2>/dev/null | cut -f1 -d-)..$tag^"
+# Get the range between previous and latest release tag.
+refspec="$(git describe --abbrev=0 --match "$prefix/*" -- "$tag^" 2>/dev/null || :)..$tag"
 
 # Distributable directory, e.g. ./dist.
 dist="$target/dist"
@@ -71,5 +71,5 @@ dist="$target/dist"
 # Make sure distributable directory exists.
 mkdir -p "$dist"
 
-# List all commits in the range that mention issues and touches the add-on directory.
-git log --format="- %h %s" "${range#..}" -- "$target" | grep "#[0-9]\+" > "$dist/CHANGELOG.md"
+# List all commits between previous and latest release tag that touches the add-on directory and have issue references.
+git log --format="- %h %s" "${refspec#..}" -- "$target" | grep "#[0-9]\+" > "$dist/CHANGELOG.md"
