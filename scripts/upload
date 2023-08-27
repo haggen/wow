@@ -111,5 +111,5 @@ jq --rawfile changelog "$dist/CHANGELOG.md" \
 # Upload to CurseForge.
 curl -vf -X POST "https://wow.curseforge.com/api/projects/$project_id/upload-file" \
 	-H "X-Api-Token: $token" \
-	-F "metadata=@$dist/metadata.json" \
+	-F "metadata=<$dist/metadata.json" \
 	-F "file=@$dist/$archive"
