@@ -64,7 +64,7 @@ release="$("$prefix/inspect" -r "$target")"
 
 # Output environment.
 cat <<-EOF
-	TAG="$tag"
-	TARGET="$target"
-	RELEASE="$release"
+	TAG=$tag
+	TARGET=$target
+	RELEASE=$release
 EOF
