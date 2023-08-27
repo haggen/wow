@@ -19,7 +19,7 @@ help() {
 
 		Usage
 		        $script -h
-		        $script [-x] <path>
+		        $script [-x] <tag>
 
 		Flags
 		        -h      Print this manual.
