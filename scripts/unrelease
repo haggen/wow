@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+# Sane defaults.
+set -euo pipefail
+
+# Find scripts directory.
+script="$0"
+if test -L "$script"; then
+	script="$(readlink -f "$0")"
+fi
+prefix="$(dirname "$script")"
+script="$(basename "$script")"
+
+# Print the manual.
+help() {
+	cat <<-EOF >&2
+		About
+		        Undo release commit and tag.
+
+		Usage
+		        $script -h
+		        $script [-x] <tag>
+
+		Flags
+		        -h      Print this manual.
+		        -x      Enable debug mode.
+	EOF
+}
+
+# Parse and apply flags.
+while getopts ":xh" option; do
+	case "$option" in
+		x)
+			set -x
+			;;
+		h)
+			help
+			exit
+			;;
+		?)
+			echo "$script: unknown flag '$OPTARG', try -h" >&2
+			exit
+			;;
+	esac
+done
+
+# Drop flags by shifting arguments.
+shift $((OPTIND - 1))
+
+# Test required arguments.
+if test -z "$*"; then
+	echo "$script: missing required argument, see -h" >&2
+	exit
+fi
+
+# Release tag being undone, e.g. Add-on/v42.
+tag="$1"
+
+# Current release tag, e.g. Add-on/v42.
+head="$(git describe --exact-match HEAD 2>/dev/null || :)"
+
+# If we're not on the release tag, you must do it manually.
+if test "$tag" != "$head"; then
+    echo "$script: tag '$tag' does not match HEAD '$head'" >&2
+    exit
+fi
+
+# Undo release commit and tag.
+git reset --hard "HEAD^"
+git tag -d "$tag"
+git push -d origin "$tag"
