@@ -38,4 +38,4 @@ jobs:
       - name: Upload to CurseForge
         env:
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-        run: scripts/upload -xt "$CURSEFORGE_TOKEN" "$TAG"
+        run: scripts/upload -xt "$CURSEFORGE_TOKEN" "$TARGET"
