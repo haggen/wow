@@ -1,5 +1,5 @@
 ## Interface: 11404
-## Version: 100
+## Version: 101
 ## Title: Tunnelvision
 ## Notes: For people with tunnel vision.
 ## DefaultState: enabled
