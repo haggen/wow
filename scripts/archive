@@ -75,4 +75,4 @@ mkdir -p "$dist"
 root="$(git rev-parse --show-toplevel)"
 
 # Generate add-on archive.
-git archive --format=zip -o "$dist/$archive" --prefix="$name/" "$tag:${target#"$root"}"
+git archive --format=zip -o "$dist/$archive" --prefix="$name/" "$tag:${target#"$root/"}"
