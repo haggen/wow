@@ -24,6 +24,13 @@ There are several Bash scripts to help development, packaging, and distribution 
 
 It also includes workspace settings for VSCode and recommended extensions.
 
+#### Pitfalls
+
+The scripts test a lot of things but also assume things about the state of the repository.
+
+- Tag are expected to follow the format `Add-on/v123`.
+- ...
+
 ### Workflow
 
 The repository tracks several different add-ons.
@@ -76,6 +83,16 @@ Each add-on should have a `.curseforge` file containing information about the pr
 ```
 
 This information is then used during release to upload the file to CurseForge via API.
+
+#### Unreleasing
+
+In case the CI fails you need to undo the release commit and tag, fix the workflow and try again. This is because the CI will use the workflow at the time of the commit and not the latest version.
+
+```sh
+scripts/unrelease <tag>
+```
+
+This will undo the commit and delete the tags both locally and remotely.
 
 ## Legal
 
