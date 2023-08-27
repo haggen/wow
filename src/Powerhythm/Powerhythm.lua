@@ -1,81 +1,69 @@
 -- Powerhythm
 -- The MIT License © 2019 Arthur Corenzan
 
-UIParentLoadAddOn("Blizzard_DebugTools");
+local POWERHYTHM = ...
 
-local power = {
-	type = "",
-	value = 0,
-	max = 0,
-	delta = 0,
-};
+UIParentLoadAddOn("Blizzard_DebugTools")
 
-local function UpdatePower()
-	_, power.type = UnitPowerType("player");
-	local value = UnitPower("player");
-	power.max = UnitPowerMax("player");
-	power.delta = value - power.value;
-	power.value = value;
+PowerhythmFrameMixin = {}
 
-	if (power.delta < 0) then
-		PowerhythmFrameTexture.color = {1.0, 0.5, 0.0, 1.0};
-	elseif (power.delta > 0) then
-		if (power.type == "MANA") then
-			PowerhythmFrameTexture.color = {0.0, 0.0, 1.0, 1.0};
-		elseif (power.type == "ENERGY") then
-			PowerhythmFrameTexture.color = {1.0, 1.0, 0.0, 1.0};
-		else
-			PowerhythmFrameTexture.color = {0.5, 0.5, 0.5, 1.0};
-		end
-	end
-end
-
-function PowerhythmFrame_OnLoad()
-	self:RegisterEvent("PLAYER_ENTERING_WORLD");
-	self:RegisterEvent("UPDATE_SHAPESHIFT_FORM");
-	self:RegisterEvent("UNIT_POWER_UPDATE");
-	self:RegisterEvent("UNIT_POWER_FREQUENT");
-	self:RegisterEvent("PLAYER_REGEN_ENABLED");
-	self:RegisterEvent("PLAYER_REGEN_DISABLED");
+function PowerhythmFrameMixin:OnLoad()
+	self.lastUpdateAt = GetTime()
+	self.lastShotAt = 0
+	self.swingDelta = 0
+	self.lastSwingAt = 0
+	self.shotDelta = 0
 
 	self:RegisterForDrag("LeftButton");
-
-	PowerhythmFrameTexture.color = {0.0, 0.0, 0.0, 0.0};
+	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 end
 
-function PowerhythmFrame_OnEvent(_, event)
-	if (event == "PLAYER_ENTERING_WORLD") then
-		UpdatePower();
-	elseif (event == "UPDATE_SHAPESHIFT_FORM") then
-		UpdatePower();
-	elseif (event == "UNIT_POWER_UPDATE") then
-		UpdatePower();
-	-- elseif (event == "UNIT_POWER_FREQUENT") then
-	-- elseif (event == "PLAYER_REGEN_ENABLED") then
-	-- elseif (event == "PLAYER_REGEN_DISABLED") then
+function PowerhythmFrameMixin:OnEvent(event, ...)
+	if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
+		self:OnCombatLogEvent(CombatLogGetCurrentEventInfo())
 	end
 end
 
-function PowerhythmFrame_OnDragStart(self)
-	if (not self.isLocked) then
-		self:StartMoving()
+function PowerhythmFrameMixin:OnCombatLogEvent(...)
+	local timestamp, subevent, _, sourceGUID, sourceName, sourceFlags,
+	sourceFlags2, targetGUID, targetName, targetFlags, targetFlags2 = ...
+
+	if (sourceGUID ~= UnitGUID("player")) then
+		return
+	end
+
+	if (subevent == "RANGE_DAMAGE") then
+		local spellId, spellName, spellSchool, amount, overkill, school,
+		resisted, blocked, absorbed, critical, glancing, crushing = select(12, ...)
+
+		DevTools_Dump({ timestamp, sourceName, spellName, amount })
+
+		if (self.lastShotAt > 0) then
+			self.shotDelta = timestamp - self.lastShotAt
+		end
+		self.lastShotAt = timestamp
+	end
+
+	if (subevent == "SWING_DAMAGE") then
+		local _, _, _, amount, overkill, school, resisted, blocked, absorbed,
+		critical, glancing, crushing, spellName, spellSchool = select(12, ...)
+
+		DevTools_Dump({ timestamp, sourceName, "Swing", amount })
+
+		if (self.lastSwingAt > 0) then
+			self.swingDelta = timestamp - self.lastSwingAt
+		end
+		self.lastSwingAt = timestamp
 	end
 end
 
-function PowerhythmFrame_OnDragStop(self)
-	self:StopMovingOrSizing()
-end
+function PowerhythmFrameMixin:OnUpdate()
+	local now = GetTime()
+	local elapsed = now - self.lastUpdateAt
 
--- local step = 0.001;
+	if (elapsed < 0.1) then
+		return
+	end
 
-function PowerhythmFrame_OnUpdate()
-	PowerhythmFrameTexture:SetColorTexture(unpack(PowerhythmFrameTexture.color));
-
-	local r, g, b, a = unpack(PowerhythmFrameTexture.color);
-	PowerhythmFrameTexture.color = {
-		r * 0.995,
-		g * 0.995,
-		b * 0.995,
-		a * 0.995,
-	};
+	self.lastUpdateAt = now
 end
