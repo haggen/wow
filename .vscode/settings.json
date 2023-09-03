@@ -71,6 +71,7 @@
     "UIParentLoadAddOn",
     "select",
     "GetCreatureDifficultyColor",
-    "MAX_ACCOUNT_MACROS"
+    "MAX_ACCOUNT_MACROS",
+    "PrimaryProfession1"
   ]
 }
