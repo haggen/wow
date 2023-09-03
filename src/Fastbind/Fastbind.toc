@@ -1,8 +1,8 @@
-## Interface: 80200
-## Version: 1.0.0
+## Interface: 100105
+## Version: 116
 ## Title: Fastbind
 ## Notes: Change your keybindings, fast.
 ## DefaultState: enabled
 ## SavedVariablesPerCharacter: FastbindSavedVars
 
-Mainline\Fastbind.xml
+Fastbind.xml
