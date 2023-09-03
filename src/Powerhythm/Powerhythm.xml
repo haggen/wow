@@ -28,7 +28,35 @@
 			<Layer level="ARTWORK">
 				<FontString name="$parentTitle" inherits="GameFontNormal" text="Powerhythm">
 					<Anchors>
-						<Anchor point="TOP" relativePoint="TOP" />
+						<Anchor point="TOPLEFT" />
+					</Anchors>
+				</FontString>
+
+				<FontString name="$parentStateText" parentKey="StateText" inherits="GameFontNormal">
+					<Color r="1" g="1" b="1" />
+					<Anchors>
+						<Anchor relativeTo="$parentTitle" point="TOPLEFT" relativePoint="BOTTOMLEFT"
+							y="-10" />
+					</Anchors>
+				</FontString>
+
+				<FontString name="$parentSwingDeltaText" parentKey="SwingDeltaText"
+					inherits="GameFontNormal">
+					<Color r="1" g="1" b="1" />
+					<Anchors>
+						<Anchor relativeTo="$parentStateText" point="TOPLEFT"
+							relativePoint="BOTTOMLEFT"
+							y="-5" />
+					</Anchors>
+				</FontString>
+
+				<FontString name="$parentShotDeltaText" parentKey="ShotDeltaText"
+					inherits="GameFontNormal">
+					<Color r="1" g="1" b="1" />
+					<Anchors>
+						<Anchor relativeTo="$parentSwingDeltaText" point="TOPLEFT"
+							relativePoint="BOTTOMLEFT"
+							y="-5" />
 					</Anchors>
 				</FontString>
 			</Layer>
