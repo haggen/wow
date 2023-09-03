@@ -10,10 +10,11 @@
 
 ### Linking
 
-During development, it's best if we link add-ons from WSL to the game directory. Launch a PowerShell prompt and execute the snippet below, changing the paths accordingly.
+During development, it's best if we link add-ons from WSL to the game directory. Copy the script `Linker.ps1` into a Windows directory, launch a PowerShell prompt there, and execute:
 
 ```psh
-New-Item "C:\World of Warcraft\_classic_era_\Interface\AddOns\Tunnelvision" -ItemType SymbolicLink -Target "\\wsl.localhost\Ubuntu-22.04\wow\src\Tunnelvision"
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+.\Linker.ps1 -Game "C:\World of Warcraft\_retail_" -AddOn "\\wsl.localhost\Ubuntu-22.04\wow\src\Tunnelvision"
 ```
 
 ### Tooling
