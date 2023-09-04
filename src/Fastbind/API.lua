@@ -7,7 +7,6 @@
 ---
 local FASTBIND = ...
 
---- Add-on API table.
 --- @class API
 ---
 local api = select(2, ...)

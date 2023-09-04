@@ -54,6 +54,9 @@ local ACTIONBAR_PREFIXES = {
 
 --- FastbindFrameMixin declaration.
 --- @class FastbindFrameMixin: Frame
+--- @field isActive boolean
+--- @field button Button
+--- @field command string
 ---
 FastbindFrameMixin = {}
 
