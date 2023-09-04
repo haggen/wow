@@ -292,12 +292,12 @@ function FastbindFrameMixin:HookButton(name)
 
 	if not button then
 		api.Printf("Frame '%s' not found.", name)
-		return
+		return false
 	end
 
 	if button.isFastbound then
 		api.Printf("Frame '%s' already hooked.", name)
-		return
+		return false
 	end
 
 	api.Printf("Hooking to '%s'.", name)
@@ -311,18 +311,22 @@ function FastbindFrameMixin:HookButton(name)
 			end
 		end
 	)
+
+	return true
 end
 
 function FastbindFrameMixin:HookBindables()
-	for i = 1, NUM_ACTIONBAR_BUTTONS do
 		for _, prefix in ipairs(ACTIONBAR_PREFIXES) do
-			self:HookButton(prefix .. i)
+		local index = 1
+		while self:HookButton(prefix .. index) do
+			index = index + 1
 		end
 	end
 
-	for i = 1, NUM_CONTAINER_FRAMES do
-		for j = 1, C_Container.GetContainerNumSlots(i) do
-			self:HookButton("ContainerFrame" .. i .. "Item" .. j)
+	for i = 1, 5 do
+		local j = 1
+		while self:HookButton("ContainerFrame" .. i .. "Item" .. j) do
+			j = j + 1
 		end
 	end
 
