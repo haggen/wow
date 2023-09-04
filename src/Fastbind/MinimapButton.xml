@@ -20,7 +20,7 @@
             </Layer>
             <Layer level="ARTWORK">
                 <Texture parentKey="icon" file="Interface\Worldmap\Gear_64Grey">
-                    <Size x="19" y="19" />
+                    <Size x="20" y="20" />
                     <TexCoords left="0.05" right="0.95" top="0.05" bottom="0.95" />
                     <Anchors>
                         <Anchor point="TOPLEFT">
