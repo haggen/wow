@@ -2,29 +2,28 @@
 -- The MIT License © 2017 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
---- Add-on name constant.
---- @type "Fastbind"
----
+-- Add-on name constant.
+--
 local FASTBIND = ...
 
---- @class API
----
+-- Add-on table.
+--
 local api = select(2, ...)
 
---- Slash command.
----
+-- Slash command.
+--
 SLASH_FASTBIND1 = "/fastbind"
 
---- Keybinding sets.
----
+-- Keybinding sets.
+--
 local KEYBINDINGS = {
 	DEFAULT = 0,
 	ACCOUNT = 1,
 	CHARACTER = 2
 }
 
---- Modifiers and keys that we shouldn't bind to.
----
+-- Modifiers and keys that we shouldn't bind to.
+--
 local EXCLUDED_KEYS = {
 	"LSHIFT",
 	"RSHIFT",
@@ -38,8 +37,8 @@ local EXCLUDED_KEYS = {
 	"RightButton"
 }
 
---- Prefixes for action bars.
----
+-- Prefixes for action bars.
+--
 local ACTIONBAR_PREFIXES = {
 	"MultiBarBottomLeftButton",
 	"MultiBarBottomRightButton",
@@ -52,16 +51,12 @@ local ACTIONBAR_PREFIXES = {
 	"PetActionButton"
 }
 
---- FastbindFrameMixin declaration.
---- @class FastbindFrameMixin: Frame
---- @field isActive boolean
---- @field button Button
---- @field command string
----
+-- Fastbind frame mixin.
+--
 FastbindFrameMixin = {}
 
---- Initialize frame.
----
+-- Initialize frame.
+--
 function FastbindFrameMixin:OnLoad()
 	StaticPopupDialogs[FASTBIND] = {
 		text =
@@ -174,8 +169,8 @@ function FastbindFrameMixin:Update()
 end
 
 function FastbindFrameMixin:ClearButton()
-	self.button = nil
 	self.command = nil
+	self.button = nil
 
 	self:Hide()
 
@@ -187,7 +182,7 @@ function FastbindFrameMixin:SetButton(button)
 		local type = GetActionInfo(button.action)
 
 		-- We wouldn't want to bind the flyout button, only the spells inside it.
-		if (type == "flyout") then
+		if type == "flyout" then
 			return
 		end
 	end
@@ -238,7 +233,7 @@ function FastbindFrameMixin:SetButton(button)
 		command = self.command,
 	})
 
-	if (self.command) then
+	if self.command then
 		self.button = button
 		self:ClearAllPoints()
 		self:SetAllPoints(button)
@@ -254,17 +249,17 @@ function FastbindFrameMixin:ClearButtonBindings()
 end
 
 function FastbindFrameMixin:SetBinding(key)
-	if (not self.button) then
+	if not self.button then
 		api.Printf("No button is set.")
 		return
 	end
 
-	if (key == "RightButton") then
+	if key == "RightButton" then
 		self:ClearButtonBindings()
 	end
 
 	for i = 1, #EXCLUDED_KEYS do
-		if (key == EXCLUDED_KEYS[i]) then
+		if key == EXCLUDED_KEYS[i] then
 			api.Printf("Can't bind excluded key '%s'", key)
 			return
 		end
@@ -316,7 +311,7 @@ function FastbindFrameMixin:HookButton(name)
 end
 
 function FastbindFrameMixin:HookBindables()
-		for _, prefix in ipairs(ACTIONBAR_PREFIXES) do
+	for _, prefix in ipairs(ACTIONBAR_PREFIXES) do
 		local index = 1
 		while self:HookButton(prefix .. index) do
 			index = index + 1

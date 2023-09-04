@@ -38,9 +38,15 @@
                 </Texture>
             </Layer>
         </Layers>
+        <Frames>
+            <GameTooltip name="FastbindMinimapButtonTooltip" parentKey="tooltip"
+                frameStrata="TOOLTIP" hidden="true"
+                inherits="GameTooltipTemplate" />
+        </Frames>
         <Scripts>
             <OnLoad method="OnLoad" />
             <OnEvent method="OnEvent" />
+            <OnUpdate method="OnUpdate" />
             <OnEnter method="OnEnter" />
             <OnLeave method="OnLeave" />
             <OnMouseDown method="OnMouseDown" />

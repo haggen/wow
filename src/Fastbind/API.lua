@@ -2,30 +2,28 @@
 -- The MIT License © 2017 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
---- Add-on name constant.
---- @type "Fastbind"
----
+-- Add-on name constant.
+--
 local FASTBIND = ...
 
---- @class API
----
+-- Add-on table.
+--
 local api = select(2, ...)
 
---- Saved variables.
----
+-- Saved variables.
+--
 FastbindSavedVars = {}
 
---- Default values.
----
+-- Default values.
+--
 api.defaultSavedVars = {
 	debug = false,
 	minimapButtonPosition = 0,
 }
 
---- Enforce schema by deleting unrecognized keys from
---- stored saved variables and setting new defaults.
---- @return nil
----
+-- Enforce schema by deleting unrecognized keys from
+-- stored saved variables and setting new defaults.
+--
 function api.MigrateSavedVars()
 	-- Remove keys with no default.
 	for key in pairs(FastbindSavedVars) do
@@ -42,27 +40,20 @@ function api.MigrateSavedVars()
 	end
 end
 
---- Get saved variable.
---- @param name string
---- @return any
----
+-- Get saved variable.
+--
 function api.GetSavedVar(name)
 	return FastbindSavedVars[name] or api.defaultSavedVars[name]
 end
 
---- Set saved variable.
---- @param name string
---- @param value any
---- @return nil
----
+-- Set saved variable.
+--
 function api.SetSavedVar(name, value)
 	FastbindSavedVars[name] = value
 end
 
---- Dump variables, if debug is enabled.
---- @param ... any
---- @return nil
----
+-- Dump variables, if debug is enabled.
+--
 function api.Dump(...)
 	if not api.GetSavedVar("debug") then
 		return
@@ -75,11 +66,8 @@ function api.Dump(...)
 	DevTools_Dump({ FASTBIND, ... })
 end
 
---- Print formatted message, if debug is enabled.
---- @param message string
---- @param ... any
---- @return nil
----
+-- Print formatted message, if debug is enabled.
+--
 function api.Printf(message, ...)
 	if not api.GetSavedVar("debug") then
 		return
