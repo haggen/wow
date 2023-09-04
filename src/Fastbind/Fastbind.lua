@@ -2,18 +2,29 @@
 -- The MIT License © 2017 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
--- Namespace variables.
+--- Add-on name constant.
+--- @type "Fastbind"
+---
 local FASTBIND = ...
 
--- Slash command.
-_G["SLASH_" .. FASTBIND .. 1] = "/fastbind"
+--- @class API
+---
+local api = select(2, ...)
 
--- Keybinding sets.
-local DEAFULT_BINDINGS = 0;
-local ACCOUNT_BINDINGS = 1;
-local CHARACTER_BINDINGS = 2;
+--- Slash command.
+---
+SLASH_FASTBIND1 = "/fastbind"
 
--- Modifier keys and keys that shouldn't be bound.
+--- Keybinding sets.
+---
+local KEYBINDINGS = {
+	DEFAULT = 0,
+	ACCOUNT = 1,
+	CHARACTER = 2
+}
+
+--- Modifiers and keys that we shouldn't bind to.
+---
 local EXCLUDED_KEYS = {
 	"LSHIFT",
 	"RSHIFT",
@@ -27,13 +38,9 @@ local EXCLUDED_KEYS = {
 	"RightButton"
 }
 
--- Action types that we won't bind.
-local EXCLUDED_ACTION_TYPES = {
-	-- "flyout",
-}
-
--- Prefixes for bindable frames.
-local BINDABLES_PREFIX_TABLE = {
+--- Prefixes for action bars.
+---
+local ACTIONBAR_PREFIXES = {
 	"MultiBarBottomLeftButton",
 	"MultiBarBottomRightButton",
 	"MultiBarRightButton",
@@ -45,33 +52,14 @@ local BINDABLES_PREFIX_TABLE = {
 	"PetActionButton"
 }
 
--- Default saved variables.
-local defaultSavedVars = {
-	version = 1,
-	debug = false
-}
-FastbindSavedVars = defaultSavedVars
-
--- Dump variables.
-local function d(...)
-	if not FastbindSavedVars.debug then
-		return
-	end
-
-	if not IsAddOnLoaded("Blizzard_DebugTools") then
-		LoadAddOn("Blizzard_DebugTools")
-	end
-
-	DevTools_Dump({ ... })
-end
-
--- Frame mixin.
+--- FastbindFrameMixin declaration.
+--- @class FastbindFrameMixin: Frame
+---
 FastbindFrameMixin = {}
 
--- Initialization.
+--- Initialize frame.
+---
 function FastbindFrameMixin:OnLoad()
-	self:RegisterEvent("ADDON_LOADED")
-
 	StaticPopupDialogs[FASTBIND] = {
 		text =
 		"Click Apply to save. Press ESC or click on Discard to undo any changes.",
@@ -88,41 +76,30 @@ function FastbindFrameMixin:OnLoad()
 		hideOnEscape = true
 	}
 
-	SlashCmdList[FASTBIND] = function()
+	function SlashCmdList.FASTBIND()
 		self:Activate()
 	end
+
+	self:RegisterEvent("ADDON_LOADED")
 end
 
 function FastbindFrameMixin:OnEvent(event, ...)
-	if (event == "ADDON_LOADED") then
+	if event == "ADDON_LOADED" then
 		local name = ...
 
-		if (name == FASTBIND) then
-			if not FastbindSavedVars.version or FastbindSavedVars.version < defaultSavedVars.version then
-				for key, value in pairs(defaultSavedVars) do
-					if FastbindSavedVars[key] == nil then
-						FastbindSavedVars[key] = value
-					end
-				end
-				for key, _ in pairs(FastbindSavedVars) do
-					if defaultSavedVars[key] == nil then
-						FastbindSavedVars[key] = nil
-					end
-				end
-			end
-
-			d("Fastbind loaded.")
+		if name == FASTBIND then
+			api.MigrateSavedVars()
 		end
 	end
 end
 
 function FastbindFrameMixin:OnKeyUp(key)
-	self:SetButtonBinding(key)
+	self:SetBinding(key)
 	self:Update()
 end
 
 function FastbindFrameMixin:OnMouseUp(button)
-	self:SetButtonBinding(button)
+	self:SetBinding(button)
 	self:Update()
 end
 
@@ -163,6 +140,16 @@ function FastbindFrameMixin:Deactivate()
 	StaticPopup_Hide(FASTBIND)
 end
 
+function FastbindFrameMixin:Apply()
+	SaveBindings(KEYBINDINGS.CHARACTER)
+	self:Deactivate()
+end
+
+function FastbindFrameMixin:Discard()
+	LoadBindings(KEYBINDINGS.CHARACTER)
+	self:Deactivate()
+end
+
 function FastbindFrameMixin:Update()
 	if not self.command then
 		return
@@ -172,7 +159,7 @@ function FastbindFrameMixin:Update()
 
 	local keys = { GetBindingKey(self.command) }
 
-	d("Keybindings", keys)
+	api.Dump(keys)
 
 	if #keys > 0 then
 		GameTooltip:AddLine(table.concat(keys, ", "), 1, 1, 1)
@@ -193,13 +180,12 @@ function FastbindFrameMixin:ClearButton()
 end
 
 function FastbindFrameMixin:SetButton(button)
-	if (button.action) then
+	if button.action then
 		local type = GetActionInfo(button.action)
 
-		for i = 1, #EXCLUDED_ACTION_TYPES do
-			if (type == EXCLUDED_ACTION_TYPES[i]) then
-				return
-			end
+		-- We wouldn't want to bind the flyout button, only the spells inside it.
+		if (type == "flyout") then
+			return
 		end
 	end
 
@@ -232,7 +218,7 @@ function FastbindFrameMixin:SetButton(button)
 		end
 	end
 
-	d({
+	api.Dump({
 		GetID = button:GetID(),
 		GetName = button:GetName(),
 		GetObjectType = button:GetObjectType(),
@@ -264,9 +250,9 @@ function FastbindFrameMixin:ClearButtonBindings()
 	end
 end
 
-function FastbindFrameMixin:SetButtonBinding(key)
+function FastbindFrameMixin:SetBinding(key)
 	if (not self.button) then
-		d(string.format("There's no button to bind to %s", tostring(key)))
+		api.Printf("No button is set.")
 		return
 	end
 
@@ -276,7 +262,7 @@ function FastbindFrameMixin:SetButtonBinding(key)
 
 	for i = 1, #EXCLUDED_KEYS do
 		if (key == EXCLUDED_KEYS[i]) then
-			d(string.format("Can't bind excluded key %s", tostring(key)))
+			api.Printf("Can't bind excluded key '%s'", key)
 			return
 		end
 	end
@@ -293,52 +279,32 @@ function FastbindFrameMixin:SetButtonBinding(key)
 	local alt = IsAltKeyDown() and "ALT-" or ""
 	local shift = IsShiftKeyDown() and "SHIFT-" or ""
 
-	d(string.format("Binding %s to %s.", ctrl .. alt .. shift .. key, tostring(self.command)))
+	api.Printf("Binding '%s' to '%s'.", ctrl .. alt .. shift .. key, self.command)
 
 	SetBinding(ctrl .. alt .. shift .. key, self.command)
 end
 
-function FastbindFrameMixin:Apply()
-	SaveBindings(CHARACTER_BINDINGS)
-	self:Deactivate()
-end
+function FastbindFrameMixin:HookButton(name)
+	local button = _G[name]
 
-function FastbindFrameMixin:Discard()
-	LoadBindings(CHARACTER_BINDINGS)
-	self:Deactivate()
-end
-
-function FastbindFrameMixin:HookFrameByName(name)
-	local frame = _G[name]
-
-	if not frame then
-		d(string.format("Frame %s not found.", tostring(frame)))
+	if not button then
+		api.Printf("Frame '%s' not found.", name)
 		return
 	end
 
-	if frame.isFastbound then
-		d(string.format("Frame %s already hooked.", tostring(frame:GetName())))
+	if button.isFastbound then
+		api.Printf("Frame '%s' already hooked.", name)
 		return
 	end
 
-	d(string.format("Hooking to %s", tostring(frame:GetName())))
+	api.Printf("Hooking to '%s'.", name)
 
-	frame.isFastbound = true
-
-	frame:HookScript(
+	button.isFastbound = 1
+	button:HookScript(
 		"OnEnter",
 		function()
 			if self.isActive then
-				self:SetButton(frame)
-			end
-		end
-	)
-
-	frame:HookScript(
-		"OnClick",
-		function()
-			if self.isActive then
-				d("Clicked on %s", frame:GetName())
+				self:SetButton(button)
 			end
 		end
 	)
@@ -346,34 +312,28 @@ end
 
 function FastbindFrameMixin:HookBindables()
 	for i = 1, NUM_ACTIONBAR_BUTTONS do
-		for _, prefix in ipairs(BINDABLES_PREFIX_TABLE) do
-			self:HookFrameByName(prefix .. i)
+		for _, prefix in ipairs(ACTIONBAR_PREFIXES) do
+			self:HookButton(prefix .. i)
 		end
 	end
 
 	for i = 1, NUM_CONTAINER_FRAMES do
-		local maxSlots = MAX_CONTAINER_ITEMS
-
-		-- Fix for retail.
-		if not maxSlots then
-			maxSlots = C_Container.GetContainerNumSlots(i)
-		end
-		for j = 1, maxSlots do
-			self:HookFrameByName("ContainerFrame" .. i .. "Item" .. j)
+		for j = 1, C_Container.GetContainerNumSlots(i) do
+			self:HookButton("ContainerFrame" .. i .. "Item" .. j)
 		end
 	end
 
-	-- Bind profession spells.
-	if PrimaryProfession1 then
-		self:HookFrameByName("PrimaryProfession1SpellButtonTop")
-		self:HookFrameByName("PrimaryProfession1SpellButtonBottom")
-		self:HookFrameByName("PrimaryProfession2SpellButtonTop")
-		self:HookFrameByName("PrimaryProfession2SpellButtonBottom")
-		self:HookFrameByName("SecondaryProfession1SpellButtonLeft")
-		self:HookFrameByName("SecondaryProfession1SpellButtonRight")
-		self:HookFrameByName("SecondaryProfession2SpellButtonLeft")
-		self:HookFrameByName("SecondaryProfession2SpellButtonRight")
-		self:HookFrameByName("SecondaryProfession3SpellButtonLeft")
-		self:HookFrameByName("SecondaryProfession3SpellButtonRight")
-	end
+	-- TODO: Not working.
+	-- if PrimaryProfession1 then
+	-- 	self:HookFrameByName("PrimaryProfession1SpellButtonTop")
+	-- 	self:HookFrameByName("PrimaryProfession1SpellButtonBottom")
+	-- 	self:HookFrameByName("PrimaryProfession2SpellButtonTop")
+	-- 	self:HookFrameByName("PrimaryProfession2SpellButtonBottom")
+	-- 	self:HookFrameByName("SecondaryProfession1SpellButtonLeft")
+	-- 	self:HookFrameByName("SecondaryProfession1SpellButtonRight")
+	-- 	self:HookFrameByName("SecondaryProfession2SpellButtonLeft")
+	-- 	self:HookFrameByName("SecondaryProfession2SpellButtonRight")
+	-- 	self:HookFrameByName("SecondaryProfession3SpellButtonLeft")
+	-- 	self:HookFrameByName("SecondaryProfession3SpellButtonRight")
+	-- end
 end
