@@ -72,6 +72,21 @@
     "select",
     "GetCreatureDifficultyColor",
     "MAX_ACCOUNT_MACROS",
-    "PrimaryProfession1"
+    "PrimaryProfession1",
+    "FAST",
+    "CHARACTER",
+    "COLOR",
+    "GRAY_FONT_COLOR",
+    "NORMAL_FONT_COLOR",
+    "MultiActionBar_Update",
+    "Settings",
+    "ActionBarController_UpdateAll",
+    "UIParent_ManageFramePositions",
+    "MultiBarBottomLeftButton6",
+    "MultiActionBar_ShowAllGrids",
+    "UpdateMicroButtons",
+    "MultiActionBar_HideAllGrids",
+    "OpenAllBags",
+    "CloseAllBags"
   ]
 }
