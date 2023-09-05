@@ -1,5 +1,5 @@
 ## Interface: 30402
-## Version: 116
+## Version: 117
 ## Title: Fastbind
 ## Notes: Change your keybindings, fast.
 ## DefaultState: enabled
