@@ -109,6 +109,16 @@ function FastbindFrameMixin:OnLeave()
 	self:ClearButton()
 end
 
+function FastbindFrameMixin:UpdatePanelsVisibility()
+	if self.isActive then
+		ShowUIPanel(SpellBookFrame)
+		OpenAllBags()
+	else
+		HideUIPanel(SpellBookFrame)
+		CloseAllBags()
+	end
+end
+
 function FastbindFrameMixin:Activate()
 	if self.isActive then
 		return
@@ -121,6 +131,7 @@ function FastbindFrameMixin:Activate()
 
 	self.isActive = true
 
+	self:UpdatePanelsVisibility()
 	self:HookBindables()
 
 	StaticPopup_Show(FASTBIND)
@@ -133,6 +144,7 @@ function FastbindFrameMixin:Deactivate()
 
 	self.isActive = false
 
+	self:UpdatePanelsVisibility()
 	self:ClearButton()
 
 	StaticPopup_Hide(FASTBIND)
