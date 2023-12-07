@@ -1,0 +1,7 @@
+## Interface: 11302
+## Version: 1
+## Title: Hyperauction
+## Notes: ...
+## DefaultState: enabled
+## SavedVariablesPerCharacter: HyperauctionSavedVars
+Hyperauction.xml
