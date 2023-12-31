@@ -1,0 +1,9 @@
+## Interface: 11404
+## Version: 1
+## Title: Reelease
+## Notes: Just don't get hooked.
+## DefaultState: enabled
+## SavedVariablesPerCharacter: ReeleaseSavedVars
+
+API.lua
+Reelease.xml
