@@ -4,7 +4,13 @@
 
 ## About
 
-...
+**Reelease** tweaks your game settings while you're fishing for convenience and ease.
+
+1. Increases the area and range of soft targeting.
+2. Enable and bind a key for interaction.
+3. Attenuate music and ambiance.
+
+All the changed settings are restored after fishing.
 
 ## Installation
 
@@ -12,11 +18,7 @@ Download the latest version from the [Releases page](https://github.com/haggen/w
 
 ## Usage
 
-After installing the add-on, your character and target frames will reset to the center of the screen as the default position. Their movement and lock state will now mirror each other.
-
-If you had moved the frames before installing this add-on, you may want to reset their location using the right-click menu.
-
-Please be aware that the add-on won't function during combat.
+After installing the add-on, type `/reelease` or `/re` to see instructions.
 
 ## Uninstall
 

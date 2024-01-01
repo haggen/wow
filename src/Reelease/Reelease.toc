@@ -7,3 +7,4 @@
 
 API.lua
 Reelease.xml
+SlashCommand.lua

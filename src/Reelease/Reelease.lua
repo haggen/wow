@@ -7,11 +7,11 @@
 local REELEASE = ...;
 
 ---Add-on API.
----@class API.
-local api = select(..., 2);
+---@type API
+local api = select(2, ...);
 
 ---Frame mixin.
----@class Frame
+---@class ReeleaseFrameMixin: Frame
 ReeleaseFrameMixin = {};
 
 ---OnLoad handler.
@@ -19,6 +19,7 @@ function ReeleaseFrameMixin:OnLoad()
 	self:RegisterEvent("ADDON_LOADED");
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START");
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP");
+	self:RegisterEvent("PLAYER_REGEN_DISABLED");
 end
 
 ---OnEvent handler.
@@ -30,6 +31,8 @@ function ReeleaseFrameMixin:OnEvent(event, ...)
 		self:OnUnitSpellcastChannelStart(...);
 	elseif (event == "UNIT_SPELLCAST_CHANNEL_STOP") then
 		self:OnUnitSpellcastChannelStop(...);
+	elseif (event == "PLAYER_REGEN_DISABLED") then
+		api:RestoreSoundSettings();
 	end
 end
 
@@ -41,6 +44,8 @@ function ReeleaseFrameMixin:OnAddonLoaded(name)
 	end
 
 	api:InitSavedVars();
+	---In case we disconnected while fishing.
+	api:RestoreAllSettings();
 end
 
 --Event handler.
@@ -52,19 +57,7 @@ function ReeleaseFrameMixin:OnUnitSpellcastChannelStart(unitTarget, castGUID, sp
 		return;
 	end
 
-	api:OverrideCVar("SoftTargetInteractArc", 2);
-	api:OverrideCVar("SoftTargetInteractRange", 30);
-
-	if api.savedVars.attenuateSounds then
-		api:OverrideCVar("Sound_SFXVolume", 1);
-		api:OverrideCVar("Sound_MusicVolume", function(value) return tonumber(value) * 0.5; end);
-		api:OverrideCVar("Sound_AmbienceVolume", function(value) return tonumber(value) * 0.5; end);
-		api:OverrideCVar("Sound_DialogVolume", function(value) return tonumber(value) * 0.5; end);
-	end
-
-	if api.savedVars.reelKey then
-		SetBinding(api.savedVars.reelKey, "INTERACTTARGET", GetCurrentBindingSet());
-	end
+	api:Activate();
 end
 
 --Event handler.
@@ -76,13 +69,5 @@ function ReeleaseFrameMixin:OnUnitSpellcastChannelStop(unitTarget, castGUID, spe
 		return;
 	end
 
-	api:RestoreCVar("SoftTargetInteractArc");
-	api:RestoreCVar("SoftTargetInteractRange");
-
-	api:RestoreCVar("Sound_SFXVolume");
-	api:RestoreCVar("Sound_MusicVolume");
-	api:RestoreCVar("Sound_AmbienceVolume");
-	api:RestoreCVar("Sound_DialogVolume");
-
-	LoadBindings(GetCurrentBindingSet());
+	api:RestoreAllSettings();
 end
