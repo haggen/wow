@@ -1,8 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-	<Script file="Reelease.lua" />
-	<Frame name="ReeleaseFrame" parent="UIParent" mixin="ReeleaseFrameMixin">
+	<Script file="Fishease.lua" />
+	<Frame name="FisheaseFrame" parent="UIParent" mixin="FisheaseFrameMixin">
 		<Scripts>
 			<OnLoad method="OnLoad" />
 			<OnEvent method="OnEvent" />

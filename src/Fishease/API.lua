@@ -1,10 +1,10 @@
--- Reelease
+-- Fishease
 -- MIT License © 2023 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
 ---Add-on namespace.
 ---@type string
-local REELEASE = ...;
+local FISHEASE = ...;
 
 ---Add-on API.
 ---@class API
@@ -18,7 +18,7 @@ local api = select(2, ...);
 ---@field attenuateSounds boolean
 ---@field changedCVars table<string, any>
 api.savedVars = {
-	version = 3,
+	version = 1,
 	state = "idle",
 	interactKey = "F",
 	attenuateSounds = true,
@@ -26,28 +26,28 @@ api.savedVars = {
 };
 
 ---Global saved variables.
-ReeleaseSavedVars = api.savedVars;
+FisheaseSavedVars = api.savedVars;
 
 ---Initialize saved variables.
 function api:InitSavedVars()
-	if (ReeleaseSavedVars.version ~= self.savedVars.version) then
+	if (FisheaseSavedVars.version ~= self.savedVars.version) then
 		for key, value in pairs(self.savedVars) do
-			if (ReeleaseSavedVars[key] == nil) then
-				ReeleaseSavedVars[key] = value;
+			if (FisheaseSavedVars[key] == nil) then
+				FisheaseSavedVars[key] = value;
 			end
 		end
 
-		for key in pairs(ReeleaseSavedVars) do
+		for key in pairs(FisheaseSavedVars) do
 			if (self.savedVars[key] == nil) then
-				ReeleaseSavedVars[key] = nil;
+				FisheaseSavedVars[key] = nil;
 			end
 		end
 
-		ReeleaseSavedVars.version = self.savedVars.version;
+		FisheaseSavedVars.version = self.savedVars.version;
 	end
 
-	---Make so api.savedVars is the same table as ReeleaseSavedVars.
-	self.savedVars = ReeleaseSavedVars;
+	---Make so api.savedVars is the same table as FisheaseSavedVars.
+	self.savedVars = FisheaseSavedVars;
 end
 
 ---Tell if the given spell is Fishing.
@@ -158,5 +158,5 @@ end
 ---@param message string
 ---@vararg string|number|boolean|nil
 function api:Print(message, ...)
-	print("|cff6666ffReelease|r: " .. message:format(...));
+	print("|cff6666ffFishease|r: " .. message:format(...));
 end

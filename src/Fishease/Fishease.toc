@@ -1,10 +1,10 @@
 ## Interface: 11404
 ## Version: 1
-## Title: Reelease
+## Title: Fishease
 ## Notes: Just don't get hooked.
 ## DefaultState: enabled
-## SavedVariablesPerCharacter: ReeleaseSavedVars
+## SavedVariablesPerCharacter: FisheaseSavedVars
 
 API.lua
-Reelease.xml
+Fishease.xml
 SlashCommand.lua

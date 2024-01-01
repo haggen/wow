@@ -1,21 +1,21 @@
--- Reelease
+-- Fishease
 -- MIT License © 2023 Arthur Corenzan
 -- More on https://github.com/haggen/wow
 
 ---Add-on namespace.
 ---@type string
-local REELEASE = ...;
+local FISHEASE = ...;
 
 ---Add-on API.
 ---@type API
 local api = select(2, ...);
 
 ---Frame mixin.
----@class ReeleaseFrameMixin: Frame
-ReeleaseFrameMixin = {};
+---@class FisheaseFrameMixin: Frame
+FisheaseFrameMixin = {};
 
 ---OnLoad handler.
-function ReeleaseFrameMixin:OnLoad()
+function FisheaseFrameMixin:OnLoad()
 	self:RegisterEvent("ADDON_LOADED");
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START");
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP");
@@ -24,7 +24,7 @@ end
 
 ---OnEvent handler.
 ---@param event string
-function ReeleaseFrameMixin:OnEvent(event, ...)
+function FisheaseFrameMixin:OnEvent(event, ...)
 	if (event == "ADDON_LOADED") then
 		self:OnAddonLoaded(...);
 	elseif (event == "UNIT_SPELLCAST_CHANNEL_START") then
@@ -38,8 +38,8 @@ end
 
 ---Event handler.
 ---@param name string
-function ReeleaseFrameMixin:OnAddonLoaded(name)
-	if (name ~= REELEASE) then
+function FisheaseFrameMixin:OnAddonLoaded(name)
+	if (name ~= FISHEASE) then
 		return;
 	end
 
@@ -52,7 +52,7 @@ end
 ---@param unitTarget string
 ---@param castGUID string
 ---@param spellID number
-function ReeleaseFrameMixin:OnUnitSpellcastChannelStart(unitTarget, castGUID, spellID)
+function FisheaseFrameMixin:OnUnitSpellcastChannelStart(unitTarget, castGUID, spellID)
 	if not api:IsFishing(spellID) then
 		return;
 	end
@@ -64,7 +64,7 @@ end
 ---@param unitTarget string
 ---@param castGUID string
 ---@param spellID number
-function ReeleaseFrameMixin:OnUnitSpellcastChannelStop(unitTarget, castGUID, spellID)
+function FisheaseFrameMixin:OnUnitSpellcastChannelStop(unitTarget, castGUID, spellID)
 	if not api:IsFishing(spellID) then
 		return;
 	end
