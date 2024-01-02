@@ -6,10 +6,10 @@
 
 **Fishease** tweaks your game settings while you're fishing for convenience and ease.
 
-1. Enable and adjust soft targeting interaction, extending range and rebinding the key.
-2. Lower music and ambiance volumes and raising effects volume.
+1. Enables and adjusts soft targeting interaction, extending range and rebinding the key.
+2. Lowers music and ambiance volumes and raising sound effects volume.
 
-All the changed settings are restored after fishing.
+All the changed settings are rolled back after fishing.
 
 ## Installation
 
