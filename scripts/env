@@ -57,7 +57,7 @@ fi
 tag="${1#refs/tags/}"
 
 # Add-on name, e.g. Add-on.
-target="$("$prefix/parse" "$tag")"
+target="$("$prefix/parse-tag" "$tag")"
 
 # Release title, e.g. Add-on v42.
 release="$("$prefix/inspect" -r "$target")"

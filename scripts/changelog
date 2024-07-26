@@ -57,7 +57,7 @@ fi
 tag="$1"
 
 # Add-on absolute path, e.g. /Add-on.
-target="$("$prefix/parse" -a "$tag")"
+target="$("$prefix/parse-tag" -a "$tag")"
 
 # Tag prefix, e.g. Add-on.
 prefix="${tag%/*}"
