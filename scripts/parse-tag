@@ -1,0 +1,99 @@
+#!/usr/bin/env ruby
+
+require 'pathname'
+require 'optparse'
+
+# Find scripts directory.
+script = Pathname.new(__FILE__).realpath
+prefix = script.dirname
+script = script.basename
+
+# Print help if no arguments are given.
+ARGV[0] = "-h" if ARGV.empty?
+
+# Default options.
+options = {
+	output: :relative
+}
+
+# Create CLI parser.
+cli = OptionParser.new
+
+# Set help banner.
+cli.banner = <<~EOF
+	About
+	    Parse Git tag and print the respective add-on directory.
+
+	Usage
+	    #{script} [OPTIONS] TAG
+
+	Options
+EOF
+
+# Define options.
+cli.on("-h", "--help", "Print this manual.") do
+	puts cli.help
+	exit 1
+end
+
+cli.on("-a", "--absolute", "Print absolute instead of relative path (to the Git repository).") do
+	options[:output] = :absolute
+end
+
+# Parse arguments.
+begin
+	cli.parse!
+rescue OptionParser::InvalidOption
+	STDERR.puts "#{script}: Invalid option. See --help."
+	exit 1
+end
+
+# Release tag, e.g. Add-on/v42.
+tag = ARGV.shift&.chomp
+
+# Validate argument.
+if tag&.empty?
+	STDERR.puts "#{script}: Missing required argument. See --help."
+	exit 1
+end
+
+# Tagged commit. e.g. 0123456789abcdef.
+commit = `git rev-parse --verify --quiet "#{tag}" 2>/dev/null`.chomp
+
+# Validate tag.
+if commit.empty?
+	STDERR.puts "#{script}: '#{tag}' is not a valid tag."
+	exit 1
+end
+
+# Manifest file path. e.g. Add-on/Add-on.toc.
+# We assume the Git tag was made by our release script, i.e. it points to a commit where the TOC file was the only file changed.
+manifest = `git diff-tree --no-commit-id --name-only -r "#{commit}" 2>/dev/null | head -1`.chomp
+
+# Validate manifest file.
+if manifest.empty?
+	STDERR.puts "#{script}: Couldn't find manifest file in commit with tag '#{tag}'."
+	exit 1
+end
+
+# Switch output mode.
+case options[:output]
+when :relative
+	# Print out relative path.
+	puts Pathname.new(manifest).dirname
+when :absolute
+	# Get Git root directory.
+	root = `git rev-parse --show-toplevel 2>/dev/null`.chomp
+
+	if root.empty?
+		STDERR.puts "#{script}: Failed to read repository root path."
+		exit 1
+	end
+
+	# Print out absolute path.
+	puts Pathname.new(root).join(manifest).realpath.dirname
+else
+	STDERR.puts "#{script}: Unexpected output mode '#{options[:output]}'."
+	exit 1
+end
+
