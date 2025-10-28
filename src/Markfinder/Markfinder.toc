@@ -1,5 +1,3 @@
-## Interface: 11508
+## Interface: 00000
 ## Title: Markfinder
-## Notes: Help you find your mark.
-## Version: 1.0.0
-Markfinder.lua
+## Notes: Game version unsupported.
