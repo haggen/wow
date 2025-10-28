@@ -1,3 +1,0 @@
--- Smartab
--- MIT © 2019 Arthur Corenzan
--- More on https://github.com/haggen/wow
