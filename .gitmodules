@@ -1,4 +1,4 @@
-[submodule "wow"]
-	path = wow
+[submodule "wow-ui-source"]
+	path = wow-ui-source
 	url = https://github.com/Gethe/wow-ui-source.git
-	branch = classic_era
+	branch = forever
