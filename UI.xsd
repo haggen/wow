@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Sam Lantinga (Blizzard Entertainment) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/"
-	xmlns:ui="http://www.blizzard.com/wow/ui/" targetNamespace="http://www.blizzard.com/wow/ui/"
-	elementFormDefault="qualified" attributeFormDefault="unqualified">
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.blizzard.com/wow/ui/"
+    xmlns:ui="http://www.blizzard.com/wow/ui/"
+    targetNamespace="http://www.blizzard.com/wow/ui/"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+>
 	<xs:simpleType name="FRAMEPOINT">
 		<xs:restriction base="xs:NMTOKEN">
 			<xs:enumeration value="TOPLEFT" />
@@ -257,7 +261,12 @@
 	<xs:complexType name="KeyValueType">
 		<xs:attribute name="key" type="xs:string" use="required" />
 		<xs:attribute name="value" type="xs:string" use="required" />
-		<xs:attribute name="keyType" type="KEYVALUETYPE" use="optional" default="string" />
+		<xs:attribute
+            name="keyType"
+            type="KEYVALUETYPE"
+            use="optional"
+            default="string"
+        />
 		<xs:attribute name="type" type="KEYVALUETYPE" use="optional" default="string" />
 	</xs:complexType>
 
@@ -271,7 +280,12 @@
 
 	<xs:complexType name="AttributeType">
 		<xs:attribute name="name" type="xs:string" use="required" />
-		<xs:attribute name="type" type="ATTRIBUTETYPE" use="optional" default="string" />
+		<xs:attribute
+            name="type"
+            type="ATTRIBUTETYPE"
+            use="optional"
+            default="string"
+        />
 		<xs:attribute name="value" type="xs:string" use="optional" />
 	</xs:complexType>
 
@@ -374,9 +388,18 @@
 			<xs:extension base="xs:string">
 				<xs:attribute name="function" type="xs:string" />
 				<xs:attribute name="method" type="xs:string" />
-				<xs:attribute name="inherit" type="SCRIPTINHERITTYPE" use="optional" default="none" />
-				<xs:attribute name="intrinsicOrder" type="SCRIPTINTRINSICORDERTYPE" use="optional"
-					default="none" />
+				<xs:attribute
+                    name="inherit"
+                    type="SCRIPTINHERITTYPE"
+                    use="optional"
+                    default="none"
+                />
+				<xs:attribute
+                    name="intrinsicOrder"
+                    type="SCRIPTINTRINSICORDERTYPE"
+                    use="optional"
+                    default="none"
+                />
 				<xs:attribute name="autoEnableInput" type="xs:boolean" default="true" />
 			</xs:extension>
 		</xs:simpleContent>
@@ -429,11 +452,19 @@
 		<xs:attribute name="virtual" type="xs:boolean" default="false" />
 	</xs:complexType>
 
-	<xs:element name="FontFamily" type="FontFamilyType" substitutionGroup="UiField" />
+	<xs:element
+        name="FontFamily"
+        type="FontFamilyType"
+        substitutionGroup="UiField"
+    />
 
 	<xs:complexType name="LayoutFrameRefType" />
-	<xs:element name="LayoutFrameRef" abstract="true" type="LayoutFrameRefType"
-		substitutionGroup="UiField" />
+	<xs:element
+        name="LayoutFrameRef"
+        abstract="true"
+        type="LayoutFrameRefType"
+        substitutionGroup="UiField"
+    />
 
 	<xs:attributeGroup name="LayoutFrameAttributes">
 		<xs:attribute name="name" type="xs:string" />
@@ -486,7 +517,11 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Scripts" type="ScriptsType" substitutionGroup="LayoutField" />
-	<xs:element name="KeyValues" type="KeyValuesType" substitutionGroup="LayoutField" />
+	<xs:element
+        name="KeyValues"
+        type="KeyValuesType"
+        substitutionGroup="LayoutField"
+    />
 	<xs:element name="Animations" substitutionGroup="LayoutField">
 		<xs:complexType>
 			<xs:sequence>
@@ -556,8 +591,16 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Color" type="ColorType" substitutionGroup="TextureField" />
-	<xs:element name="Gradient" type="GradientType" substitutionGroup="TextureField" />
-	<xs:element name="Texture" type="TextureType" substitutionGroup="LayoutFrameRef" />
+	<xs:element
+        name="Gradient"
+        type="GradientType"
+        substitutionGroup="TextureField"
+    />
+	<xs:element
+        name="Texture"
+        type="TextureType"
+        substitutionGroup="LayoutFrameRef"
+    />
 
 	<xs:complexType name="MaskTextureType">
 		<xs:complexContent>
@@ -584,7 +627,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="MaskTexture" type="MaskTextureType" substitutionGroup="LayoutFrameRef" />
+	<xs:element
+        name="MaskTexture"
+        type="MaskTextureType"
+        substitutionGroup="LayoutFrameRef"
+    />
 
 	<xs:complexType name="FontStringType">
 		<xs:complexContent>
@@ -621,7 +668,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="FontString" type="FontStringType" substitutionGroup="LayoutFrameRef" />
+	<xs:element
+        name="FontString"
+        type="FontStringType"
+        substitutionGroup="LayoutFrameRef"
+    />
 
 	<xs:complexType name="LineType">
 		<xs:complexContent>
@@ -664,8 +715,12 @@
 			<xs:extension base="LayoutFrameRefType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="FrameRef" abstract="true" type="FrameRefType"
-		substitutionGroup="LayoutFrameRef" />
+	<xs:element
+        name="FrameRef"
+        abstract="true"
+        type="FrameRefType"
+        substitutionGroup="LayoutFrameRef"
+    />
 
 	<xs:attributeGroup name="FrameAttributes">
 		<xs:attributeGroup ref="LayoutFrameAttributes" />
@@ -690,7 +745,11 @@
 		<xs:attribute name="ignoreParentScale" type="xs:boolean" default="false" />
 		<xs:attribute name="intrinsic" type="xs:boolean" default="false" />
 		<xs:attribute name="clipChildren" type="xs:boolean" default="false" />
-		<xs:attribute name="propagateHyperlinksToParent" type="xs:boolean" default="false" />
+		<xs:attribute
+            name="propagateHyperlinksToParent"
+            type="xs:boolean"
+            default="false"
+        />
 		<xs:attribute name="hyperlinksEnabled" type="xs:boolean" default="false" />
 		<xs:attribute name="fixedFrameStrata" type="xs:boolean" default="false" />
 		<xs:attribute name="fixedFrameLevel" type="xs:boolean" default="false" />
@@ -750,7 +809,11 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="Attributes" type="AttributesType" substitutionGroup="FrameField" />
+	<xs:element
+        name="Attributes"
+        type="AttributesType"
+        substitutionGroup="FrameField"
+    />
 	<xs:element name="Frames" substitutionGroup="FrameField">
 		<xs:complexType>
 			<xs:sequence minOccurs="0">
@@ -765,14 +828,21 @@
 			<xs:extension base="FrameType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="UnitPositionFrame" type="UnitPositionFrameType"
-		substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="UnitPositionFrame"
+        type="UnitPositionFrameType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:attributeGroup name="ButtonAttributes">
 		<xs:attributeGroup ref="FrameAttributes" />
 		<xs:attribute name="text" type="xs:string" />
 		<xs:attribute name="registerForClicks" type="xs:string" />
-		<xs:attribute name="motionScriptsWhileDisabled" type="xs:boolean" default="false" />
+		<xs:attribute
+            name="motionScriptsWhileDisabled"
+            type="xs:boolean"
+            default="false"
+        />
 	</xs:attributeGroup>
 
 
@@ -791,18 +861,66 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:element name="ButtonField" abstract="true" />
-	<xs:element name="NormalTexture" type="ui:TextureType" substitutionGroup="ButtonField" />
-	<xs:element name="PushedTexture" type="ui:TextureType" substitutionGroup="ButtonField" />
-	<xs:element name="DisabledTexture" type="ui:TextureType" substitutionGroup="ButtonField" />
-	<xs:element name="HighlightTexture" type="ui:TextureType" substitutionGroup="ButtonField" />
-	<xs:element name="ButtonText" type="FontStringType" substitutionGroup="ButtonField" />
-	<xs:element name="NormalFont" type="ButtonStyleType" substitutionGroup="ButtonField" />
-	<xs:element name="HighlightFont" type="ButtonStyleType" substitutionGroup="ButtonField" />
-	<xs:element name="DisabledFont" type="ButtonStyleType" substitutionGroup="ButtonField" />
-	<xs:element name="NormalColor" type="ColorType" substitutionGroup="ButtonField" />
-	<xs:element name="HighlightColor" type="ColorType" substitutionGroup="ButtonField" />
-	<xs:element name="DisabledColor" type="ColorType" substitutionGroup="ButtonField" />
-	<xs:element name="PushedTextOffset" type="Dimension" substitutionGroup="ButtonField" />
+	<xs:element
+        name="NormalTexture"
+        type="ui:TextureType"
+        substitutionGroup="ButtonField"
+    />
+	<xs:element
+        name="PushedTexture"
+        type="ui:TextureType"
+        substitutionGroup="ButtonField"
+    />
+	<xs:element
+        name="DisabledTexture"
+        type="ui:TextureType"
+        substitutionGroup="ButtonField"
+    />
+	<xs:element
+        name="HighlightTexture"
+        type="ui:TextureType"
+        substitutionGroup="ButtonField"
+    />
+	<xs:element
+        name="ButtonText"
+        type="FontStringType"
+        substitutionGroup="ButtonField"
+    />
+	<xs:element
+        name="NormalFont"
+        type="ButtonStyleType"
+        substitutionGroup="ButtonField"
+    />
+	<xs:element
+        name="HighlightFont"
+        type="ButtonStyleType"
+        substitutionGroup="ButtonField"
+    />
+	<xs:element
+        name="DisabledFont"
+        type="ButtonStyleType"
+        substitutionGroup="ButtonField"
+    />
+	<xs:element
+        name="NormalColor"
+        type="ColorType"
+        substitutionGroup="ButtonField"
+    />
+	<xs:element
+        name="HighlightColor"
+        type="ColorType"
+        substitutionGroup="ButtonField"
+    />
+	<xs:element
+        name="DisabledColor"
+        type="ColorType"
+        substitutionGroup="ButtonField"
+    />
+	<xs:element
+        name="PushedTextOffset"
+        type="Dimension"
+        substitutionGroup="ButtonField"
+    />
 	<xs:element name="Button" type="ButtonType" substitutionGroup="ui:FrameRef" />
 
 	<xs:complexType name="CheckButtonType">
@@ -823,10 +941,21 @@
 	</xs:complexType>
 
 	<xs:element name="CheckButtonField" abstract="true" />
-	<xs:element name="CheckedTexture" type="TextureType" substitutionGroup="CheckButtonField" />
-	<xs:element name="DisabledCheckedTexture" type="TextureType"
-		substitutionGroup="CheckButtonField" />
-	<xs:element name="CheckButton" type="CheckButtonType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="CheckedTexture"
+        type="TextureType"
+        substitutionGroup="CheckButtonField"
+    />
+	<xs:element
+        name="DisabledCheckedTexture"
+        type="TextureType"
+        substitutionGroup="CheckButtonField"
+    />
+	<xs:element
+        name="CheckButton"
+        type="CheckButtonType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="StatusBarType">
 		<xs:complexContent>
@@ -851,9 +980,21 @@
 	</xs:complexType>
 
 	<xs:element name="StatusBarField" abstract="true" />
-	<xs:element name="BarTexture" type="TextureType" substitutionGroup="StatusBarField" />
-	<xs:element name="BarColor" type="ui:ColorType" substitutionGroup="StatusBarField" />
-	<xs:element name="StatusBar" type="StatusBarType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="BarTexture"
+        type="TextureType"
+        substitutionGroup="StatusBarField"
+    />
+	<xs:element
+        name="BarColor"
+        type="ui:ColorType"
+        substitutionGroup="StatusBarField"
+    />
+	<xs:element
+        name="StatusBar"
+        type="StatusBarType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="SliderType">
 		<xs:complexContent>
@@ -927,7 +1068,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="ColorSelect" type="ui:ColorSelectType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="ColorSelect"
+        type="ui:ColorSelectType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="ModelType">
 		<xs:complexContent>
@@ -987,7 +1132,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="SimpleHTML" type="ui:SimpleHTMLType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="SimpleHTML"
+        type="ui:SimpleHTMLType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="MessageFrameType">
 		<xs:complexContent>
@@ -1007,7 +1156,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="MessageFrame" type="MessageFrameType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="MessageFrame"
+        type="MessageFrameType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<!-- This is now an intrinsic type-->
 	<xs:complexType name="ScrollingMessageFrameType">
@@ -1015,8 +1168,11 @@
 			<xs:extension base="FrameType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="ScrollingMessageFrame" type="ScrollingMessageFrameType"
-		substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="ScrollingMessageFrame"
+        type="ScrollingMessageFrameType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="ScrollFrameType">
 		<xs:complexContent>
@@ -1041,14 +1197,22 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="ScrollFrame" type="ScrollFrameType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="ScrollFrame"
+        type="ScrollFrameType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="MovieFrameType">
 		<xs:complexContent>
 			<xs:extension base="FrameType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="MovieFrame" type="MovieFrameType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="MovieFrame"
+        type="MovieFrameType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="ActorScriptsType">
 		<xs:sequence>
@@ -1064,7 +1228,12 @@
 	</xs:complexType>
 	<xs:complexType name="ModelSceneActorType">
 		<xs:sequence minOccurs="0">
-			<xs:element name="Scripts" type="ActorScriptsType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element
+                name="Scripts"
+                type="ActorScriptsType"
+                minOccurs="0"
+                maxOccurs="unbounded"
+            />
 			<xs:element name="Animations" minOccurs="0">
 				<xs:complexType>
 					<xs:sequence minOccurs="0">
@@ -1088,7 +1257,11 @@
 		<xs:attribute name="scale" type="xs:float" default="1.0" />
 		<xs:attribute name="desaturation" type="xs:float" default="0.0" />
 	</xs:complexType>
-	<xs:element name="Actor" type="ModelSceneActorType" substitutionGroup="UiField" />
+	<xs:element
+        name="Actor"
+        type="ModelSceneActorType"
+        substitutionGroup="UiField"
+    />
 
 	<xs:complexType name="ScopedModifierType">
 		<xs:sequence>
@@ -1105,8 +1278,12 @@
 		<xs:complexType>
 			<xs:sequence minOccurs="0">
 				<xs:choice maxOccurs="unbounded">
-					<xs:element name="ScopedModifier" type="ScopedModifierType" minOccurs="0"
-						maxOccurs="unbounded" />
+					<xs:element
+                        name="ScopedModifier"
+                        type="ScopedModifierType"
+                        minOccurs="0"
+                        maxOccurs="unbounded"
+                    />
 					<xs:element ref="UiField" />
 				</xs:choice>
 			</xs:sequence>
@@ -1138,14 +1315,22 @@
 			<xs:extension base="FrameType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="WorldFrame" type="WorldFrameType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="WorldFrame"
+        type="WorldFrameType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="GameTooltipType">
 		<xs:complexContent>
 			<xs:extension base="FrameType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="GameTooltip" type="GameTooltipType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="GameTooltip"
+        type="GameTooltipType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="CooldownType">
 		<xs:complexContent>
@@ -1170,7 +1355,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="Cooldown" type="CooldownType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="Cooldown"
+        type="CooldownType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="QuestPOIFrameType">
 		<xs:complexContent>
@@ -1180,7 +1369,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="QuestPOIFrame" type="QuestPOIFrameType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="QuestPOIFrame"
+        type="QuestPOIFrameType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="ArchaeologyDigSiteFrameType">
 		<xs:complexContent>
@@ -1190,8 +1383,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="ArchaeologyDigSiteFrame" type="ArchaeologyDigSiteFrameType"
-		substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="ArchaeologyDigSiteFrame"
+        type="ArchaeologyDigSiteFrameType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="ScenarioPOIFrameType">
 		<xs:complexContent>
@@ -1201,7 +1397,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="ScenarioPOIFrame" type="ScenarioPOIFrameType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="ScenarioPOIFrame"
+        type="ScenarioPOIFrameType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="MinimapType">
 		<xs:complexContent>
@@ -1227,21 +1427,33 @@
 			<xs:extension base="ModelType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="PlayerModel" type="PlayerModelType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="PlayerModel"
+        type="PlayerModelType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="DressUpModelType">
 		<xs:complexContent>
 			<xs:extension base="PlayerModelType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="DressUpModel" type="DressUpModelType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="DressUpModel"
+        type="DressUpModelType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="TabardModelType">
 		<xs:complexContent>
 			<xs:extension base="PlayerModelType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="TabardModel" type="TabardModelType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="TabardModel"
+        type="TabardModelType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="CinematicModelType">
 		<xs:complexContent>
@@ -1250,14 +1462,22 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="CinematicModel" type="CinematicModelType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="CinematicModel"
+        type="CinematicModelType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="UiCameraType">
 		<xs:complexContent>
 			<xs:extension base="ModelType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="UiCamera" type="UiCameraType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="UiCamera"
+        type="UiCameraType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="UnitButtonType">
 		<xs:complexContent>
@@ -1270,7 +1490,11 @@
 			<xs:extension base="FrameType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="TaxiRouteFrame" type="TaxiRouteFrameType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="TaxiRouteFrame"
+        type="TaxiRouteFrameType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="BrowserType">
 		<xs:complexContent>
@@ -1288,7 +1512,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="Checkout" type="CheckoutType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="Checkout"
+        type="CheckoutType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="FogOfWarFrameType">
 		<xs:complexContent>
@@ -1297,7 +1525,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="FogOfWarFrame" type="FogOfWarFrameType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="FogOfWarFrame"
+        type="FogOfWarFrameType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:complexType name="ModelSceneType">
 		<xs:complexContent>
@@ -1323,7 +1555,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="ModelScene" type="ModelSceneType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="ModelScene"
+        type="ModelSceneType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<xs:simpleType name="ANIMLOOPTYPE">
 		<xs:restriction base="xs:NMTOKEN">
@@ -1414,7 +1650,11 @@
 		<xs:attribute name="smoothing" type="ANIMSMOOTHTYPE" default="NONE" />
 	</xs:complexType>
 	<xs:element name="AnimationRef" abstract="true" substitutionGroup="UiField" />
-	<xs:element name="Animation" type="AnimationType" substitutionGroup="AnimationRef" />
+	<xs:element
+        name="Animation"
+        type="AnimationType"
+        substitutionGroup="AnimationRef"
+    />
 
 	<xs:complexType name="TranslationType">
 		<xs:complexContent>
@@ -1424,14 +1664,22 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="Translation" type="TranslationType" substitutionGroup="AnimationRef" />
+	<xs:element
+        name="Translation"
+        type="TranslationType"
+        substitutionGroup="AnimationRef"
+    />
 
 	<xs:complexType name="LineTranslationType">
 		<xs:complexContent>
 			<xs:extension base="TranslationType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="LineTranslation" type="LineTranslationType" substitutionGroup="AnimationRef" />
+	<xs:element
+        name="LineTranslation"
+        type="LineTranslationType"
+        substitutionGroup="AnimationRef"
+    />
 
 	<xs:complexType name="RotationType">
 		<xs:complexContent>
@@ -1441,7 +1689,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="Rotation" type="RotationType" substitutionGroup="AnimationRef" />
+	<xs:element
+        name="Rotation"
+        type="RotationType"
+        substitutionGroup="AnimationRef"
+    />
 
 	<xs:complexType name="ScaleType">
 		<xs:complexContent>
@@ -1462,7 +1714,11 @@
 			<xs:extension base="ScaleType" />
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="LineScale" type="LineScaleType" substitutionGroup="AnimationRef" />
+	<xs:element
+        name="LineScale"
+        type="LineScaleType"
+        substitutionGroup="AnimationRef"
+    />
 
 	<xs:complexType name="AlphaType">
 		<xs:complexContent>
@@ -1514,7 +1770,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="FlipBook" type="FlipBookType" substitutionGroup="AnimationRef" />
+	<xs:element
+        name="FlipBook"
+        type="FlipBookType"
+        substitutionGroup="AnimationRef"
+    />
 
 	<xs:complexType name="TextureCoordTranslationType">
 		<xs:complexContent>
@@ -1524,8 +1784,11 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:element name="TextureCoordTranslation" type="TextureCoordTranslationType"
-		substitutionGroup="AnimationRef" />
+	<xs:element
+        name="TextureCoordTranslation"
+        type="TextureCoordTranslationType"
+        substitutionGroup="AnimationRef"
+    />
 
 	<xs:complexType name="AnimationGroupType">
 		<xs:sequence minOccurs="0">
@@ -1543,16 +1806,52 @@
 		<xs:attribute name="looping" type="ANIMLOOPTYPE" default="NONE" />
 		<xs:attribute name="setToFinalAlpha" type="xs:boolean" default="false" />
 	</xs:complexType>
-	<xs:element name="AnimationGroup" type="AnimationGroupType" substitutionGroup="UiField" />
-	<xs:element name="OffScreenFrame" type="FrameType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="AnimationGroup"
+        type="AnimationGroupType"
+        substitutionGroup="UiField"
+    />
+	<xs:element
+        name="OffScreenFrame"
+        type="FrameType"
+        substitutionGroup="ui:FrameRef"
+    />
 
 	<!-- instrinsic types -->
-	<xs:element name="ContainedAlertFrame" type="ButtonType" substitutionGroup="ui:FrameRef" />
-	<xs:element name="DropDownToggleButton" type="ButtonType" substitutionGroup="ui:FrameRef" />
-	<xs:element name="EventEditBox" type="EditBoxType" substitutionGroup="ui:FrameRef" />
-	<xs:element name="EventScrollFrame" type="ScrollFrameType" substitutionGroup="ui:FrameRef" />
-	<xs:element name="EventFrame" type="FrameType" substitutionGroup="ui:FrameRef" />
-	<xs:element name="EventButton" type="ButtonType" substitutionGroup="ui:FrameRef" />
-	<xs:element name="ItemButton" type="ButtonType" substitutionGroup="ui:FrameRef" />
+	<xs:element
+        name="ContainedAlertFrame"
+        type="ButtonType"
+        substitutionGroup="ui:FrameRef"
+    />
+	<xs:element
+        name="DropDownToggleButton"
+        type="ButtonType"
+        substitutionGroup="ui:FrameRef"
+    />
+	<xs:element
+        name="EventEditBox"
+        type="EditBoxType"
+        substitutionGroup="ui:FrameRef"
+    />
+	<xs:element
+        name="EventScrollFrame"
+        type="ScrollFrameType"
+        substitutionGroup="ui:FrameRef"
+    />
+	<xs:element
+        name="EventFrame"
+        type="FrameType"
+        substitutionGroup="ui:FrameRef"
+    />
+	<xs:element
+        name="EventButton"
+        type="ButtonType"
+        substitutionGroup="ui:FrameRef"
+    />
+	<xs:element
+        name="ItemButton"
+        type="ButtonType"
+        substitutionGroup="ui:FrameRef"
+    />
 	<xs:element name="TestFrame" type="FrameType" substitutionGroup="ui:FrameRef" />
 </xs:schema>
