@@ -1,6 +1,7 @@
-## Interface: 11302
-## Version: 0.0.0
+## Interface: 16001
+## Version: 1
 ## Title: Developer
 ## Notes: Toolkit for add-on developers.
-## DefaultState: enabled
+## X-Website: https://github.com/haggen/wow
+
 Developer.xml
