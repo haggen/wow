@@ -1,10 +1,6 @@
 # My add-ons for World of Warcraft®
 
-| Add-on           | Description                    | Supported game version   |                                                                                                                                                  |
-| ---------------- | ------------------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Dangeradar**   | Watch out for danger.          | Wrath                    | [CurseForge](https://www.curseforge.com/wow/addons/dangeradar) — [Source](/addons/Dangeradar) — [Download](/releases?q=Dangeradar)               |
-| **Tunnelvision** | For people with tunnel vision. | Wrath, Classic           | [CurseForge](https://www.curseforge.com/wow/addons/tunnelvision-focused) — [Source](/addons/Tunnelvision) — [Download](/releases?q=Tunnelvision) |
-| **Fastbind**     | Change your keybindings, fast. | Mainline, Wrath, Classic | [CurseForge](https://www.curseforge.com/wow/addons/fastbind) — [Source](/addons/Fastbind) — [Download](/releases?q=Fastbind)                     |
+...
 
 ## Development
 
