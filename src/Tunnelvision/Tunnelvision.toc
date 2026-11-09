@@ -1,8 +1,7 @@
-## Interface: 11404
-## Version: 101
+## Interface: 16001
+## Version: 102
 ## Title: Tunnelvision
-## Notes: For people with tunnel vision.
-## DefaultState: enabled
+## Notes: Target health bar mirrors the player health bar position.
 ## SavedVariablesPerCharacter: TunnelvisionSavedVars
 
-Tunnelvision.xml
+Tunnelvision.lua
