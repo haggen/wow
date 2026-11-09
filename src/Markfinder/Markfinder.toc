@@ -1,3 +1,0 @@
-## Interface: 00000
-## Title: Markfinder
-## Notes: Game version unsupported.

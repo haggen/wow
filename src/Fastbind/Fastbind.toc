@@ -1,9 +1,0 @@
-## Interface: 100105
-## Version: 117
-## Title: Fastbind
-## Notes: Change your keybindings, fast.
-## DefaultState: enabled
-## SavedVariablesPerCharacter: FastbindSavedVars
-
-Fastbind.xml
-MinimapButton.xml

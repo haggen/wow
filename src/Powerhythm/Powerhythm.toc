@@ -1,7 +1,0 @@
-## Interface: 11404
-## Version: 0
-## Title: Powerhythm
-## Notes: ...
-## DefaultState: enabled
-
-Powerhythm.xml
