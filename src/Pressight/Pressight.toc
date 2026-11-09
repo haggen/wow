@@ -1,0 +1,7 @@
+## Interface: 16001
+## Version: 1
+## Title: Pressight
+## Notes: Instantly see which abilities are usable on a unit's nameplate.
+## X-Website: https://github.com/haggen/wow
+
+Pressight.xml

@@ -1,0 +1,7 @@
+## Interface: 16001
+## Version: 1
+## Title: Tooltipointer
+## Notes: Unit tooltip now follows the cursor.
+## X-Website: https://github.com/haggen/wow
+
+Tooltipointer.lua

@@ -1,0 +1,8 @@
+## Interface: 16001
+## Version: 1
+## Title: Targetrigger
+## Notes: Easily repeat your last /target command.
+## X-Website: https://github.com/haggen/wow
+
+WhenOutOfCombat.lua
+Targetrigger.lua
